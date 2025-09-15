@@ -289,6 +289,27 @@
         flex-direction: column; /* Stacks buttons vertically on small screens */
     }
 }
+/*
+ * هذه التنسيقات الإضافية تضمن أن الأزرار تعمل بشكل صحيح على الجوال.
+ */
+@media (max-width: 600px) {
+  /* تعديل موضع القائمة المنسدلة على الجوال */
+  .dropdown-options {
+    position: absolute; /* احتفاظ بالموضع النسبي */
+    bottom: auto; /* إزالة خاصية bottom التي قد تسبب مشاكل */
+    top: 100%; /* وضع القائمة أسفل الزر مباشرةً */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px; /* تحديد عرض ثابت لضمان عدم الخروج من الشاشة */
+    padding: 5px;
+  }
+
+  /* جعل حاوية الأزرار الرئيسية مرنة لترتيب الأزرار بشكل عمودي */
+  .certificate-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
 </style>
 <link href="favicon.png" rel="icon" type="image/png"/><link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/></head>
 <body>
