@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>شهادة إتمام الرحلة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Marhey:wght@500&display=swap" rel="stylesheet">
+<audio id="success-audio" src="assets/sounds/nashed.mp3" preload="auto"></audio>
+
+<style>
+  :root {
+    --primary-color: #004d40; /* Deep Teal */
+    --secondary-color: #bcaaa4; /* Light Brown/Gold Accent */
+    --text-color: #333;
+    --bg-color: #f9f9f7;
+  }
+  body {
+    font-family: "Cairo", sans-serif;
+    background: var(--bg-color);
+    text-align: center;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  #printable-certificate {
+    width: 800px;
+    background: white;
+    border: 10px solid var(--primary-color);
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    position: relative;
+    background-image: url('assets/images/logo-watermark.webp'); /* Optional: Add a light watermark */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 400px;
+  }
+  .cert-border {
+    border: 2px solid var(--secondary-color);
+    padding: 20px;
+  }
+  .cert-header {
+    margin-bottom: 25px;
+  }
+  .cert-header img {
+    width: 120px;
+    margin-bottom: 10px;
+  }
+  .cert-header h1 {
+    font-family: 'Marhey', cursive;
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin: 0;
+  }
+  .cert-header h2 {
+    font-size: 1.5rem;
+    color: var(--text-color);
+    margin: 5px 0;
+  }
+  .cert-body .intro-text {
+    font-size: 1.2rem;
+    margin: 20px 0 5px 0;
+  }
+  .cert-body .student-name {
+    font-family: 'Marhey', cursive;
+    font-size: 2.2rem;
+    color: var(--primary-color);
+    margin: 0 0 15px 0;
+  }
+  .cert-body .main-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin: 0 auto 30px auto;
+    max-width: 90%;
+  }
+  .results-section {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: rgba(240, 240, 240, 0.5);
+    border-radius: 10px;
+  }
+  .score-container, .scholarship-container {
+    text-align: center;
+  }
+  .results-section p {
+    margin: 0;
+    font-size: 1rem;
+    color: #555;
+  }
+  .results-section strong {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    display: block;
+    margin-top: 5px;
+  }
+  .cert-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 40px;
+  }
+  .signature-area, .qr-code-area {
+    text-align: center;
+  }
+  .signature-area p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  #qrcode {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 5px auto;
+    border: 1px solid #eee;
+    padding: 5px;
+  }
+
+  .certificate-actions {
+    margin-top: 2rem;
+  }
+  .certificate-actions button {
+    font-family: 'Cairo', sans-serif;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 5px;
+    margin: 0 5px;
+    transition: background-color 0.3s;
+  }
+  .certificate-actions button:hover {
+    background-color: #00251a;
+  }
+  /* Media query for mobile devices */
+@media (max-width: 600px) {
+  #printable-certificate {
+    width: 95%; /* Make the certificate take up most of the screen width */
+    padding: 10px; /* Reduce padding to save space */
+  }
+
+  .cert-border {
+    padding: 10px; /* Reduce border padding */
+  }
+
+  .cert-header img {
+    width: 70px; /* Smaller logo */
+  }
+  
+  .cert-header h1 {
+    font-size: 1.2rem; /* Smaller main heading */
+  }
+  
+  .cert-header h2 {
+    font-size: 0.9rem; /* Smaller sub-heading */
+  }
+
+  .cert-body .intro-text,
+  .cert-body .main-text,
+  .signature-area p,
+  .qr-code-area p {
+    font-size: 0.8rem; /* Smaller body text */
+  }
+  
+  .cert-body .student-name {
+    font-size: 1.5rem; /* Smaller name font */
+  }
+
+  .results-section {
+    flex-direction: column; /* Stack results vertically */
+    gap: 10px; /* Smaller gap */
+    padding: 8px;
+  }
+  
+  .results-section strong {
+    font-size: 1.1rem; /* Smaller score/scholarship font */
+  }
+
+  .cert-footer {
+    flex-direction: column; /* Stack footer elements vertically */
+    align-items: center; /* Center footer items */
+    gap: 15px; /* Add some space between them */
+  }
+  
+  #qrcode {
+    width: 60px; /* Smaller QR code for mobile */
+    height: 60px;
+  }
+
+  .certificate-actions {
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 10px;
+    width: 100%;
+  }
+
+  .certificate-actions button {
+    font-size: 0.9rem; /* Smaller button font */
+    padding: 8px 15px; /* Smaller button padding */
+  }
+}
+
+  @media print {
+    body * { visibility: hidden; }
+    #printable-certificate, #printable-certificate * {
+      visibility: visible;
+    }
+    #printable-certificate {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      box-shadow: none;
+      margin: 0;
+      padding: 20px;
+    }
+    .certificate-actions { display: none; }
+  }
+</style>
+</head>
+
+<body>
+
+<div id="printable-certificate">
+  <div class="cert-border">
+    <div class="cert-header">
+      <img src="assets/images/logo.webp" alt="شعار الجامعة الإسلامية">
+      <h1>الجامعة الإسلامية - غزة</h1>
+      <h2>شهادة إتمام رحلة تعريفية</h2>
+    </div>
+    <div class="cert-body">
+      <p class="intro-text">تشهد عمادة شؤون الطلبة بأن الطالب/ة</p>
+      <h2 class="student-name" id="cert-player-name">[اسم الطالب]</h2>
+      <p class="main-text">قد أتم بنجاح رحلة "رحلتي في الإسلامية" التعريفية الافتراضية، وأظهر معرفة ممتازة بمرافق الجامعة وكلياتها المتنوعة.</p>
+      
+      <div class="results-section">
+        <div class="score-container">
+          <p>النقاط المكتسبة</p>
+          <strong id="cert-final-score">0</strong>
+        </div>
+        <div class="scholarship-container">
+          <p>المنحة المستحقة</p>
+          <strong id="cert-scholarship-details">---</strong>
+        </div>
+      </div>
+    </div>
+    <div class="cert-footer">
+      <div class="signature-area">
+        <p>___________________</p>
+        <p><strong>عميد شؤون الطلبة</strong></p>
+      </div>
+      <div class="qr-code-area">
+        <div id="qrcode"></div>
+        <p>رمز التحقق</p>
+      </div>
+      <div class="signature-area">
+        <p>___________________</p>
+        <p><strong>رئيس الجامعة</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="certificate-actions">
+  <button onclick="window.print()">🖨️ طباعة الشهادة</button>
+  <button onclick="downloadCertificate()">📷 تحميل كصورة</button>
+  <button onclick="window.location.href='index.html'">🏠 العودة للعبة</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+
+
+
+<script>
+function populateCertificateData() {
+  const params = new URLSearchParams(window.location.search);
+  let playerName = params.get("name");
+  let playerScore = parseInt(params.get("score"));
+
+  try {
+    const saved = localStorage.getItem('iugGameProgress');
+    if (saved) {
+      const state = JSON.parse(saved);
+      if (!playerName || playerName.trim() === "") {
+        if (state.playerName) playerName = state.playerName;
+        else if (state.name) playerName = state.name;
+        else if (state.player) playerName = state.player;
+      }
+      if (!Number.isFinite(playerScore)) {
+        if (typeof state.score === "number") playerScore = state.score;
+        else if (typeof state.totalScore === "number") playerScore = state.totalScore;
+        else if (typeof state.points === "number") playerScore = state.points;
+      }
+    }
+  } catch (e) {
+    console.warn("Failed to read game state:", e);
+  }
+
+  if (!playerName || playerName.trim() === "") playerName = "[اسم الطالب]";
+  if (!Number.isFinite(playerScore)) playerScore = 0;
+
+  document.getElementById("cert-player-name").textContent = playerName;
+  document.getElementById("cert-final-score").textContent = playerScore;
+
+  const scholarshipEl = document.getElementById("cert-scholarship-details");
+  let scholarshipPercentage = 0;
+  if (playerScore >= 50) scholarshipPercentage = 50;
+  else if (playerScore > 0) scholarshipPercentage = playerScore;
+  scholarshipEl.textContent =
+    scholarshipPercentage > 0
+      ? `منحة ${scholarshipPercentage}% للفصل الدراسي الأول`
+      : "لم يتم الحصول على منحة";
+
+  // تشغيل الصوت
+  const audio = document.getElementById("success-audio");
+  if (audio) {
+    audio.currentTime = 0;
+    audio.play().catch(err => console.log("Autoplay blocked:", err));
+  }
+
+  // تحديث QR
+  const qrcodeContainer = document.getElementById("qrcode");
+  if (qrcodeContainer) {
+    qrcodeContainer.innerHTML = '';
+    new QRCode(qrcodeContainer, {
+      text: `شهادة إتمام رحلة\\nالطالب: ${playerName}\\nالنقاط: ${playerScore}\\nالجامعة الإسلامية بغزة`,
+      width: 90,
+      height: 90,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  }
+}
+window.addEventListener('DOMContentLoaded', populateCertificateData);
+</script>
+
+
+</body>
+</html>

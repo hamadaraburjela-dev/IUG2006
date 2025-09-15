@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>جامعة المعرفة | الإرشاد الأكاديمي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" referrerpolicy="no-referrer" rel="stylesheet"/>
+<!-- يعتمد على نمط الموقع الأساسي إن وُجد -->
+<link href="assets/css/main.css" rel="stylesheet"/>
+<style>
+    :root {
+      --pri:#0a3d62; --pri2:#1e5799; --bg:#f4f8fb; --ok:#16a34a; --warn:#f59e0b; --bad:#ef4444;
+      --card:#ffffff; --muted:#6b7280; --chip:#eef6ff;
+    }
+    body { background:var(--bg); font-family: "Cairo", system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+    .container { max-width: 1100px; margin: 20px auto 80px; padding: 0 16px; }
+    .page-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
+    .page-header h1 { font-size: 26px; margin:0; color:var(--pri); }
+    .sub { color:var(--muted); font-size:13px; }
+    .chip { display:inline-flex; align-items:center; gap:6px; background:var(--chip); border:1px solid rgba(10,61,98,.12); padding:4px 10px; border-radius:999px; font-size:12px; color:#0a3d62; }
+
+    .card { background:var(--card); border:1px solid rgba(10,61,98,.08); border-radius:16px; box-shadow:0 6px 18px rgba(10,61,98,.06); padding:16px; }
+    .grid { display:grid; gap:12px; }
+    .cols-2 { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    @media (max-width: 900px){ .cols-2{ grid-template-columns:1fr; } }
+
+    .section-title { display:flex; align-items:center; gap:8px; font-weight:800; color:var(--pri); margin:2px 0 8px; }
+    .row { display:flex; gap:10px; align-items:center; }
+    .row > * { flex:1; }
+    label { font-weight:700; font-size:14px; color:#233; }
+    select, input[type="number"], input[type="text"] { width:100%; border:1px solid rgba(0,0,0,.12); border-radius:10px; padding:10px 12px; background:#fff; }
+    .hint { color:var(--muted); font-size:12px; margin-top:4px; }
+
+    .q { border:1px dashed rgba(10,61,98,.18); border-radius:14px; padding:12px; background:#fff; }
+    .q-title { font-weight:700; margin:2px 0 8px; }
+    .likert { display:flex; gap:6px; }
+    .likert input { display:none; }
+    .likert label { flex:1; text-align:center; border:1px solid rgba(0,0,0,.12); border-radius:10px; padding:8px 6px; cursor:pointer; background:#fafafa; transition:all .2s; font-weight:700; }
+    .likert input:checked + label { background:linear-gradient(135deg,#e6f4ff,#e9f7ff); border-color:#7fb2ff; color:#0a3d62; box-shadow:0 0 0 3px rgba(127,178,255,.15) inset; }
+
+    .progress { height:10px; background:#e9eef4; border-radius:999px; overflow:hidden; }
+    .progress > span { display:block; height:100%; width:0%; background:linear-gradient(90deg,#4f46e5,#0ea5e9); transition:width .3s ease; }
+
+    .actions { display:flex; gap:10px; justify-content:flex-end; margin-top:8px; }
+    .btn { border:0; padding:10px 16px; border-radius:12px; font-weight:800; cursor:pointer; transition:transform .06s ease; }
+    .btn:active{ transform: translateY(1px); }
+    .btn-primary { background:linear-gradient(135deg,#0a3d62,#1d4c78); color:#fff; }
+    .btn-secondary { background:#fff; border:1px solid rgba(0,0,0,.12); }
+
+    .results { display:none; }
+    .result-item { border:1px solid rgba(0,0,0,.08); border-radius:14px; background:#fff; padding:12px; }
+    .tag { display:inline-block; font-size:12px; padding:2px 8px; border-radius:999px; border:1px solid rgba(0,0,0,.1); }
+    .tag.ok{ color:#065f46; background:#ecfdf5; border-color:#a7f3d0; }
+    .tag.warn{ color:#7c2d12; background:#fffbeb; border-color:#fde68a; }
+    .tag.bad{  color:#7f1d1d; background:#fef2f2; border-color:#fecaca; }
+
+    .divider { height:1px; background:rgba(0,0,0,.06); margin:14px 0; }
+    .footnote { font-size:12px; color:var(--muted); }
+
+    .pill { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; background:#f1f5f9; border:1px solid rgba(0,0,0,.06); font-size:12px; }
+  </style>
+<style>
+@media (max-width: 600px){
+  .container { padding: 0 12px; }
+  .page-header h1 { font-size: 22px; }
+  .page-header .sub { font-size: 12px; line-height: 1.6; }
+  .card { padding: 18px 14px; }
+  .row { flex-direction: column; gap: 6px; }
+  select, input[type="number"], input[type="text"] { font-size: 16px; padding: 12px; width: 100%; }
+  label { font-size: 14px; margin-bottom: 4px; display:block; }
+  .q-title { font-size: 15px; line-height: 1.6; }
+  .likert label { padding: 10px 0; font-size: 15px; }
+  .actions { flex-direction: column; gap: 8px; }
+  .btn { width: 100%; }
+}
+</style>
+<meta content="خدمات الإرشاد الأكاديمي في جامعة المعرفة لمساعدة الطلاب على التخطيط لمسارهم الدراسي بنجاح." name="description"/><meta content="جامعة المعرفة | الإرشاد الأكاديمي" property="og:title"/><meta content="خدمات الإرشاد الأكاديمي في جامعة المعرفة لمساعدة الطلاب على التخطيط لمسارهم الدراسي بنجاح." property="og:description"/><meta content="/assets/images/arts-logo.webp" property="og:image"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="True" href="https://fonts.gstatic.com" rel="preconnect"/><meta content="ar_AR" property="og:locale"/><meta content="summary_large_image" name="twitter:card"/><meta content="جامعة المعرفة | الإرشاد الأكاديمي" name="twitter:title"/><meta content="خدمات الإرشاد الأكاديمي في جامعة المعرفة لمساعدة الطلاب على التخطيط لمسارهم الدراسي بنجاح." name="twitter:description"/><meta content="/assets/images/arts-logo.webp" name="twitter:image"/><link href="https://example.com/advisor.html" rel="canonical"/></head>
+<body>
+<div id="status-bar-placeholder"></div>
+<div class="container">
+<div class="page-header">
+<div>
+<h1>المستشار الذكي للتخصصات</h1>
+<div class="sub">استشارة احترافية لطلبة الثانوية لتحديد الميول ومسارات الدراسة الأنسب، مع مراعاة المسار والمعدل والحدود الدنيا.</div>
+</div>
+<span class="chip">🧭توصيات شخصية</span>
+</div>
+<!-- بيانات الطالب الأساسية -->
+<div class="card grid cols-2" id="student-section">
+<div>
+<div class="section-title">👤 بياناتك</div>
+<div class="row">
+<div>
+<label for="studentName">الاسم</label>
+<input id="studentName" placeholder="سيُملأ تلقائيًا إن أمكن" type="text"/>
+<div class="hint">إن كان اسمك محفوظًا في اللعبة سيظهر تلقائيًا.</div>
+</div>
+<div>
+<label for="tawjihiStream">المسار</label>
+<select id="tawjihiStream">
+<option value="علمي">علمي</option>
+<option value="أدبي">أدبي</option>
+<option value="صناعي">صناعي</option>
+<option value="شرعي">شرعي</option>
+</select>
+</div>
+</div>
+<div class="row">
+<div>
+<label for="avg">معدّل الثانوية (٪)</label>
+<input id="avg" max="100" min="40" placeholder="مثال: 82.7" step="0.1" type="number"/>
+<div class="hint">يستخدم لقياس أهلية القبول فقط — لا يؤثر على ترتيب الميول مباشرة.</div>
+</div>
+<div>
+<label for="workEnv">أفضل بيئة عمل مستقبلية</label>
+<select id="workEnv">
+<option value="مختبرات">مختبرات وبحوث</option>
+<option value="مستشفى">مستشفى/رعاية صحية</option>
+<option value="شركة-تقنية">شركة تقنية/برمجة</option>
+<option value="ميدان">ميدان/مشاريع/مواقع</option>
+<option value="مكتب">مكتب وإدارة</option>
+<option value="تعليم">مدرسة/تعليم</option>
+<option value="إعلام">إعلام/صحافة/كتابة</option>
+<option value="قانون">قانون/محاماة/تشريع</option>
+</select>
+</div>
+</div>
+</div>
+<div>
+<div class="section-title">📚 مواد تميل إليها (اختياري)</div>
+<div class="row">
+<div>
+<label for="fav">اختر أكثر من مادة</label>
+<select id="fav" multiple="" style="height:106px;">
+<option>رياضيات</option><option>فيزياء</option><option>كيمياء</option><option>أحياء</option>
+<option>حاسوب</option><option>لغة عربية</option><option>لغة إنجليزية</option>
+<option>تاريخ</option><option>جغرافيا</option><option>اقتصاد</option><option>تربية فنية</option>
+</select>
+</div>
+<div>
+<label for="notes">قيود/ملاحظات (اختياري)</label>
+<input id="notes" placeholder="مثال: لا أفضّل المناوبات الليلية، أفضّل عمل قريب من المنزل..." type="text"/>
+<div class="hint">تُستخدم لتعديل التوصيات (تعليم/مناوبات/ميدان...).</div>
+</div>
+</div>
+</div>
+</div>
+<!-- أسئلة الميول (موسّعة) -->
+<div class="card" style="margin-top:14px;">
+<div class="section-title">🧪 مقياس الميول (اختر من 1 إلى 5)</div>
+<div id="questions"></div>
+<div class="progress" style="margin:10px 0 4px;">
+<span id="progressBar"></span>
+</div>
+<div class="actions">
+<button class="btn btn-secondary" id="btnPrev">السابق</button>
+<button class="btn btn-primary" id="btnNext">التالي</button>
+</div>
+<div class="hint">لن يستغرق الأمر أكثر من 3–5 دقائق. <span class="pill"><span id="answeredCount">0</span>/<span id="totalCount">0</span> مجاب</span></div>
+</div>
+<!-- النتائج -->
+<div class="card results" id="results">
+<div class="section-title">📌 ترشيحاتك الشخصية</div>
+<div class="grid cols-2" id="topPicks"></div>
+<div class="divider"></div>
+<div class="section-title">🔍 لماذا هذه الترشيحات؟</div>
+<div class="grid" id="factors"></div>
+<div class="divider"></div>
+<div class="section-title">📄 جميع النتائج حسب الملاءمة</div>
+<div id="details"></div>
+<div class="divider"></div>
+<div style="display:flex; gap:8px; justify-content:flex-end;">
+<button class="btn btn-secondary" onclick="window.location.href='index.html'">العودة إلى الخريطة</button>
+<button class="btn btn-primary" id="btnSave">حفظ وإرسال (اختياري)</button>
+</div>
+<div class="footnote" style="margin-top:8px;">تنبيه: هذه التوصيات إرشادية وليست قرار قبول نهائي. القبول مرتبط بالأنظمة واللوائح والحدود الدنيا لكل كلية/برنامج.</div>
+</div>
+</div>
+<script>
+/* =======================
+   1) ربط الاسم تلقائيًا بالموقع
+   ======================= */
+function autoFillNameFromSite(){
+  try {
+    // من الذاكرة العامة إن وُجدت
+    if (window.gameState && window.gameState.playerName) {
+      document.getElementById('studentName').value = window.gameState.playerName;
+      return;
+    }
+    // من التخزين العام للموقع
+    const gp = JSON.parse(localStorage.getItem('iugGameProgress')||'null');
+    if (gp && gp.playerName) {
+      document.getElementById('studentName').value = gp.playerName;
+    }
+  } catch(e){}
+}
+
+/* =======================
+   2) تكوين التخصصات والحدود الدنيا
+   (قابلة للتحديث سنويًا من إدارة القبول)
+   ======================= */
+const MAJORS = {
+  medicine:   { name:"الطب البشري", faculty:"الطب", streams:{"علمي":95,"أدبي":null,"صناعي":null,"شرعي":null}, axes:{life:1.0, empathy:0.9, lab:0.6, shift:0.6} },
+  civil:      { name:"الهندسة المدنية", faculty:"الهندسة", streams:{"علمي":80,"أدبي":null,"صناعي":80,"شرعي":null}, axes:{stem:1.0, field:0.9, spatial:0.5, problem:0.7} },
+  arch:       { name:"الهندسة المعمارية", faculty:"الهندسة", streams:{"علمي":80,"أدبي":null,"صناعي":80,"شرعي":null}, axes:{spatial:1.0, design:0.9, stem:0.6} },
+  comp_eng:   { name:"هندسة الحاسوب", faculty:"الهندسة", streams:{"علمي":80,"أدبي":null,"صناعي":80,"شرعي":null}, axes:{stem:0.9, coding:1.0, electronics:0.8, problem:0.8} },
+  mech:       { name:"الهندسة الميكانيكية", faculty:"الهندسة", streams:{"علمي":80,"أدبي":null,"صناعي":80,"شرعي":null}, axes:{stem:0.9, field:0.7, tinkering:0.8, physics:0.6} },
+  industrial: { name:"الهندسة الصناعية", faculty:"الهندسة", streams:{"علمي":80,"أدبي":null,"صناعي":80,"شرعي":null}, axes:{stem:0.8, business:0.6, problem:0.8, optimization:0.8} },
+  electrical: { name:"الهندسة الكهربائية", faculty:"الهندسة", streams:{"علمي":80,"أدبي":null,"صناعي":80,"شرعي":null}, axes:{stem:0.9, electronics:0.9, physics:0.7} },
+  env_eng:    { name:"الهندسة البيئية", faculty:"الهندسة", streams:{"علمي":80,"أدبي":null,"صناعي":80,"شرعي":null}, axes:{stem:0.7, environment:1.0, field:0.7, chemistry:0.5} },
+
+  cs:         { name:"علوم الحاسوب", faculty:"تكنولوجيا المعلومات", streams:{"علمي":65,"أدبي":65,"صناعي":65,"شرعي":65}, axes:{coding:1.0, problem:0.9, math:0.7} },
+  it:         { name:"تكنولوجيا المعلومات", faculty:"تكنولوجيا المعلومات", streams:{"علمي":65,"أدبي":65,"صناعي":65,"شرعي":65}, axes:{coding:0.8, systems:0.8, comm:0.6} },
+  web:        { name:"تقنيات الوسائط المتعددة وتطوير الويب", faculty:"تكنولوجيا المعلومات", streams:{"علمي":65,"أدبي":70,"صناعي":65,"شرعي":65}, axes:{coding:0.7, design:0.8, media:0.8} },
+  cybersecurity:{ name:"الأمن السيبراني", faculty:"تكنولوجيا المعلومات", streams:{"علمي":70,"أدبي":70,"صناعي":70,"شرعي":70}, axes:{coding:0.8, problem:0.9, systems:0.8} },
+
+  math:       { name:"الرياضيات", faculty:"العلوم", streams:{"علمي":65,"أدبي":null,"صناعي":65,"شرعي":null}, axes:{math:1.0, stem:0.9, research:0.7} },
+  physicsM:   { name:"الفيزياء", faculty:"العلوم", streams:{"علمي":65,"أدبي":null,"صناعي":65,"شرعي":null}, axes:{physics:1.0, stem:0.9, research:0.7} },
+  chemistryM: { name:"الكيمياء", faculty:"العلوم", streams:{"علمي":65,"أدبي":null,"صناعي":65,"شرعي":null}, axes:{chemistry:1.0, lab:0.9, research:0.7} },
+  biologyM:   { name:"الأحياء", faculty:"العلوم", streams:{"علمي":65,"أدبي":null,"صناعي":65,"شرعي":null}, axes:{life:1.0, lab:0.7, research:0.6} },
+  earth:      { name:"علوم الأرض والبيئة", faculty:"العلوم", streams:{"علمي":65,"أدبي":null,"صناعي":65,"شرعي":null}, axes:{environment:1.0, field:0.7} },
+
+  med_imaging:{ name:"تقنيات التصوير الطبي", faculty:"العلوم الصحية", streams:{"علمي":70,"أدبي":70,"صناعي":70,"شرعي":70}, axes:{life:0.8, lab:0.7, tech:0.6} },
+  nutrition:  { name:"التغذية السريرية", faculty:"العلوم الصحية", streams:{"علمي":70,"أدبي":80,"صناعي":70,"شرعي":70}, axes:{life:0.8, empathy:0.7, research:0.5} },
+  physio:     { name:"العلاج الطبيعي", faculty:"العلوم الصحية", streams:{"علمي":70,"أدبي":70,"صناعي":70,"شرعي":70}, axes:{life:0.7, empathy:0.7, field:0.6} },
+
+  nursing:    { name:"التمريض", faculty:"التمريض", streams:{"علمي":70,"أدبي":70,"صناعي":70,"شرعي":70}, axes:{empathy:1.0, life:0.9, shift:0.7} },
+  midwifery:  { name:"القبالة", faculty:"التمريض/القبالة", streams:{"علمي":80,"أدبي":80,"صناعي":80,"شرعي":80}, axes:{empathy:0.9, life:0.9, shift:0.6} },
+
+  accounting: { name:"المحاسبة", faculty:"الاقتصاد والعلوم الإدارية", streams:{"علمي":65,"أدبي":65,"صناعي":65,"شرعي":65}, axes:{business:0.9, office:0.8, math:0.6} },
+  business:   { name:"إدارة الأعمال", faculty:"الاقتصاد والعلوم الإدارية", streams:{"علمي":65,"أدبي":65,"صناعي":65,"شرعي":65}, axes:{business:1.0, comm:0.7, entrepreneurship:0.7} },
+  marketing:  { name:"التسويق والابتكار (إلكتروني/رقمي)", faculty:"الاقتصاد والعلوم الإدارية", streams:{"علمي":65,"أدبي":65,"صناعي":65,"شرعي":65}, axes:{media:0.7, business:0.8, comm:0.8} },
+  finance:    { name:"التمويل والمصارف", faculty:"الاقتصاد والعلوم الإدارية", streams:{"علمي":65,"أدبي":65,"صناعي":65,"شرعي":65}, axes:{business:0.9, math:0.6, office:0.8} },
+
+  law:        { name:"القانون", faculty:"الشريعة والقانون", streams:{"علمي":65,"أدبي":75,"صناعي":65,"شرعي":65}, axes:{law:1.0, comm:0.8, ethics:0.8} },
+  sharia:     { name:"الشريعة", faculty:"الشريعة والقانون", streams:{"علمي":65,"أدبي":65,"صناعي":65,"شرعي":65}, axes:{religion:1.0, comm:0.6, ethics:0.8} },
+  usul:       { name:"أصول الدين", faculty:"أصول الدين", streams:{"علمي":65,"أدبي":65,"صناعي":65,"شرعي":65}, axes:{religion:1.0, comm:0.5} },
+
+  arabic:     { name:"اللغة العربية", faculty:"الآداب", streams:{"علمي":65,"أدبي":65,"صناعي":65,"شرعي":65}, axes:{language:1.0, media:0.4} },
+  english:    { name:"اللغة الإنجليزية", faculty:"الآداب", streams:{"علمي":65,"أدبي":65,"صناعي":65,"شرعي":65}, axes:{language:1.0, media:0.4} },
+  journalism: { name:"الصحافة والإعلام", faculty:"الآداب", streams:{"علمي":65,"أدبي":65,"صناعي":65,"شرعي":65}, axes:{media:1.0, language:0.7, comm:0.9} },
+  geography:  { name:"الجغرافيا", faculty:"الآداب", streams:{"علمي":65,"أدبي":65,"صناعي":65,"شرعي":65}, axes:{environment:0.6, field:0.6, media:0.4} },
+
+  teacher:    { name:"معلم صف/أساس", faculty:"التربية", streams:{"علمي":65,"أدبي":65,"صناعي":65,"شرعي":65}, axes:{education:1.0, patience:0.8, comm:0.8} },
+  english_teach:{ name:"تعليم إنجليزي", faculty:"التربية", streams:{"علمي":65,"أدبي":65,"صناعي":65,"شرعي":65}, axes:{education:0.9, language:1.0, comm:0.8} },
+  social_teach:{ name:"تعليم اجتماعيات/تاريخ", faculty:"التربية", streams:{"علمي":65,"أدبي":65,"صناعي":65,"شرعي":65}, axes:{education:0.9, media:0.5, comm:0.8} },
+};
+
+// محاور/أبعاد الميول (Likert 1..5) — موسّع (40 سؤالًا)
+const QUESTIONS = [
+  // STEM & Math/Physics/Chemistry
+  { id:"q1", axis:"stem", text:"أستمتع بحل مسائل الرياضيات والمنطق." },
+  { id:"q2", axis:"math", text:"المعادلات والتحليل الرياضي ممتعان بالنسبة لي." },
+  { id:"q3", axis:"physics", text:"أميل لفهم الظواهر الفيزيائية والميكانيكية." },
+  { id:"q4", axis:"chemistry", text:"أستمتع بالكيمياء والتفاعلات وتفسيرها." },
+
+  // Coding / Systems / Cyber
+  { id:"q5", axis:"coding", text:"أحب البرمجة أو بناء تطبيقات باستخدام الحاسوب." },
+  { id:"q6", axis:"systems", text:"أفهم الشبكات/الأنظمة أو أحب تعلّمها." },
+  { id:"q7", axis:"problem", text:"أستمتع بتفكيك المشكلات الكبيرة إلى خطوات صغيرة." },
+  { id:"q8", axis:"electronics", text:"أميل للإلكترونيات والدوائر." },
+
+  // Life/Health/Bio
+  { id:"q9", axis:"life", text:"أميل للمواد الحياتية (أحياء/كيمياء حيوية) أكثر من الفيزياء." },
+  { id:"q10", axis:"lab", text:"أستمتع بالعمل في المختبر وإجراء التجارب." },
+  { id:"q11", axis:"empathy", text:"أستطيع التعامل بتعاطف وصبر مع المرضى/الناس لساعات." },
+  { id:"q12", axis:"shift", text:"لا أمانع نظام المناوبات في الليل/العطل عند الحاجة." },
+
+  // Field/Design/Spatial
+  { id:"q13", axis:"field", text:"أفضل الأعمال الميدانية والتنفيذ في مواقع المشاريع." },
+  { id:"q14", axis:"spatial", text:"لديّ حسّ مكاني/تصميمي جيد (تفكير هندسي/معماري)." },
+  { id:"q15", axis:"design", text:"أحب التصميم البصري/المعماري أو تجربة مستخدم." },
+  { id:"q16", axis:"tinkering", text:"أستمتع بفك وتركيب الأشياء (مُحب للتجريب العملي)." },
+
+  // Business/Office/Entrepreneurship
+  { id:"q17", axis:"business", text:"أميل للأعمال/التجارة/المحاسبة وتخطيط المشاريع." },
+  { id:"q18", axis:"office", text:"أفضل بيئة العمل المكتبية الهادئة على الميدان." },
+  { id:"q19", axis:"entrepreneurship", text:"أفكّر بريادة الأعمال وابتكار مشاريع." },
+  { id:"q20", axis:"optimization", text:"أحب تحسين الإجراءات وتقليل الهدر/الوقت." },
+
+  // Media/Language/Law/Religion
+  { id:"q21", axis:"language", text:"أستمتع بالقراءة/الكتابة/اللغات (عربية/إنجليزية)." },
+  { id:"q22", axis:"media", text:"أميل للإعلام والصحافة وصناعة المحتوى." },
+  { id:"q23", axis:"law", text:"أهتم بالقانون/الحقوق/العدل والنقاشات القانونية." },
+  { id:"q24", axis:"religion", text:"أميل للدراسات الشرعية والعلوم الإسلامية." },
+
+  // Education/Comm/Patience
+  { id:"q25", axis:"education", text:"أحب التعليم وشرح الأفكار للآخرين." },
+  { id:"q26", axis:"comm", text:"أمتلك مهارات تواصل ممتازة وأحب التعامل مع الناس." },
+  { id:"q27", axis:"patience", text:"صبوري في التعامل مع الأطفال/المتعلمين لأوقات طويلة." },
+
+  // Research/Environment
+  { id:"q28", axis:"research", text:"أستمتع بالبحث العلمي والقراءة المتعمقة." },
+  { id:"q29", axis:"environment", text:"أهتم بالبيئة/الاستدامة/المناخ." },
+  { id:"q30", axis:"tech", text:"أميل للتقنيات الطبية/الأجهزة." },
+
+  // Extra depth (10 أكثر لواقعية كبيرة)
+  { id:"q31", axis:"ai", text:"أحب الذكاء الاصطناعي وتحليل البيانات." },
+  { id:"q32", axis:"network", text:"الشبكات/الأمن والتشفير مجالات تهمّني." },
+  { id:"q33", axis:"anatomy", text:"أستمتع بدراسة جسم الإنسان ووظائفه." },
+  { id:"q34", axis:"pharma", text:"أهتم بالأدوية وتركيبها وآثارها." },
+  { id:"q35", axis:"geospatial", text:"أميل لخرائط GIS والاستكشاف الجغرافي." },
+  { id:"q36", axis:"publicSpeaking", text:"أحب التقديم والخطابة والحوار." },
+  { id:"q37", axis:"history", text:"أستمتع بالتاريخ والعلوم الإنسانية." },
+  { id:"q38", axis:"arts", text:"أميل للفنون البصرية/التصميم الجرافيكي." },
+  { id:"q39", axis:"caregiving", text:"أجد نفسي في رعاية الآخرين وتقديم الدعم النفسي." },
+  { id:"q40", axis:"discipline", text:"منضبط في الدراسة والالتزام بمتطلبات طويلة المدى." },
+];
+
+const qWrap = document.getElementById('questions');
+const progressEl = document.getElementById('progressBar');
+const btnPrev = document.getElementById('btnPrev');
+const btnNext = document.getElementById('btnNext');
+const ansCount = document.getElementById('answeredCount');
+const totalCount = document.getElementById('totalCount');
+
+let currentIndex = 0;
+const answers = {}; // { qid: 1..5 }
+totalCount.textContent = QUESTIONS.length;
+
+// بناء السؤال الحالي
+function renderQuestion(i){
+  const q = QUESTIONS[i];
+  const val = answers[q.id] || 3;
+  qWrap.innerHTML = `
+    <div class="q">
+      <div class="q-title">${i+1}. ${q.text}</div>
+      <div class="likert">
+        ${[1,2,3,4,5].map(v=>`<input type="radio" id="${q.id}-${v}" name="${q.id}" value="${v}" ${val===v? 'checked':''} />
+                                <label for="${q.id}-${v}">${v}</label>`).join('')}
+      </div>
+    </div>`;
+  [...qWrap.querySelectorAll('input[type=radio]')].forEach(inp=>{
+    inp.addEventListener('change', e => {
+      answers[q.id] = Number(e.target.value);
+      updateCounters();
+      saveLocal();
+    });
+  });
+  progressEl.style.width = ((i+1)/QUESTIONS.length*100).toFixed(1)+"%";
+  btnPrev.disabled = (i===0);
+  btnNext.textContent = (i===QUESTIONS.length-1)? 'عرض النتائج' : 'التالي';
+}
+
+function updateCounters(){
+  let count = 0;
+  for (const q of QUESTIONS){ if (answers[q.id]) count++; }
+  ansCount.textContent = count;
+}
+
+btnPrev.addEventListener('click', ()=>{ if(currentIndex>0){ currentIndex--; renderQuestion(currentIndex); } });
+btnNext.addEventListener('click', ()=>{
+  if (currentIndex < QUESTIONS.length-1){ currentIndex++; renderQuestion(currentIndex); }
+  else { computeResults(); }
+});
+
+// حساب النتائج
+function getSelectedMultiple(selectEl){ return [...selectEl.selectedOptions].map(o=>o.value); }
+
+function computeResults(){
+  const stream = document.getElementById('tawjihiStream').value;
+  const avg = Number(document.getElementById('avg').value || 0);
+  const fav = new Set(getSelectedMultiple(document.getElementById('fav')));
+  const workEnv = document.getElementById('workEnv').value;
+  const name = document.getElementById('studentName').value.trim();
+
+  // تجميع محاور الميول إلى 0..1
+  const axisScores = {}; // axis -> 0..1
+  QUESTIONS.forEach(q => { axisScores[q.axis] = (axisScores[q.axis]||0) + (answers[q.id]||3); });
+  Object.keys(axisScores).forEach(k => { axisScores[k] = axisScores[k] / (5 * QUESTIONS.filter(x=>x.axis===k).length || 1); });
+
+  // تعزيزات وفق المواد المفضلة والبيئة
+  function boost(axis, amount){ axisScores[axis] = Math.min(1, (axisScores[axis]||0) + amount); }
+  if (fav.has('رياضيات')) boost('math', .12);
+  if (fav.has('فيزياء')) { boost('physics', .08); boost('spatial', .06); }
+  if (fav.has('كيمياء')) { boost('chemistry', .08); boost('lab', .06); }
+  if (fav.has('أحياء')) { boost('life', .12); boost('lab', .06); }
+  if (fav.has('حاسوب')) { boost('coding', .16); boost('problem', .08); boost('systems', .06); }
+  if (fav.has('لغة عربية') || fav.has('لغة إنجليزية')) { boost('language', .12); boost('comm', .06); }
+  if (fav.has('اقتصاد')) { boost('business', .12); }
+  if (fav.has('جغرافيا')) { boost('geospatial', .10); boost('environment', .06); }
+  if (workEnv==='مختبرات'){ ['lab','research'].forEach(ax=>boost(ax,.08)); }
+  if (workEnv==='مستشفى'){ ['life','empathy','shift'].forEach(ax=>boost(ax,.08)); }
+  if (workEnv==='شركة-تقنية'){ ['coding','problem','office'].forEach(ax=>boost(ax,.08)); }
+  if (workEnv==='ميدان'){ ['field','spatial'].forEach(ax=>boost(ax,.08)); }
+  if (workEnv==='مكتب'){ ['office','business'].forEach(ax=>boost(ax,.08)); }
+  if (workEnv==='تعليم'){ ['education','patience'].forEach(ax=>boost(ax,.08)); }
+  if (workEnv==='إعلام'){ ['media','language','comm'].forEach(ax=>boost(ax,.08)); }
+  if (workEnv==='قانون'){ ['law','ethics','comm'].forEach(ax=>boost(ax,.08)); }
+
+  // قيود إضافية من الملاحظات (بشكل طفيف)
+  const notes = (document.getElementById('notes').value||'').toLowerCase();
+  if (notes.includes('لا أفضّل المناوبات') || notes.includes('لا افضل المناوبات')) { axisScores['shift'] = Math.min(axisScores['shift']||0, .2); }
+  if (notes.includes('قريب') && (axisScores['field']||0) > .6) { axisScores['field'] -= .1; }
+
+  // حساب نقاط لكل تخصص
+  const recommendations = Object.entries(MAJORS).map(([key, m]) => {
+    let interest = 0, weightSum = 0;
+    for (const [ax, w] of Object.entries(m.axes)){
+      interest += (axisScores[ax]||0) * w;
+      weightSum += w;
+    }
+    interest = (weightSum? (interest/weightSum):0); // 0..1
+
+    const minForStream = m.streams[stream] ?? null;
+    const eligible = (minForStream==null) ? false : (avg >= minForStream);
+    const gap = (minForStream==null) ? null : Math.max(0, (minForStream - avg));
+
+    const score = interest + (eligible? 0.12 : 0); // مكافأة بسيطة للأهلية
+    return { key, score, interest, eligible, gap, minForStream, title:m.name, faculty:m.faculty, axes:m.axes };
+  }).sort((a,b)=> b.score - a.score);
+
+  renderResults(recommendations, stream, avg, name, axisScores);
+  saveLocal();
+  document.getElementById('results').style.display = 'block';
+  window.scrollTo({ top: document.getElementById('results').offsetTop - 16, behavior: 'smooth' });
+}
+
+// عرض النتائج
+function renderResults(recs, stream, avg, name, axisScores){
+  const topPicks = document.getElementById('topPicks');
+  const details = document.getElementById('details');
+  const factors = document.getElementById('factors');
+
+  topPicks.innerHTML = '';
+  details.innerHTML = '';
+  factors.innerHTML = '';
+
+  const hello = name ? `مرحبًا ${name}، ` : '';
+
+  // أفضل 3
+  recs.slice(0,3).forEach((r, idx) => {
+    const tag = r.eligible ? `<span class="tag ok">مؤهَّل (≥ ${r.minForStream}٪)</span>` : (r.minForStream==null? `<span class="tag warn">غير متاح لمسارك</span>` : `<span class="tag warn">بحاجة +${(r.gap).toFixed(1)}٪</span>`);
+    const el = document.createElement('div');
+    el.className = 'result-item';
+    el.innerHTML = `
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+        <div>
+          <div style="font-weight:800; font-size:18px;">${idx===0? 'الخيار الأول' : idx===1? 'الخيار الثاني' : 'الخيار الثالث'}</div>
+          <div style="font-size:16px; color:#111;">${r.title}</div>
+          <div class="sub">الكلية: ${r.faculty}</div>
+        </div>
+        ${tag}
+      </div>`;
+    topPicks.appendChild(el);
+  });
+
+  // لماذا اخترناك؟ — نعرض أعلى 6 محاور أثّرت في الترشيح الأول
+  if (recs.length){
+    const top = recs[0];
+    const axesSorted = Object.entries(axisScores).sort((a,b)=> b[1]-a[1]).slice(0,6);
+    factors.innerHTML = `
+      <div class="result-item">
+        <div style="font-weight:800; margin-bottom:6px;">${hello}هذه أبرز أسباب الترشيح:</div>
+        <ul style="margin:0 18px; line-height:1.9;">
+          ${axesSorted.map(([ax,val])=> `<li>${axisToArabic(ax)}: ${(val*100).toFixed(0)}٪</li>`).join('')}
+        </ul>
+      </div>`;
+  }
+
+  // جميع النتائج
+  recs.forEach(r => {
+    const tag = r.eligible ? `<span class="tag ok">مؤهَّل</span>` : (r.minForStream==null? `<span class="tag warn">غير متاح لمسارك</span>` : `<span class="tag bad">ناقص ${(r.gap).toFixed(1)}٪</span>`);
+    const row = document.createElement('div'); row.className = 'result-item';
+    row.innerHTML = `
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+        <div>
+          <div style="font-weight:700;">${r.title}</div>
+          <div class="sub">الكلية: ${r.faculty}</div>
+          <div class="sub">ملاءمة الميول: ${(r.interest*100).toFixed(0)}٪</div>
+        </div>
+        <div>${tag}</div>
+      </div>`;
+    details.appendChild(row);
+  });
+}
+
+// ترجمة اسم المحور للعربية
+function axisToArabic(ax){
+  const map = {
+    stem:"ميول STEM", math:"رياضيات", physics:"فيزياء", chemistry:"كيمياء",
+    coding:"برمجة", systems:"أنظمة/شبكات", problem:"حلّ المشكلات", electronics:"إلكترونيات",
+    life:"علوم حياتية", lab:"مختبر", empathy:"تعاطف", shift:"مناوبات",
+    field:"عمل ميداني", spatial:"حس مكاني", design:"تصميم", tinkering:"تجريب/تصنيع",
+    business:"أعمال/إدارة", office:"مكتب", entrepreneurship:"ريادة", optimization:"تحسين/تشغيل",
+    language:"لغة", media:"إعلام", law:"قانون", religion:"شرعي",
+    education:"تعليم", comm:"تواصل", patience:"صبر",
+    research:"بحث علمي", environment:"بيئة", tech:"تقنيات طبية",
+    ai:"ذكاء اصطناعي", network:"شبكات/أمن", anatomy:"تشريح", pharma:"صيدلة/دواء",
+    geospatial:"GIS/جغرافيا", publicSpeaking:"خطابة", history:"تاريخ/إنسانيات",
+    arts:"فنون", caregiving:"رعاية", discipline:"انضباط"
+  };
+  return map[ax] || ax;
+}
+
+/* =======================
+   حفظ واسترجاع محلي + إرسال اختياري
+   ======================= */
+function saveLocal(){
+  try{
+    const payload = {
+      name: document.getElementById('studentName').value.trim(),
+      stream: document.getElementById('tawjihiStream').value,
+      avg: document.getElementById('avg').value,
+      fav: [...document.getElementById('fav').selectedOptions].map(o=>o.value),
+      workEnv: document.getElementById('workEnv').value,
+      notes: document.getElementById('notes').value,
+      answers
+    };
+    localStorage.setItem('iugMajorAdvisor', JSON.stringify(payload));
+  }catch(e){}
+}
+
+function loadLocal(){
+  try{
+    const s = JSON.parse(localStorage.getItem('iugMajorAdvisor')||'null');
+    if (!s) return;
+    document.getElementById('studentName').value = s.name||'';
+    document.getElementById('tawjihiStream').value = s.stream||'علمي';
+    document.getElementById('avg').value = s.avg||'';
+    const fav = new Set(s.fav||[]);
+    [...document.getElementById('fav').options].forEach(o=> o.selected = fav.has(o.value));
+    document.getElementById('workEnv').value = s.workEnv||'مختبرات';
+    document.getElementById('notes').value = s.notes||'';
+    Object.assign(answers, s.answers||{});
+  }catch(e){}
+}
+
+// إرسال إلى Google Apps Script اختياريًا إن عرّفتم window.ADVISOR_SCRIPT_URL
+document.getElementById('btnSave').addEventListener('click', () => {
+  try{
+    if (!window.ADVISOR_SCRIPT_URL) { alert('تم الحفظ محليًا. لتمكين الإرسال الخارجي، عرّفوا window.ADVISOR_SCRIPT_URL.'); return; }
+    const payload = JSON.parse(localStorage.getItem('iugMajorAdvisor')||'{}');
+    const fd = new FormData();
+    fd.append('event','advisor_result');
+    fd.append('payload', JSON.stringify(payload));
+    (navigator.sendBeacon && navigator.sendBeacon(ADVISOR_SCRIPT_URL, fd)) || fetch(ADVISOR_SCRIPT_URL, { method:'POST', body:fd });
+    alert('تم إرسال الاستشارة بنجاح، شكرًا لك!');
+  }catch(e){ alert('تم الحفظ محليًا.'); }
+});
+
+/* =======================
+   تهيئة الصفحة
+   ======================= */
+function init() {
+  autoFillNameFromSite();
+  loadLocal();
+  renderQuestion(currentIndex);
+  updateCounters();
+  // استماع لتغيّر الحقول للحفظ الفوري
+  ['studentName','tawjihiStream','avg','workEnv','fav','notes'].forEach(id=>{
+    const el = document.getElementById(id);
+    el && el.addEventListener('change', saveLocal);
+  });
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+<script defer="True" src="assets/js/statusBar.js"></script>
+</body>
+</html>

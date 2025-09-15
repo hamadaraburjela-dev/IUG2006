@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎮 منصة الألعاب - الجامعة الإسلامية</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Marhey:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #004d40; /* نفس لون موقعك */
+      --secondary-color: #bcaaa4; /* لون ذهبي فاتح */
+      --bg-color: #f9f9f7;
+    }
+    body {
+      margin: 0;
+      font-family: "Cairo", sans-serif;
+      background: var(--bg-color);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: var(--primary-color);
+      color: white;
+      text-align: center;
+      padding: 30px 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    header h1 {
+      font-family: "Marhey", cursive;
+      font-size: 2rem;
+      margin: 0;
+    }
+    header p {
+      margin: 5px 0 0;
+      font-size: 1rem;
+      color: #e0e0e0;
+    }
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 25px;
+      padding: 30px;
+      max-width: 1100px;
+      margin: auto;
+      width: 100%;
+    }
+    .game-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .game-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+    }
+    .game-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+    .game-card h2 {
+      font-size: 1.3rem;
+      margin: 15px 0 5px;
+      text-align: center;
+      color: var(--primary-color);
+      font-family: "Marhey", cursive;
+    }
+    .game-card p {
+      font-size: 0.9rem;
+      color: #555;
+      text-align: center;
+      padding: 0 10px;
+      margin: 0 0 10px;
+    }
+    .game-card button {
+      margin: 10px auto 20px;
+      padding: 10px 20px;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .game-card button:hover {
+      background: #00695c;
+    }
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 15px;
+      font-size: 0.85rem;
+      background: #eee;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🎮 منصة الألعاب</h1>
+    <p>اختر لعبتك واستمتع بالتجربة</p>
+  </header>
+
+  <main class="games-grid">
+    <!-- لعبة الركلات الحرة -->
+    <div class="game-card">
+      <img src="assets/images/free-kick-thumb.png" alt="ركلات حرة">
+      <h2>تحدي الركلات الحرة</h2>
+      <p>اختبر مهارتك في تسجيل الأهداف من الضربات الحرة 🥅⚽</p>
+      <button onclick="window.location.href='free-kick.html'">ابدأ اللعب</button>
+    </div>
+
+    <!-- لعبة XO -->
+    <div class="game-card">
+      <img src="assets/images/tic-tac-toe.png" alt="XO">
+      <h2>لعبة XO</h2>
+      <p>لعبة كلاسيكية سريعة وممتعة، جرب أن تفوز على الكمبيوتر ✖️⭕</p>
+      <button onclick="window.location.href='tic-tac-toe.html'">ابدأ اللعب</button>
+    </div>
+
+    <!-- لعبة الذاكرة -->
+    <div class="game-card">
+      <img src="assets/images/memory.png" alt="لعبة الذاكرة">
+      <h2>لعبة الذاكرة</h2>
+      <p>اختبر ذاكرتك وطابق البطاقات بأسرع وقت 🧠🃏</p>
+      <button onclick="window.location.href='memory.html'">ابدأ اللعب</button>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 الجامعة الإسلامية - منصة الألعاب | كل الحقوق محفوظة
+  </footer>
+
+</body>
+</html>

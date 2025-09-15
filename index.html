@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>جامعة المعرفة | الصفحة الرئيسية</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" referrerpolicy="no-referrer" rel="stylesheet"/>
+<link href="assets/css/main.css" rel="stylesheet"/>
+<link rel="icon" type="image/png" href="assets/images/favicon.png">
+
+<meta content="مرحباً بكم في جامعة المعرفة – منصة تعليمية متكاملة تقدم أحدث البرامج الأكاديمية وخدمات للطلاب." name="description"/><meta content="جامعة المعرفة | الصفحة الرئيسية" property="og:title"/><meta content="مرحباً بكم في جامعة المعرفة – منصة تعليمية متكاملة تقدم أحدث البرامج الأكاديمية وخدمات للطلاب." property="og:description"/><meta content="/assets/images/arts-logo.webp" property="og:image"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="True" href="https://fonts.gstatic.com" rel="preconnect"/><meta content="ar_AR" property="og:locale"/><meta content="summary_large_image" name="twitter:card"/><meta content="جامعة المعرفة | الصفحة الرئيسية" name="twitter:title"/><meta content="مرحباً بكم في جامعة المعرفة – منصة تعليمية متكاملة تقدم أحدث البرامج الأكاديمية وخدمات للطلاب." name="twitter:description"/><meta content="/assets/images/arts-logo.webp" name="twitter:image"/><link href="https://example.com/index.html" rel="canonical"/></head>
+<body>
+<audio id="correct-sound" preload="auto" src="assets/sounds/correct.mp3"></audio>
+<audio id="incorrect-sound" preload="auto" src="assets/sounds/funny.mp3"></audio>
+<audio id="transition-sound" preload="auto" src="assets/sounds/turning.mp3"></audio>
+<audio id="guide-appears-sound" preload="auto" src="assets/sounds/guide_appears.mp3"></audio>
+
+<div id="status-bar-placeholder"></div>
+<div class="game-container">
+<div id="landing-screen">
+<img alt="شعار الجامعة الإسلامية" class="logo" height="250" loading="lazy" src="assets/images/logo.webp" width="250"/>
+<h1>رحلتك نحو المعرفة والتميز تبدأ الآن</h1>
+<p class="subtitle">تطلق الجامعة الإسلامية بغزة مسابقة تفاعلية فريدة لطلبة الثانوية العامة، استعد لتحدي معلوماتك والفوز بجوائز قيمة.</p>
+<div class="competition-details">
+<h4>🏆 كيف تفوز في المسابقة؟</h4>
+<ul>
+<li>أجب عن التحديات في كل محطة لجمع النقاط.</li>
+<li>كل إجابة صحيقة تزيد من رصيدك</li>
+<li>حوّل نقاطك إلى منحة دراسية عند قبولك في الجامعة</li>
+</ul>
+</div>
+<div class="features-grid">
+<div class="feature-card"><span class="icon">🎓</span><h3>حوّلها إلى منحة</h3><p>حوّل أرباحك لمنحة دراسية حقيقية عند التحاقك بالجامعة.</p></div>
+<div class="feature-card"><span class="icon">💰</span><h3>اربح جوائز فورية</h3><p>اجمع "نقاط" إلكترونية مع كل إجابة صحيحة تضاف إلى رصيدك.</p></div>
+<div class="feature-card"><span class="icon">🏆</span><h3>تحديات ممتعة</h3><p>أجب عن أسئلة شيقة في مجالات متنوعة واختر تخصصك.</p></div>
+</div>
+<button class="action-button main-cta" id="show-register-btn">
+<span class="btn-icon">📅</span> سجّل الآن وابدأ التحدي!
+            </button>
+<p class="reset-link-container"><a href="#" id="reset-progress-btn">هل تريد بدء رحلة جديدة؟ (سيتم حذف التقدم الحالي)</a></p>
+</div>
+<div class="hidden" id="start-screen">
+<img alt="شعار الجامعة الإسلامية" class="logo" height="250" loading="lazy" src="assets/images/logo.webp" width="250"/>
+<h1>أهلاً بك في رحلتك الافتراضية</h1>
+<p>استكشف الجامعة الإسلامية بغزة أجب عن التحديات، واربح منحة دراسية حقيقية!</p>
+<form id="player-form">
+<div class="form-group"><label for="name">الاسم الكامل:</label><input id="name" minlength="5" placeholder="مثال: محمد أحمد" required="" type="text"/></div>
+<div class="form-group">
+<label for="phone">رقم الجوال:</label>
+<input id="phone" pattern="^05[96][0-9]{7}$" placeholder="مثال: 059xxxxxxx" required="" type="tel"/>
+</div>
+<div class="form-group"><label for="tawjihi-year">سنة التوجيهي:</label><input id="tawjihi-year" min="2000" placeholder="مثال: 2024" required="" type="number"/></div>
+<button class="action-button" disabled="" type="submit">ابدأ الرحلة!</button>
+</form>
+</div>
+<div class="game-stage hidden" id="guide-selection-screen">
+<div class="scene-content">
+<h2 class="scene-title">اختر مرشدك في الرحلة</h2><p>كل مرشد سيقدم لك نصائح من منظور تخصصه الفريد!</p>
+<div class="guides-container"></div>
+<button class="action-button" disabled="" id="confirm-guide-btn" style="margin-top: 30px;">تأكيد المرشد والبدء</button>
+</div>
+</div>
+<div class="game-stage hidden" id="player-profile-scene">
+<div class="scene-content" style="text-align: center;">
+<h2 class="scene-title">الملف الشخصي للاعب</h2>
+<div id="profile-emoji" style="font-size: 80px; margin-bottom: 15px;">👤</div>
+<h3 id="profile-name" style="font-size: 24px; color: var(--primary-dark); margin-bottom: 20px;"></h3>
+<div style="display: flex; justify-content: center; gap: 20px; font-size: 18px; flex-wrap: wrap; margin-bottom: 20px;">
+<div class="feature-card" style="width: auto; padding: 15px 25px;">
+<strong>النقاط:</strong> <span id="profile-score">0 نقطة</span>
+</div>
+<div class="feature-card" style="width: auto; padding: 15px 25px;">
+<strong>سنة التوجيهي:</strong> <span id="profile-tawjihi-year"></span>
+</div>
+</div>
+<div class="badges-section">
+<h3 class="badges-title">الشارات المكتسبة</h3>
+<div class="badges-container" id="badges-container">
+</div>
+</div>
+<button class="action-button" id="profile-back-btn" style="margin-top: 30px;">العودة إلى اللعبة</button>
+</div>
+</div>
+<div class="hidden" id="game-scene">
+<button class="hidden" id="start-gate-quiz-btn"></button>
+<div class="game-stage hidden" id="map-scene">
+<div class="scene-content">
+<h2 class="scene-title">خريطة الجامعة</h2>
+<p>لقد دخلت الحرم الجامعي! اختر وجهتك التالية لاستكمال رحلتك.</p>
+<div class="options-container">
+<button class="option-btn" onclick="window.location.href='library.html'"><span class="map-icon">📚</span> المكتبة المركزية</button>
+<span class="stage-points-pill" data-stage-points="library"></span>
+<button class="option-btn" onclick="window.location.href='advisor.html'"><span class="map-icon">🧭</span>المستشار الذكي للتخصصات</button>
+<span class="stage-points-pill" data-stage-points="advisor"></span>
+<button class="option-btn" onclick="window.location.href='admission.html'"><span class="map-icon">📝</span> القبول والتسجيل</button>
+<span class="stage-points-pill" data-stage-points="admission"></span>
+<button class="option-btn" onclick="window.location.href='studentaffairs.html'"><span class="map-icon">🧑‍🎓</span> شؤون الطلبة</button>
+<span class="stage-points-pill" data-stage-points="studentaffairs"></span>
+<button class="option-btn" onclick="window.location.href='faculties.html'"><span class="map-icon">🏢</span> الكليات</button>
+<span class="stage-points-pill" data-stage-points="faculties"></span>
+<button class="option-btn" onclick="window.location.href='grants.html'"><span class="map-icon">💰</span> المنح والمساعدات</button>
+<span class="stage-points-pill" data-stage-points="grants"></span>
+<button class="option-btn" onclick="window.location.href='degree-certification.html'"><span class="map-icon">🏛️</span> قاعة المؤتمرات</button>
+<span class="stage-points-pill" data-stage-points="degree-certification"></span>
+<button class="option-btn" onclick="window.location.href='hospital.html'"><span class="map-icon">🏥</span> المستشفى الجامعي</button>
+<span class="stage-points-pill" data-stage-points="hospital"></span>
+<button class="option-btn" onclick="window.location.href='cafeteria.html'"><span class="map-icon">☕</span> الكافتيريا</button>
+<span class="stage-points-pill" data-stage-points="cafeteria"></span>
+<button class="option-btn" onclick="window.location.href='stadium-game.html'"><span class="map-icon">🏟️</span> ملعب الجامعة</button>
+<span class="stage-points-pill" data-stage-points="stadium-game"></span>
+<button class="option-btn" onclick="window.location.href='exchange.html'"><span class="map-icon">🌍</span> التبادل الأكاديمي</button>
+<span class="stage-points-pill" data-stage-points="exchange"></span>
+<button class="option-btn" onclick="window.location.href='certificate.html'"><span class="map-icon">📜</span> الحصول على الشهادة</button>
+<span class="stage-points-pill" data-stage-points="certificate"></span>
+</div>
+</div>
+</div>
+<div class="game-stage hidden" id="end-scene">
+<div class="scene-content">
+<div class="certificate">
+<div class="cert-header">
+<img alt="شعار الجامعة الإسلامية" class="cert-logo" height="250" loading="lazy" src="assets/images/logo.webp" width="250"/>
+<h2>شهادة إتمام رحلة</h2>
+<h1>"رحلتي في الإسلامية"</h1>
+</div>
+<div class="cert-body">
+<p>تشهد الجامعة الإسلامية بغزة بأن</p>
+<h3 id="cert-player-name">[اسم الطالب هنا]</h3>
+<p>قد أتم/ ت بنجاح رحلته التعريفية بالجامعة، وأظهر/ ت معرفة ممتازة بمرافقها وكلياتها المختلفة.</p>
+<div class="cert-score">
+<span>النقاط المكتسبة</span>
+<strong id="cert-final-score">0</strong>
+</div>
+</div>
+<div class="cert-footer">
+<p>نتمنى لك مستقبلاً باهراً!</p>
+</div>
+</div>
+<div class="end-scene-actions">
+<p>شارك إنجازك مع أصدقائك!</p>
+<div class="share-buttons">
+<a class="share-btn facebook" href="#" id="share-facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+<a class="share-btn whatsapp" href="#" id="share-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<a class="share-btn twitter" href="#" id="share-twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+</div>
+<a class="action-button community-btn" href="https://t.me/your_telegram_group_link" rel="noopener noreferrer" target="_blank">
+<i class="fab fa-telegram-plane"></i> انضم لمجتمع الطلبة الجدد
+                        </a>
+<button class="action-button secondary-btn" id="new-player-btn">بدء رحلة جديدة (لاعب جديد)</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="modal-container" id="quiz-modal">
+<div class="modal-content">
+<div class="modal-header"><h2 id="quiz-title">عنوان الاختبار</h2><button aria-label="إغلاق" class="close-button" id="close-quiz-modal-btn">×</button></div>
+<div id="quiz-body"></div>
+</div>
+</div>
+<div class="feedback-popup-container" id="feedback-popup">
+<div class="feedback-popup-content">
+<div class="feedback-progress-bar"></div><span id="feedback-emoji">✅</span><p id="feedback-message">إجابة رائعة!</p><p id="feedback-hint"></p>
+</div>
+</div>
+<div class="modal hidden" id="feedback-modal">
+<div class="modal-content"><h2 id="modal-title"></h2><div id="modal-text"></div><button class="action-button" id="modal-close-btn">متابعة</button></div>
+</div>
+<div class="modal hidden" id="logout-confirm-modal">
+<div class="modal-content">
+<h2>تأكيد الخروج</h2><p>هل أنت متأكد أنك تريد بدء رحلة جديدة؟ سيتم حذف كل تقدمك الحالي.</p>
+<div class="modal-actions"><button class="action-button danger" id="confirm-logout-btn">نعم، اخرج</button><button class="action-button secondary" id="cancel-logout-btn">لا، ابقَ هنا</button></div>
+</div>
+</div>
+<div class="modal hidden" id="video-overlay">
+<video id="welcome-video" preload="metadata"><source src="assets/media/hares-1.mp4" type="video/mp4"/>متصفحك لا يدعم عرض الفيديو.</video>
+<button class="action-button" id="skip-video-btn">تخطي الفيديو</button>
+</div>
+<div class="modal hidden" id="logout-confirm-modal">
+<div class="modal-content">
+<h2>تأكيد الخروج</h2>
+<p>هل أنت متأكد أنك تريد بدء رحلة جديدة؟ سيتم حذف كل تقدمك الحالي.</p>
+<div class="modal-actions">
+<button class="action-button danger" id="confirm-logout-btn">نعم، اخرج</button>
+<button class="action-button secondary" id="cancel-logout-btn">لا، ابقَ هنا</button>
+</div>
+</div>
+</div>
+<div id="toast-notification"></div>
+<script defer="True" src="assets/js/statusBar.js"></script>
+<script defer="True" src="assets/js/script.js"></script>
+<script defer="True" src="assets/js/quiz-logic.js"></script>
+<script defer="True" src="assets/js/common-fixes.js"></script>
+<script defer="True" src="assets/js/faculty-page.js"></script>
+
+</body>
+</html>
