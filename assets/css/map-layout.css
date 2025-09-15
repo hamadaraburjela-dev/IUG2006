@@ -1,0 +1,21 @@
+/* حاوية الخريطة */
+.map-container {
+  display: grid;
+  grid-template-columns: 1fr; /* عمود واحد افتراضياً (موبايل) */
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* على الشاشات المتوسطة والكبيرة (لابتوب وما فوق) */
+@media (min-width: 768px) {
+  .map-container {
+    grid-template-columns: repeat(2, 1fr); /* عمودين */
+  }
+}
+
+/* تحسين العرض على الشاشات الكبيرة جداً */
+@media (min-width: 1200px) {
+  .map-container {
+    gap: 1.5rem;
+  }
+}

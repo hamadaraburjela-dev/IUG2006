@@ -1020,6 +1020,30 @@ if (window.quizLogicLoaded) {
         let allQuestions = [];
         let currentQuestionIndex = 0;
         let score = 0;
+let attemptsScores = [];
+
+function finishQuiz() {
+    // خزن نتيجة هذه المحاولة (يعتمد على أن quizRestartAttempts يبدأ من 1 كما في أسفل الملف)
+    attemptsScores[quizRestartAttempts - 1] = score;
+
+    if (quizRestartAttempts === 2) {
+        const averageScore = (attemptsScores[0] + attemptsScores[1]) / 2;
+        alert(`نتيجتك النهائية: ${averageScore}`);
+    } else {
+        alert(`نتيجتك في هذه المحاولة: ${score}`);
+    }
+}
+
+function canRestartQuiz() {
+    // يسمح بمحاولتين فقط (1 و 2). المحاولة الثالثة مرفوضة.
+    if (quizRestartAttempts >= 2) {
+        alert("لقد أكملت التحدي، لا مزيد من المحاولات.");
+        return false;
+    }
+    quizRestartAttempts += 1;
+    return true;
+}
+
         let helpCounters = {};
         let questionTimer;
         let timeLeft = 0;
