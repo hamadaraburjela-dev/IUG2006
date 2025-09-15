@@ -1,14 +1,14 @@
 <!DOCTYPE html>
+
 <html dir="rtl" lang="ar">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>شهادة إتمام الرحلة</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Marhey:wght@500&display=swap" rel="stylesheet">
-<audio id="success-audio" src="assets/sounds/nashed.mp3" preload="auto"></audio>
-
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&amp;family=Marhey:wght@500&amp;display=swap" rel="stylesheet"/>
+<audio id="success-audio" preload="auto" src="assets/sounds/nashed.mp3"></audio>
 <style>
   :root {
     --primary-color: #004d40; /* Deep Teal */
@@ -224,62 +224,53 @@
     .certificate-actions { display: none; }
   }
 </style>
-</head>
-
+<link href="favicon.png" rel="icon" type="image/png"/><link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/></head>
 <body>
-
 <div id="printable-certificate">
-  <div class="cert-border">
-    <div class="cert-header">
-      <img src="assets/images/logo.webp" alt="شعار الجامعة الإسلامية">
-      <h1>الجامعة الإسلامية - غزة</h1>
-      <h2>شهادة إتمام رحلة تعريفية</h2>
-    </div>
-    <div class="cert-body">
-      <p class="intro-text">تشهد عمادة شؤون الطلبة بأن الطالب/ة</p>
-      <h2 class="student-name" id="cert-player-name">[اسم الطالب]</h2>
-      <p class="main-text">قد أتم بنجاح رحلة "رحلتي في الإسلامية" التعريفية الافتراضية، وأظهر معرفة ممتازة بمرافق الجامعة وكلياتها المتنوعة.</p>
-      
-      <div class="results-section">
-        <div class="score-container">
-          <p>النقاط المكتسبة</p>
-          <strong id="cert-final-score">0</strong>
-        </div>
-        <div class="scholarship-container">
-          <p>المنحة المستحقة</p>
-          <strong id="cert-scholarship-details">---</strong>
-        </div>
-      </div>
-    </div>
-    <div class="cert-footer">
-      <div class="signature-area">
-        <p>___________________</p>
-        <p><strong>عميد شؤون الطلبة</strong></p>
-      </div>
-      <div class="qr-code-area">
-        <div id="qrcode"></div>
-        <p>رمز التحقق</p>
-      </div>
-      <div class="signature-area">
-        <p>___________________</p>
-        <p><strong>رئيس الجامعة</strong></p>
-      </div>
-    </div>
-  </div>
+<div class="cert-border">
+<div class="cert-header">
+<img alt="شعار الجامعة الإسلامية" src="assets/images/logo.webp"/>
+<h1>الجامعة الإسلامية - غزة</h1>
+<h2>شهادة إتمام رحلة تعريفية</h2>
 </div>
-
+<div class="cert-body">
+<p class="intro-text">تشهد عمادة شؤون الطلبة بأن الطالب/ة</p>
+<h2 class="student-name" id="cert-player-name">[اسم الطالب]</h2>
+<p class="main-text">قد أتم بنجاح رحلة "رحلتي في الإسلامية" التعريفية الافتراضية، وأظهر معرفة ممتازة بمرافق الجامعة وكلياتها المتنوعة.</p>
+<div class="results-section">
+<div class="score-container">
+<p>النقاط المكتسبة</p>
+<strong id="cert-final-score">0</strong>
+</div>
+<div class="scholarship-container">
+<p>المنحة المستحقة</p>
+<strong id="cert-scholarship-details">---</strong>
+</div>
+</div>
+</div>
+<div class="cert-footer">
+<div class="signature-area">
+<p>___________________</p>
+<p><strong>عميد شؤون الطلبة</strong></p>
+</div>
+<div class="qr-code-area">
+<div id="qrcode"></div>
+<p>رمز التحقق</p>
+</div>
+<div class="signature-area">
+<p>___________________</p>
+<p><strong>رئيس الجامعة</strong></p>
+</div>
+</div>
+</div>
+</div>
 <div class="certificate-actions">
-  <button onclick="window.print()">🖨️ طباعة الشهادة</button>
-  <button onclick="downloadCertificate()">📷 تحميل كصورة</button>
-  <button onclick="window.location.href='index.html'">🏠 العودة للعبة</button>
+<button onclick="window.print()">🖨️ طباعة الشهادة</button>
+<button onclick="downloadCertificate()">📷 تحميل كصورة</button>
+<button onclick="window.location.href='index.html'">🏠 العودة للعبة</button>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
-
-
-
 <script>
 function populateCertificateData() {
   const params = new URLSearchParams(window.location.search);
@@ -343,7 +334,5 @@ function populateCertificateData() {
 }
 window.addEventListener('DOMContentLoaded', populateCertificateData);
 </script>
-
-
 </body>
 </html>
