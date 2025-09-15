@@ -272,14 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
         badges: {}
     };
     window.gameState = gameState;
-    // ===== Helpers for stage points & scoring policy =====
- function updateStagePoints(quizId, score, total){
-  const el = document.querySelector(`[data-stage-points="${quizId}"]`);
-  if (!el) return;
-  const progress = JSON.parse(localStorage.getItem('iugGameProgress')||'{}');
-  const best = progress.bestScores?.[quizId] || 0;
-  el.textContent = `✔ ${best}/${total}`;
-}
+
 
     window.updateStagePoints = updateStagePoints;
 
