@@ -274,12 +274,17 @@ document.addEventListener('DOMContentLoaded', () => {
     window.gameState = gameState;
     // ===== Helpers for stage points & scoring policy =====
  function updateStagePoints(quizId, score, total){
-  const el = document.querySelector(`[data-stage-points="${quizId}"]`);
-  if (!el) return;
-  const progress = JSON.parse(localStorage.getItem('iugGameProgress')||'{}');
-  const best = progress.bestScores?.[quizId] || 0;
-  el.textContent = `✔ ${best}/${total}`;
-}
+     const el = document.querySelector(`[data-stage-points="${quizId}"]`);
+     if (!el) return;
+     // Read the player's best score from stored attempts instead of the
+     // non-existent `bestScores` object. Fall back to the provided arguments
+     // when available.
+     const progress = JSON.parse(localStorage.getItem('iugGameProgress') || '{}');
+     const attempt = progress.attempts?.[quizId] || {};
+     const best = attempt.bestScore ?? score ?? 0;
+     const totalQuestions = attempt.total ?? total ?? 0;
+     el.textContent = `✔ ${best}/${totalQuestions}`;
+ }
 
     window.updateStagePoints = updateStagePoints;
 
