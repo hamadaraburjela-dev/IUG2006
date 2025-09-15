@@ -265,9 +265,28 @@
 </div>
 </div>
 <div class="certificate-actions">
-<button onclick="window.print()">🖨️ طباعة الشهادة</button>
-<button onclick="downloadCertificate()">📷 تحميل كصورة</button>
-<button onclick="window.location.href='index.html'">🏠 العودة للعبة</button>
+<div class="certificate-actions">
+    <button onclick="window.print()">🖨️ طباعة الشهادة</button>
+    <button onclick="downloadCertificate()">📷 تحميل كصورة</button>
+
+    <div class="share-container">
+        <button id="shareButton">🌐 مشاركة الشهادة</button>
+        <div class="share-options" style="display:none;">
+            <a href="#" id="share-facebook" target="_blank">Facebook</a>
+            <a href="#" id="share-twitter" target="_blank">Twitter</a>
+            <a href="#" id="share-linkedin" target="_blank">LinkedIn</a>
+        </div>
+    </div>
+    
+    <div class="telegram-container">
+        <button id="telegram-button">أنضمام إلى مجتمع الطلاب</button>
+        <div class="telegram-options" style="display:none;">
+            <a href="https://t.me/iug2006" target="_blank">طلاب 2006</a>
+            <a href="https://t.me/Iug2007" target="_blank">طلاب 2007</a>
+        </div>
+    </div>
+
+    <button onclick="window.location.href='index.html'">🏠 العودة للعبة</button>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
