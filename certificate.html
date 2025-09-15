@@ -223,6 +223,72 @@
     }
     .certificate-actions { display: none; }
   }
+  /* New styles for dropdown containers */
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.dropdown-options {
+  position: absolute;
+  bottom: 100%; /* Position above the button */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  border: 1px solid var(--primary-color);
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  min-width: 150px;
+  z-index: 10;
+  margin-bottom: 5px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-options a {
+  padding: 8px 12px;
+  text-decoration: none;
+  color: var(--primary-color);
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+  text-align: center;
+}
+
+.dropdown-options a:hover {
+  background-color: #f0f0f0;
+}
+/* Adjustments for mobile view */
+@media (max-width: 600px) {
+    .dropdown-options {
+        bottom: auto;
+        top: 100%;
+        margin-top: 5px;
+    }
+}
+/* New styles for a professional button layout */
+.certificate-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Adds space between button groups */
+}
+
+.actions-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Adds space between buttons within each group */
+    flex-wrap: wrap; /* Allows buttons to wrap to the next line on small screens */
+}
+
+/* Adjustments for mobile view */
+@media (max-width: 600px) {
+    .actions-group {
+        flex-direction: column; /* Stacks buttons vertically on small screens */
+    }
+}
 </style>
 <link href="favicon.png" rel="icon" type="image/png"/><link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/></head>
 <body>
@@ -265,28 +331,34 @@
 </div>
 </div>
 <div class="certificate-actions">
-<div class="certificate-actions">
-    <button onclick="window.print()">🖨️ طباعة الشهادة</button>
-    <button onclick="downloadCertificate()">📷 تحميل كصورة</button>
+    <div class="actions-group">
+        <button onclick="window.print()">🖨️ طباعة الشهادة</button>
+        <button onclick="downloadCertificate()">📷 تحميل كصورة</button>
+    </div>
 
-    <div class="share-container">
-        <button id="shareButton">🌐 مشاركة الشهادة</button>
-        <div class="share-options" style="display:none;">
-            <a href="#" id="share-facebook" target="_blank">Facebook</a>
-            <a href="#" id="share-twitter" target="_blank">Twitter</a>
-            <a href="#" id="share-linkedin" target="_blank">LinkedIn</a>
+    <div class="actions-group">
+        <div class="dropdown-container">
+            <button id="shareButton">🌐 مشاركة الشهادة</button>
+            <div class="dropdown-options" id="shareOptions" style="display:none;">
+                <a href="#" id="share-facebook" target="_blank" class="share-btn facebook">فيسبوك</a>
+                <a href="#" id="share-twitter" target="_blank" class="share-btn twitter">تويتر (X)</a>
+                <a href="#" id="share-linkedin" target="_blank" class="share-btn linkedin">لينكدإن</a>
+                <a href="#" id="share-whatsapp" target="_blank" class="share-btn whatsapp">واتساب</a>
+            </div>
+        </div>
+
+        <div class="dropdown-container">
+            <button id="telegramButton">👥 انضم لمجتمع الطلاب</button>
+            <div class="dropdown-options" id="telegramOptions" style="display:none;">
+                <a href="https://t.me/iug2006" target="_blank" class="telegram-btn">طلاب 2006</a>
+                <a href="https://t.me/Iug2007" target="_blank" class="telegram-btn">طلاب 2007</a>
+            </div>
         </div>
     </div>
     
-    <div class="telegram-container">
-        <button id="telegram-button">أنضمام إلى مجتمع الطلاب</button>
-        <div class="telegram-options" style="display:none;">
-            <a href="https://t.me/iug2006" target="_blank">طلاب 2006</a>
-            <a href="https://t.me/Iug2007" target="_blank">طلاب 2007</a>
-        </div>
+    <div class="actions-group">
+        <button onclick="window.location.href='index.html'">🏠 العودة للعبة</button>
     </div>
-
-    <button onclick="window.location.href='index.html'">🏠 العودة للعبة</button>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -351,7 +423,65 @@ function populateCertificateData() {
     });
   }
 }
+
 window.addEventListener('DOMContentLoaded', populateCertificateData);
+
+    function setupButtons() {
+        const shareButton = document.getElementById('shareButton');
+        const telegramButton = document.getElementById('telegramButton');
+        const shareOptions = document.getElementById('shareOptions');
+        const telegramOptions = document.getElementById('telegramOptions');
+
+        shareButton.onclick = function() {
+            shareOptions.style.display = shareOptions.style.display === 'none' ? 'flex' : 'none';
+        };
+
+        telegramButton.onclick = function() {
+            telegramOptions.style.display = telegramOptions.style.display === 'none' ? 'flex' : 'none';
+        };
+
+        // Close dropdowns if the user clicks anywhere else
+        window.onclick = function(event) {
+            if (!event.target.matches('#shareButton') && !event.target.matches('#telegramButton')) {
+                shareOptions.style.display = 'none';
+                telegramOptions.style.display = 'none';
+            }
+        };
+    }
+    
+    function updateShareLinks() {
+        const playerName = document.getElementById("cert-player-name").textContent;
+        const playerScore = document.getElementById("cert-final-score").textContent;
+        
+        const title = "أنا '"+playerName+"' وقد أنهيت رحلة الجامعة الإسلامية الافتراضية بنجاح!";
+        const scoreText = "حصلت على " + playerScore + " نقطة!";
+        const websiteUrl = window.location.href;
+        
+        const message = `${title}\n${scoreText}\nتعرف على الجامعة عبر الرابط: ${websiteUrl}`;
+        const encodedMessage = encodeURIComponent(message);
+        
+        // Facebook Share
+        const facebookLink = "https://www.facebook.com/sharer/sharer.php?quote=" + encodedMessage + "&u=" + encodeURIComponent(websiteUrl);
+        document.getElementById('share-facebook').href = facebookLink;
+        
+        // Twitter (X) Share
+        const twitterLink = "https://twitter.com/intent/tweet?text=" + encodedMessage;
+        document.getElementById('share-twitter').href = twitterLink;
+
+        // LinkedIn Share
+        const linkedinLink = "https://www.linkedin.com/shareArticle?mini=true&url=" + encodeURIComponent(websiteUrl) + "&title=" + encodeURIComponent(title) + "&summary=" + encodedMessage;
+        document.getElementById('share-linkedin').href = linkedinLink;
+
+        // WhatsApp Share
+        const whatsappLink = "https://wa.me/?text=" + encodedMessage;
+        document.getElementById('share-whatsapp').href = whatsappLink;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        populateCertificateData();
+        setupButtons();
+        updateShareLinks();
+    });
 </script>
 </body>
 </html>
