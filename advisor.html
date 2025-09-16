@@ -87,6 +87,10 @@
   .typing-dots{display:flex;gap:6px}
   .typing-dots span{width:8px;height:8px;border-radius:50%;background:rgba(10,107,58,0.16);animation:blink 1s infinite}
 
+  /* subtle avatar pulse when typing */
+  .avatar.pulse{animation:avatar-pulse 1.6s infinite}
+  @keyframes avatar-pulse{0%{box-shadow:0 0 0 0 rgba(10,107,58,0.12)}50%{box-shadow:0 8px 24px 6px rgba(10,107,58,0.06)}100%{box-shadow:0 0 0 0 rgba(10,107,58,0.0)}}
+
   .choice:focus{outline:3px solid rgba(7,120,64,0.12);outline-offset:3px}
 
   /* Phone-like centered chat panel */
@@ -415,9 +419,13 @@
         chat.appendChild(tr);
         scrollChat();
       }
+      // add pulse to the last avatar (the bot avatar)
+      const avs = chat.querySelectorAll('.row.bot .avatar'); if(avs.length) avs[avs.length-1].classList.add('pulse');
       try{ if(window.__setBotStatus) window.__setBotStatus('يكتب...'); }catch(e){}
     } else {
       if(tr) tr.remove();
+      // remove pulse from any bot avatars
+      const avs2 = chat.querySelectorAll('.row.bot .avatar.pulse'); avs2.forEach(x=>x.classList.remove('pulse'));
       try{ if(window.__setBotStatus) window.__setBotStatus('متصل'); }catch(e){}
     }
   }
@@ -513,9 +521,19 @@
   chatUI.style.display='grid';
   chatUI.classList.add('chat-panel');
     chat.innerHTML=''; choices.innerHTML='';
-  showTypingRow(true);
-  setTimeout(()=>{ showTyping(false); addBot('مرحباً! أنا مستشارك الأكاديمي الذكي للجامعة الإسلامية بغزة.'); }, 260);
-  setTimeout(()=>{ addBot('سأطرح عليك 60 سؤال قصيرة. اختر لكل عبارة درجة من 1 إلى 5. يمكنك اختيار من 1 إلى 5 أو النقر على الأزرار.') ; updateProgress(); askQuestion(); }, 700);
+    // Start greeting and ask for readiness before first question
+    showTypingRow(true);
+    setTimeout(()=>{ showTypingRow(false); addBot('مرحباً! أنا مستشارك الأكاديمي الذكي للجامعة الإسلامية بغزة.'); }, 260);
+    setTimeout(()=>{
+      addBot('سأطرح عليك 60 سؤال قصيرة. هل أنت جاهز للبدء؟');
+      // render quick ready buttons
+      choices.innerHTML = '';
+      const yes = document.createElement('button'); yes.className='choice'; yes.textContent='نعم، ابدأ';
+      const no = document.createElement('button'); no.className='choice'; no.textContent='ليس الآن';
+      yes.onclick = ()=>{ addUser('نعم'); choices.innerHTML=''; updateProgress(); askQuestion(); };
+      no.onclick = ()=>{ addUser('ليس الآن'); addBot('حسناً، عد عندما تكون جاهزاً.'); choices.innerHTML=''; };
+      choices.appendChild(yes); choices.appendChild(no);
+    }, 700);
   }
 
   btnReady.onclick = startChat;
