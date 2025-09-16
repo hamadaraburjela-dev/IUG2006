@@ -571,11 +571,20 @@ img[src*="first_faculties_q"] {
 #exchange-scene .options-container,
 #admission-scene .options-container,
 #studentaffairs-scene .options-container {
-    grid-template-columns: 1fr;
+    /* تم حذف grid-template-columns: 1fr; من هنا */
     max-width: 400px;
     margin: 25px auto 0;
 }
 
+/* قم بإضافة هذه القاعدة الجديدة في مكان مناسب داخل Media Query للجوال */
+@media (max-width: 768px) {
+    #faculties-scene .options-container,
+    #exchange-scene .options-container,
+    #admission-scene .options-container,
+    #studentaffairs-scene .options-container {
+        grid-template-columns: 1fr; /* تفعيل عمود واحد فقط على الشاشات الصغيرة */
+    }
+}
 #faculties-scene .option-btn,
 #exchange-scene .option-btn,
 #admission-scene .option-btn,
