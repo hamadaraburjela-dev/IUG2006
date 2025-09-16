@@ -3939,3 +3939,23 @@ button:active, .btn:active, .nav-item:active, .answer-option:active {
     grid-template-columns: 1fr; /* عمود واحد على الجوال */
   }
 }
+
+
+
+/* === إصلاح مشكلة الفراغ على يمين الموقع === */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden !important;
+}
+
+img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block !important;
+}
+
+.container, .row, .quiz-card, .status-bar {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
