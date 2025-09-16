@@ -719,10 +719,10 @@ showResults = function(){
 // UI mute toggle button
 document.addEventListener('DOMContentLoaded', ()=>{
   const toggle = document.getElementById('ui-sound-toggle');
-  function updateToggle(){
+    function updateToggle(){
     if (!toggle) return;
     toggle.setAttribute('aria-pressed', window.uiMuted ? 'true' : 'false');
-    toggle.textContent = window.uiMuted ? '🔈 مكتوم' : '🔊 صوت';
+    toggle.textContent = window.uiMuted ? '🔈 مكتوم' : '🔊 تشغيل الأصوات';
   }
   updateToggle();
   toggle.addEventListener('click', ()=>{
