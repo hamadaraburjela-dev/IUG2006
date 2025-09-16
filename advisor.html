@@ -659,8 +659,14 @@ body {
     window.scrollTo({top:0,behavior:'smooth'});
   };
   
-<script defer="True" src="assets/js/statusBar.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+btnRestart.onclick = ()=>{
+  idx=0; for(const k in responses) delete responses[k];
+  results.style.display='none';
+  intro.style.display='grid';
+  fill.style.width='0%'; progTxt.textContent='';
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
 /* ====== مؤثرات صوتية بسيطة ====== */
 const ctx = new (window.AudioContext||window.webkitAudioContext)();
 function beep({freq=500,dur=0.1,type='sine'}={}) {
@@ -679,7 +685,7 @@ const sfx = {
   success: ()=>{ beep({freq:500}); setTimeout(()=>beep({freq:760}),80); }
 };
 
-/* دمج الأصوات مع الدوال */
+/* ربط الأصوات مع الأحداث */
 const origAddBot = addBot;
 addBot = function(txt){
   origAddBot(txt);
@@ -697,6 +703,12 @@ showResults = function(){
   origShowResults();
   sfx.success();
 };
+
+</script>
+
+<script defer="True" src="assets/js/statusBar.js"></script>
+<!-- داخل <head> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </script>
 </body>
 </html>
