@@ -136,6 +136,9 @@
       </div>
       <p class="muted" style="text-align:center;margin-top:6px">تنبيه: هذه أداة إرشادية، ناقش خياراتك مع المرشد الأكاديمي.</p>
     </section>
+  
+    <!-- Mute toggle (floating) -->
+    <button id="ui-sound-toggle" aria-pressed="false" title="كتم / تفعيل الأصوات" style="position:fixed;left:18px;bottom:18px;z-index:1200;background:linear-gradient(180deg,#fff,#f6fff6);border-radius:999px;padding:8px 12px;border:1px solid rgba(10,107,58,0.08);box-shadow:0 6px 20px rgba(6,60,40,0.06);cursor:pointer">🔊 صوت</button>
   </div>
 </div>
 
@@ -482,9 +485,11 @@ btnRestart.onclick = ()=>{
   window.scrollTo({top:0,behavior:'smooth'});
 };
 
-/* ====== مؤثرات صوتية بسيطة ====== */
+  /* ====== مؤثرات صوتية بسيطة ====== */
 const ctx = new (window.AudioContext||window.webkitAudioContext)();
+window.uiMuted = localStorage.getItem('iug-ui-muted') === '1';
 function beep({freq=500,dur=0.1,type='sine'}={}) {
+  if (window.uiMuted) return; // respect mute
   if(!ctx) return;
   const o=ctx.createOscillator(), g=ctx.createGain();
   o.type=type; o.frequency.value=freq;
@@ -519,12 +524,32 @@ showResults = function(){
   sfx.success();
 };
 
+// UI mute toggle button
+document.addEventListener('DOMContentLoaded', ()=>{
+  const toggle = document.getElementById('ui-sound-toggle');
+  function updateToggle(){
+    if (!toggle) return;
+    toggle.setAttribute('aria-pressed', window.uiMuted ? 'true' : 'false');
+    toggle.textContent = window.uiMuted ? '🔈 مكتوم' : '🔊 صوت';
+  }
+  updateToggle();
+  toggle.addEventListener('click', ()=>{
+    // resume AudioContext on first interaction
+    try{ if (ctx.state === 'suspended') ctx.resume(); }catch(e){}
+    window.uiMuted = !window.uiMuted;
+    localStorage.setItem('iug-ui-muted', window.uiMuted ? '1' : '0');
+    updateToggle();
+  });
+});
+
 </script>
 
 <script defer="True" src="assets/js/statusBar.js"></script>
-<!-- داخل <head> -->
+<!-- GSAP for micro-animations -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-</script>
+
 </body>
 </html>
-  <audio id="transition-sound" preload="auto" src="assets/sounds/turning.mp3"></audio>
+
+<!-- inline audio fallback (optional element) -->
+<audio id="transition-sound" preload="auto" src="assets/sounds/turning.mp3"></audio>
