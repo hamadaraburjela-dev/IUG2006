@@ -1,3 +1,4 @@
+let quizRestartAttempts = parseInt(localStorage.getItem("quizRestartAttempts")) || 0;
 if (window.quizLogicLoaded) {
     // This is a guard to prevent the script from running multiple times.
 } else {
@@ -1059,36 +1060,55 @@ let currentQuizData = null;
         let currentQuizTitle = '';
         const mapScene = document.getElementById('map-scene');
 
-        function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
-            const startQuizBtn = document.getElementById(triggerButtonId);
-            if (!startQuizBtn) return;
-            const startQuiz = () => {
-                currentQuizData = quizDataObject;
-                currentQuizTitle = quizTitle;
-                unlockAudio();
-                if (quizTitleEl) quizTitleEl.textContent = quizTitle;
-                currentQuestionIndex = 0;
-                score = 0;
-                quizRestartAttempts = 1;
-                
-                // Use page filename as stable quizId (e.g., library, grants, ...)
-                currentQuizId = (location.pathname.split('/').pop() || 'index.html').replace(/\.html?$/,'').toLowerCase();
-helpCounters = {
-                    fiftyFifty: 3,
-                    skip: 3,
-                    poll: 3,
-                    addTime: 3
-                };
-                const numToShow = quizTitle === 'تحدي بوابة الجامعة' ? 1 : NUM_QUESTIONS_TO_SHOW;
-                const shuffledTf = [...currentQuizData.tf_questions].sort(() => Math.random() - 0.5);
-                const shuffledMc = [...currentQuizData.mc_questions].sort(() => Math.random() - 0.5);
-                const allAvailableQuestions = shuffledMc.concat(shuffledTf);
-                allQuestions = allAvailableQuestions.slice(0, numToShow);
-                displayQuestion();
-                if (quizModal) quizModal.classList.add('active');
-            };
-            startQuizBtn.addEventListener('click', startQuiz);
-        }
+
+function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
+  const startQuizBtn = document.getElementById(triggerButtonId);
+  if (!startQuizBtn) return;
+
+  const startQuiz = () => {
+    // ✅ احتساب المحاولة عند الضغط على زر البدء
+    quizRestartAttempts++;
+    localStorage.setItem("quizRestartAttempts", quizRestartAttempts);
+
+    // التحقق من الحد الأقصى قبل بدء الاختبار
+    if (!canRestartQuiz()) {
+      alert("لقد استنفدت جميع المحاولات المسموح بها.");
+      return;
+    }
+
+    // باقي منطق التهيئة
+    currentQuizData = quizDataObject;
+    currentQuizTitle = quizTitle;
+    unlockAudio();
+    if (quizTitleEl) quizTitleEl.textContent = quizTitle;
+    currentQuestionIndex = 0;
+    score = 0;
+
+    // Use page filename as stable quizId (e.g., library, grants, ...)
+    currentQuizId = (location.pathname.split('/').pop() || 'index.html')
+      .replace(/\.html?$/,'')
+      .toLowerCase();
+
+    helpCounters = {
+      fiftyFifty: 3,
+      skip: 3,
+      poll: 3,
+      addTime: 3
+    };
+
+    const numToShow = quizTitle === 'تحدي بوابة الجامعة' ? 1 : NUM_QUESTIONS_TO_SHOW;
+    const shuffledTf = [...currentQuizData.tf_questions].sort(() => Math.random() - 0.5);
+    const shuffledMc = [...currentQuizData.mc_questions].sort(() => Math.random() - 0.5);
+    const allAvailableQuestions = shuffledMc.concat(shuffledTf);
+    allQuestions = allAvailableQuestions.slice(0, numToShow);
+
+    displayQuestion();
+    if (quizModal) quizModal.classList.add('active');
+  };
+
+  startQuizBtn.addEventListener('click', startQuiz);
+}
+
 
         function unlockAudio() {
             if (isAudioUnlocked) return;
