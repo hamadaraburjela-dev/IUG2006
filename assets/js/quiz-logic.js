@@ -1,4 +1,6 @@
 let quizRestartAttempts = parseInt(localStorage.getItem("quizRestartAttempts")) || 0;
+const MAX_ATTEMPTS = 2;
+
 if (window.quizLogicLoaded) {
     // This is a guard to prevent the script from running multiple times.
 } else {
@@ -1035,15 +1037,11 @@ function finishQuiz() {
     }
 }
 
+
 function canRestartQuiz() {
-    // يسمح بمحاولتين فقط (1 و 2). المحاولة الثالثة مرفوضة.
-    if (quizRestartAttempts >= 2) {
-        alert("لقد أكملت التحدي، لا مزيد من المحاولات.");
-        return false;
-    }
-    quizRestartAttempts += 1;
-    return true;
+  return quizRestartAttempts < MAX_ATTEMPTS;
 }
+
 
         let helpCounters = {};
         let questionTimer;
@@ -1065,18 +1063,15 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
   const startQuizBtn = document.getElementById(triggerButtonId);
   if (!startQuizBtn) return;
 
-  const startQuiz = () => {
-    // ✅ احتساب المحاولة عند الضغط على زر البدء
-    quizRestartAttempts++;
-    localStorage.setItem("quizRestartAttempts", quizRestartAttempts);
-
-    // التحقق من الحد الأقصى قبل بدء الاختبار
+  startQuizBtn.addEventListener("click", () => {
     if (!canRestartQuiz()) {
-      alert("لقد استنفدت جميع المحاولات المسموح بها.");
+      alert("لقد أكملت جميع المحاولات.");
       return;
     }
-
-    // باقي منطق التهيئة
+    quizRestartAttempts++;
+    localStorage.setItem("quizRestartAttempts", quizRestartAttempts);
+  
+    // تهيئة البيانات
     currentQuizData = quizDataObject;
     currentQuizTitle = quizTitle;
     unlockAudio();
@@ -1084,9 +1079,8 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
     currentQuestionIndex = 0;
     score = 0;
 
-    // Use page filename as stable quizId (e.g., library, grants, ...)
     currentQuizId = (location.pathname.split('/').pop() || 'index.html')
-      .replace(/\.html?$/,'')
+      .replace(/\\.html?$/, '')
       .toLowerCase();
 
     helpCounters = {
@@ -1103,11 +1097,12 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
     allQuestions = allAvailableQuestions.slice(0, numToShow);
 
     displayQuestion();
-    if (quizModal) quizModal.classList.add('active');
-  };
+    if (quizModal) quizModal.classList.add("active");
+  });
+    console.log("بدء التحدي:", quizTitle);
 
-  startQuizBtn.addEventListener('click', startQuiz);
 }
+
 
 
         function unlockAudio() {
