@@ -376,6 +376,56 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.addEventListener('click', unlockAudio, { once: true });
     } catch (e) {}
 
+    // Delegated handler: play transition sound before navigating to internal HTML pages
+    document.addEventListener('click', function (evt) {
+        try {
+            let el = evt.target;
+            // walk up to find actionable element
+            while (el && el !== document) {
+                // anchor links to internal pages
+                if (el.tagName === 'A' && el.getAttribute('href')) {
+                    const href = el.getAttribute('href');
+                    if (href && href.endsWith('.html')) {
+                        evt.preventDefault();
+                        unlockAudio();
+                        if (transitionSound) playSound(transitionSound);
+                        setTimeout(() => { window.location.href = href; }, 220);
+                        return;
+                    }
+                }
+
+                // elements with data-href attribute
+                if (el.dataset && el.dataset.href) {
+                    const href = el.dataset.href;
+                    if (href && href.endsWith('.html')) {
+                        evt.preventDefault();
+                        unlockAudio();
+                        if (transitionSound) playSound(transitionSound);
+                        setTimeout(() => { window.location.href = href; }, 220);
+                        return;
+                    }
+                }
+
+                // inline onclick patterns like window.location.href='page.html'
+                const onclick = el.getAttribute && el.getAttribute('onclick');
+                if (onclick && /window\.location\.href\s*=/.test(onclick)) {
+                    const m = onclick.match(/window\.location\.href\s*=\s*['"]([^'"]+)['"]/);
+                    if (m && m[1] && m[1].endsWith('.html')) {
+                        evt.preventDefault();
+                        unlockAudio();
+                        if (transitionSound) playSound(transitionSound);
+                        setTimeout(() => { window.location.href = m[1]; }, 220);
+                        return;
+                    }
+                }
+
+                el = el.parentNode;
+            }
+        } catch (err) {
+            console.warn('Navigation sound handler failed', err);
+        }
+    }, true);
+
     function playSound(soundElement) {
         if (isAudioUnlocked && soundElement) {
             soundElement.currentTime = 0;
