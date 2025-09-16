@@ -566,6 +566,11 @@ img[src*="first_faculties_q"] {
     font-size: 36px;
     margin-bottom: 5px;
 }
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* يمنع الفراغ على اليمين */
+}
 
 #faculties-scene .options-container,
 #exchange-scene .options-container,
@@ -575,7 +580,14 @@ img[src*="first_faculties_q"] {
     max-width: 400px;
     margin: 25px auto 0;
 }
-
+#map-scene .options-container {
+    grid-template-columns: 1fr 1fr; /* هذا سيجعلها عمودين على الشاشات الكبيرة */
+}
+@media (max-width: 480px) {
+    #map-scene .options-container {
+        grid-template-columns: 1fr; /* هذا يضمن عمودًا واحدًا على الجوال */
+    }
+}
 /* قم بإضافة هذه القاعدة الجديدة في مكان مناسب داخل Media Query للجوال */
 @media (max-width: 768px) {
     #faculties-scene .options-container,
