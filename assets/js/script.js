@@ -2,7 +2,7 @@
 
 // غيّر للرابط الخاص بك
 // ضع رابط نشر Google Apps Script هنا 👇
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxvWi3rYcaaPdTxCxo3lKGTPJ5Mkb6UkU3pc2lkjun-wD1xzN9JV8YDloJdsDGgYMJvog/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-LAUgjFXgcySQv4_nVK3k_y2edp7JKc4LKjmCK7eIPae2vXD_bm9yvvoRnEkLmi-EkA/exec';
 
 // دالة لمزامنة النقاط مع Code.gs
 async function syncScoreToServer(uniqueId, score, currentScene = '', answeredQuestions = [], selectedGuide = '') {
@@ -39,41 +39,6 @@ function updatePlayerScore(uniqueId, score, currentScene = '', answeredQuestions
   syncScoreToServer(uniqueId, score, currentScene, answeredQuestions, selectedGuide);
 }
 
-// دالة معالجة الإجابة
-function processAnswer(selectedKey, question, selectedOption) {
-  if (!selectedKey) return;
-
-  if (selectedKey === question.correctAnswer) {
-    // ✅ إجابة صحيحة
-    playSound(correctSound);
-    score++;
-    selectedOption.classList.add('correct');
-    showFeedback(true, "إجابة رائعة!");
-
-    // حفظ التقدم
-    const savedState = JSON.parse(localStorage.getItem('iugGameProgress') || '{}');
-    if (savedState && savedState.uniquePlayerId) {
-      const answeredQ = savedState.answeredQuestions || [];
-      syncScoreToServer(
-        savedState.uniquePlayerId,
-        score,
-        savedState.currentScene || '',
-        answeredQ,
-        savedState.selectedGuide || ''
-      );
-    }
-  } else {
-    // ❌ إجابة خاطئة
-    playSound(wrongSound);
-    selectedOption.classList.add('wrong');
-    showFeedback(false, "إجابة خاطئة");
-  }
-
-  // تعطيل الأزرار بعد الإجابة
-  disableOptions();
-}
-
-
 // --- بداية منطق الشارات ---
 const allBadges = {
     explorer: { id: 'explorer', name: 'المستكشف', icon: '🗺️', description: 'أكملت 3 تحديات مختلفة', earned: false },
@@ -84,6 +49,18 @@ const allBadges = {
     engineer: { id: 'engineer', name: 'المهندس الواعد', icon: '🏗️', description: 'أكملت تحدي الكليات بنجاح', earned: false }
 };
 
+function processAnswer(userAnswer) {
+    const isCorrect = (userAnswer === currentQuestion.correctAnswer);
+    if (isCorrect) {
+        // يتم تحديث النقاط في الواجهة الأمامية
+        gameState.score++; 
+        // ثم يتم استدعاء دالة المزامنة
+        syncScoreToServer(gameState.uniqueId, gameState.score, gameState.currentScene, gameState.answeredQuestions, gameState.selectedGuide);
+        showFeedback(true);
+    } else {
+        showFeedback(false);
+    }
+}
 function checkAndAwardBadges() {
     const state = JSON.parse(localStorage.getItem('iugGameProgress'));
     if (!state) return;
