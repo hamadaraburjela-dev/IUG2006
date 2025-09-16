@@ -36,6 +36,13 @@
   .reset-link-container { margin-top:14px; }
   @media (max-width:900px) { .features-grid { grid-template-columns: 1fr; } .hero-card{padding:22px} .hero-title{font-size:22px} }
   </style>
+  <style>
+  /* Form helper and error styles */
+  .field-help { font-size: 0. nine rem; color: #556b63; opacity: 0.9; margin-top:6px; }
+  .field-error { font-size: 0.95rem; color: #b22222; margin-top:6px; display:none; }
+  .form-group { margin-bottom: 14px; }
+  .action-button[disabled] { opacity: 0.6; cursor: not-allowed; }
+  </style>
 
 <meta content="مرحباً بكم في جامعة المعرفة – منصة تعليمية متكاملة تقدم أحدث البرامج الأكاديمية وخدمات للطلاب." name="description"/><meta content="جامعة المعرفة | الصفحة الرئيسية" property="og:title"/><meta content="مرحباً بكم في جامعة المعرفة – منصة تعليمية متكاملة تقدم أحدث البرامج الأكاديمية وخدمات للطلاب." property="og:description"/><meta content="/assets/images/arts-logo.webp" property="og:image"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="True" href="https://fonts.gstatic.com" rel="preconnect"/><meta content="ar_AR" property="og:locale"/><meta content="summary_large_image" name="twitter:card"/><meta content="جامعة المعرفة | الصفحة الرئيسية" name="twitter:title"/><meta content="مرحباً بكم في جامعة المعرفة – منصة تعليمية متكاملة تقدم أحدث البرامج الأكاديمية وخدمات للطلاب." name="twitter:description"/><meta content="/assets/images/arts-logo.webp" name="twitter:image"/><link href="https://example.com/index.html" rel="canonical"/></head>
 <body>
@@ -70,15 +77,72 @@
 <img alt="شعار الجامعة الإسلامية" class="logo" height="250" loading="lazy" src="assets/images/logo.webp" width="250"/>
 <h1>أهلاً بك في رحلتك الافتراضية</h1>
 <p>استكشف الجامعة الإسلامية بغزة أجب عن التحديات، واربح منحة دراسية حقيقية!</p>
-<form id="player-form">
-<div class="form-group"><label for="name">الاسم الكامل:</label><input id="name" minlength="5" placeholder="مثال: محمد أحمد" required="" type="text"/></div>
-<div class="form-group">
-<label for="phone">رقم الجوال:</label>
-<input id="phone" pattern="^05[96][0-9]{7}$" placeholder="مثال: 059xxxxxxx" required="" type="tel"/>
-</div>
-<div class="form-group"><label for="tawjihi-year">سنة التوجيهي:</label><input id="tawjihi-year" min="2000" placeholder="مثال: 2024" required="" type="number"/></div>
-<button class="action-button" disabled="" type="submit">ابدأ الرحلة!</button>
+<form id="player-form" novalidate>
+  <div class="form-group">
+    <label for="name">الاسم الكامل:</label>
+    <input id="name" minlength="5" placeholder="مثال: محمد أحمد" required type="text"/>
+    <div class="field-help">أدخل اسمك الكامل كما في الهوية؛ سنستخدمه على الشهادة.</div>
+    <div id="error-name" class="field-error">الاسم يجب أن يكون 5 أحرف على الأقل.</div>
+  </div>
+
+  <div class="form-group">
+    <label for="phone">رقم الجوال:</label>
+    <input id="phone" pattern="^05[96][0-9]{7}$" placeholder="مثال: 059xxxxxxx" required type="tel"/>
+    <div class="field-help">أدخل رقم جوالك لنتواصل معك ولتفعيل بعض الخدمات (مثال: 0591234567).</div>
+    <div id="error-phone" class="field-error">رقم الجوال غير صحيح؛ يجب أن يبدأ بـ 059/056 ويتبعه 7 أرقام.</div>
+  </div>
+
+  <div class="form-group">
+    <label for="tawjihi-year">سنة التوجيهي:</label>
+    <input id="tawjihi-year" min="2000" max="2026" placeholder="مثال: 2024" required type="number"/>
+    <div class="field-help">سنستخدم سنة التوجيهي للمساعدة في إظهار التحديات المناسبة لسنتك.</div>
+    <div id="error-year" class="field-error">أدخل سنة صحيحة بين 2000 و2026.</div>
+  </div>
+
+  <button class="action-button" id="start-button" disabled type="submit">ابدأ الرحلة!</button>
 </form>
+
+<script>
+  (function(){
+    const nameEl = document.getElementById('name');
+    const phoneEl = document.getElementById('phone');
+    const yearEl = document.getElementById('tawjihi-year');
+    const startBtn = document.getElementById('start-button');
+
+    function validateName(){
+      const v = nameEl.value.trim();
+      const ok = v.length >= 5;
+      document.getElementById('error-name').style.display = ok ? 'none' : 'block';
+      return ok;
+    }
+    function validatePhone(){
+      const re = /^05[96][0-9]{7}$/;
+      const ok = re.test(phoneEl.value.trim());
+      document.getElementById('error-phone').style.display = ok ? 'none' : 'block';
+      return ok;
+    }
+    function validateYear(){
+      const y = parseInt(yearEl.value,10);
+      const ok = Number.isFinite(y) && y >=2000 && y <= 2026;
+      document.getElementById('error-year').style.display = ok ? 'none' : 'block';
+      return ok;
+    }
+
+    function refresh(){
+      const allOk = validateName() && validatePhone() && validateYear();
+      startBtn.disabled = !allOk;
+    }
+
+    [nameEl, phoneEl, yearEl].forEach(el=>el.addEventListener('input', refresh));
+    document.getElementById('player-form').addEventListener('submit', function(e){
+      if (!validateName() || !validatePhone() || !validateYear()){
+        e.preventDefault(); refresh();
+        // focus first error
+        if (!validateName()) nameEl.focus(); else if (!validatePhone()) phoneEl.focus(); else yearEl.focus();
+      }
+    });
+  })();
+</script>
 </div>
 <div class="game-stage hidden" id="guide-selection-screen">
 <div class="scene-content">
