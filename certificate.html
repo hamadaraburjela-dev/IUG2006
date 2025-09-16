@@ -139,11 +139,32 @@
         }
 
         #qrcode {
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 5px auto;
-            border: 1px solid #eee;
-            padding: 5px;
+            width: 140px;
+            height: 140px;
+            display: block;
+            margin: 0 auto 8px auto;
+            border: 2px solid #e6e6e6;
+            padding: 8px;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            box-sizing: border-box;
+        }
+
+        .signature-area .sig-name {
+            font-family: 'Marhey', cursive;
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            margin: 0 0 6px 0;
+        }
+        .signature-area .sig-title {
+            font-size: 0.95rem;
+            color: #444;
+            margin: 0;
+        }
+        .signature-area .sig-date {
+            font-size: 0.82rem;
+            color: #777;
+            margin-top: 6px;
         }
 
         /* New professional button layout */
@@ -324,16 +345,18 @@
         </div>
         <div class="cert-footer">
             <div class="signature-area">
-                <p>___________________</p>
-                <p><strong>عميد شؤون الطلبة</strong></p>
+                <p class="sig-name">د. سامي الطويل</p>
+                <p class="sig-title"><strong>عميد شؤون الطلبة</strong></p>
+                <p class="sig-date">15/09/2025</p>
             </div>
             <div class="qr-code-area">
                 <div id="qrcode"></div>
                 <p>رمز التحقق</p>
             </div>
             <div class="signature-area">
-                <p>___________________</p>
-                <p><strong>رئيس الجامعة</strong></p>
+                <p class="sig-name">أ.د. ريم أبو دقة</p>
+                <p class="sig-title"><strong>رئيس الجامعة</strong></p>
+                <p class="sig-date">15/09/2025</p>
             </div>
         </div>
     </div>
