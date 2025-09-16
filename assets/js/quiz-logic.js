@@ -1077,18 +1077,18 @@ let currentQuizData = null;
                 const hintEl = document.getElementById('feedback-hint'); if (hintEl) { hintEl.textContent = hint || ''; }
 
                 // ensure fill resets
-                if (fill){ fill.style.transition = 'none'; fill.style.width = '100%'; }
+                if (fill){ fill.style.transition = 'none'; fill.style.transform = 'scaleX(1)'; }
 
                 // show popup
                 popup.classList.add('visible');
 
                 // force layout then animate
-                requestAnimationFrame(()=>{
-                    if (fill){ fill.style.transition = `width ${duration}ms linear`; fill.style.width = '0%'; }
-                });
+                    requestAnimationFrame(()=>{
+                        if (fill){ fill.style.transition = `transform ${duration}ms linear`; fill.style.transform = 'scaleX(0)'; }
+                    });
 
                 // hide after duration
-                setTimeout(()=>{ try{ popup.classList.remove('visible'); if (fill){ fill.style.transition = 'none'; fill.style.width = '100%'; } }catch(e){} }, duration + 80);
+                setTimeout(()=>{ try{ popup.classList.remove('visible'); if (fill){ fill.style.transition = 'none'; fill.style.transform = 'scaleX(1)'; } }catch(e){} }, duration + 80);
             }catch(e){ console.warn('showFeedback error', e); }
         }
 
