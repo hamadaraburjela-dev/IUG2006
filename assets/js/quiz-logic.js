@@ -1293,7 +1293,14 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
             // delegate to the progress-enabled helper so the bar animates and timing matches
             try{
                 playSound(guideAppearsSound);
-                const hint = (!isCorrect && allQuestions[currentQuestionIndex] && allQuestions[currentQuestionIndex].hint) ? `💡 ${allQuestions[currentQuestionIndex].hint}` : '';
+                // Restore hint/explanation for both correct and incorrect answers when available
+                const currentQuestion = allQuestions && allQuestions[currentQuestionIndex] ? allQuestions[currentQuestionIndex] : null;
+                let hint = '';
+                if (currentQuestion) {
+                    // prefer explicit explanation field, fallback to hint
+                    const explain = currentQuestion.explanation || currentQuestion.expl || currentQuestion.hint || currentQuestion.note;
+                    if (explain) hint = `💡 ${explain}`;
+                }
                 if (typeof window.showFeedbackWithProgress === 'function') {
                     window.showFeedbackWithProgress({ correct: !!isCorrect, emoji: isCorrect ? '✅' : '🤔', message: message || (isCorrect ? 'إجابة رائعة!' : 'إجابة خاطئة!'), hint });
                 } else {
