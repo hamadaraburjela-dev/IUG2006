@@ -1077,18 +1077,18 @@ let currentQuizData = null;
                 const hintEl = document.getElementById('feedback-hint'); if (hintEl) { hintEl.textContent = hint || ''; }
 
                 // ensure fill resets
-                if (fill){ fill.style.transition = 'none'; fill.style.transform = 'scaleX(1)'; }
+                if (fill){ fill.style.transition = 'none'; fill.style.width = '100%'; }
 
                 // show popup
                 popup.classList.add('visible');
 
                 // force layout then animate
-                    requestAnimationFrame(()=>{
-                        if (fill){ fill.style.transition = `transform ${duration}ms linear`; fill.style.transform = 'scaleX(0)'; }
-                    });
+                requestAnimationFrame(()=>{
+                    if (fill){ fill.style.transition = `width ${duration}ms linear`; fill.style.width = '0%'; }
+                });
 
                 // hide after duration
-                setTimeout(()=>{ try{ popup.classList.remove('visible'); if (fill){ fill.style.transition = 'none'; fill.style.transform = 'scaleX(1)'; } }catch(e){} }, duration + 80);
+                setTimeout(()=>{ try{ popup.classList.remove('visible'); if (fill){ fill.style.transition = 'none'; fill.style.width = '100%'; } }catch(e){} }, duration + 80);
             }catch(e){ console.warn('showFeedback error', e); }
         }
 
@@ -1266,12 +1266,10 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
                 selectedOption.classList.add('incorrect');
                 showFeedback(false, "إجابة خاطئة!");
             }
-            // advance after appropriate feedback duration
-            const delayAfter = (selectedKey === question.correctAnswer) ? FEEDBACK_DURATION : FEEDBACK_INCORRECT_DURATION;
             setTimeout(() => {
                 currentQuestionIndex++;
                 displayQuestion();
-            }, delayAfter);
+            }, FEEDBACK_DURATION);
         }
 
         function handleTimeOut() {
@@ -1286,33 +1284,35 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
             setTimeout(() => {
                 currentQuestionIndex++;
                 displayQuestion();
-            }, FEEDBACK_INCORRECT_DURATION);
+            }, FEEDBACK_DURATION);
         }
 
         function showFeedback(isCorrect, message) {
-            // delegate to the progress-enabled helper so the bar animates and timing matches
-            try{
-                playSound(guideAppearsSound);
-                // Restore hint/explanation for both correct and incorrect answers when available
-                const currentQuestion = allQuestions && allQuestions[currentQuestionIndex] ? allQuestions[currentQuestionIndex] : null;
-                let hint = '';
-                if (currentQuestion) {
-                    // prefer explicit explanation field, fallback to hint
-                    const explain = currentQuestion.explanation || currentQuestion.expl || currentQuestion.hint || currentQuestion.note;
-                    if (explain) hint = `💡 ${explain}`;
+            if (!feedbackPopup || !feedbackContent) {
+                console.error("Feedback popup elements not found!");
+                return;
+            }
+            feedbackContent.classList.remove('correct', 'incorrect');
+            if (feedbackHint) feedbackHint.innerHTML = '';
+            if (feedbackMessage) feedbackMessage.textContent = '';
+            playSound(guideAppearsSound);
+            if (feedbackMessage) {
+                feedbackMessage.textContent = message;
+            }
+            feedbackContent.classList.remove('correct', 'incorrect');
+            if (isCorrect) {
+                if (feedbackEmoji) feedbackEmoji.textContent = '✅';
+                feedbackContent.classList.add('correct');
+                if (feedbackHint) feedbackHint.innerHTML = '';
+            } else {
+                if (feedbackEmoji) feedbackEmoji.textContent = '🤔';
+                feedbackContent.classList.add('incorrect');
+                const currentQuestion = allQuestions[currentQuestionIndex];
+                if (feedbackHint && currentQuestion.hint) {
+                    feedbackHint.innerHTML = `💡 ${currentQuestion.hint}`;
                 }
-                if (typeof window.showFeedbackWithProgress === 'function') {
-                    window.showFeedbackWithProgress({ correct: !!isCorrect, emoji: isCorrect ? '✅' : '🤔', message: message || (isCorrect ? 'إجابة رائعة!' : 'إجابة خاطئة!'), hint });
-                } else {
-                    // fallback: simple visible toggle
-                    if (!feedbackPopup || !feedbackContent) return;
-                    feedbackContent.classList.remove('correct', 'incorrect');
-                    feedbackContent.classList.add(isCorrect ? 'correct' : 'incorrect');
-                    if (feedbackMessage) feedbackMessage.textContent = message || '';
-                    if (feedbackHint) feedbackHint.innerHTML = hint;
-                    feedbackPopup.classList.add('visible');
-                }
-            }catch(e){ console.warn('showFeedback delegate error', e); }
+            }
+            feedbackPopup.classList.add('visible');
         }
 
         function displayResults() {
