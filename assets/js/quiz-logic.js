@@ -1025,13 +1025,17 @@ if (window.quizLogicLoaded) {
         let allQuestions = [];
         let currentQuestionIndex = 0;
         let score = 0;
-let attemptsScores = [];
+// load attempts scores (persistent) and attempts remaining
+let attemptsScores = JSON.parse(localStorage.getItem('quizAttemptsScores') || '[]');
+if (!Array.isArray(attemptsScores)) attemptsScores = [];
 
 function finishQuiz() {
     // خزن نتيجة هذه المحاولة استناداً إلى عدد المحاولات المستخدمة
     const used = MAX_ATTEMPTS - (quizAttemptsRemaining === null ? MAX_ATTEMPTS : quizAttemptsRemaining);
     const idx = Math.max(0, used - 1);
     attemptsScores[idx] = score;
+    // persist scores
+    try{ localStorage.setItem('quizAttemptsScores', JSON.stringify(attemptsScores)); }catch(e){console.warn('Could not save attemptsScores', e);} 
 
     if (used >= MAX_ATTEMPTS) {
         const sum = (attemptsScores[0] || 0) + (attemptsScores[1] || 0);
@@ -1044,11 +1048,11 @@ function finishQuiz() {
 
 
     function consumeAttempt(){
-        if (quizAttemptsRemaining === null) quizAttemptsRemaining = MAX_ATTEMPTS;
-        if (quizAttemptsRemaining > 0){
-            quizAttemptsRemaining--;
-            localStorage.setItem('quizRestartAttempts', quizAttemptsRemaining);
-        }
+            if (quizAttemptsRemaining === null) quizAttemptsRemaining = MAX_ATTEMPTS;
+            if (quizAttemptsRemaining > 0){
+                quizAttemptsRemaining--;
+                localStorage.setItem('quizRestartAttempts', quizAttemptsRemaining);
+            }
     }
 
     function canRestartQuiz() {
@@ -1115,6 +1119,7 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
   if (!startQuizBtn) return;
 
     startQuizBtn.addEventListener("click", () => {
+            console.log('Start click: attemptsRemaining=', quizAttemptsRemaining, 'attemptsScores=', attemptsScores);
             if (!canRestartQuiz()) {
                 showAttemptsModal({
                     title: "لقد أكملت جميع المحاولات",
@@ -1130,6 +1135,7 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
             function proceedStart(){
                 // consume one attempt for this new run
                 consumeAttempt();
+                        console.log('Proceeding to start quiz: attemptsRemaining after consume=', quizAttemptsRemaining);
 
                 // تهيئة البيانات
                 currentQuizData = quizDataObject;
@@ -1161,10 +1167,10 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
             }
 
                 // If user already used two attempts (third click), show final summary and DO NOT start a new run
-                if (usedSoFar >= (MAX_ATTEMPTS - 1) && attemptsScores && attemptsScores.length >= (MAX_ATTEMPTS - 1)){
+                    if (usedSoFar >= (MAX_ATTEMPTS - 1) && attemptsScores && attemptsScores.length >= (MAX_ATTEMPTS - 1)){
                     const s1 = attemptsScores[0] != null ? attemptsScores[0] : 'غير متوفر';
                     const s2 = attemptsScores[1] != null ? attemptsScores[1] : 'غير متوفر';
-                    const msg = `لقد أكمَلت جميع محاولات التحدي.\nنتائجك السابقة:\nالمحاولة الأولى: ${s1}\nالمحاولة الثانية: ${s2}`;
+                        const msg = `لقد أكمَلت جميع محاولات التحدي.\nنتائجك السابقة:\nالمحاولة الأولى: ${s1}\nالمحاولة الثانية: ${s2}`;
                     showAttemptsModal({ title: 'انتهت المحاولات', message: msg });
                     return;
                 }
