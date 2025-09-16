@@ -446,29 +446,59 @@ function populateCertificateData() {
 }
 
 window.addEventListener('DOMContentLoaded', populateCertificateData);
+function setupButtons() {
+    const shareButton = document.getElementById('shareButton');
+    const telegramButton = document.getElementById('telegramButton');
+    const shareOptions = document.getElementById('shareOptions');
+    const telegramOptions = document.getElementById('telegramOptions');
 
-    function setupButtons() {
-        const shareButton = document.getElementById('shareButton');
-        const telegramButton = document.getElementById('telegramButton');
-        const shareOptions = document.getElementById('shareOptions');
-        const telegramOptions = document.getElementById('telegramOptions');
-
-        shareButton.onclick = function() {
-            shareOptions.style.display = shareOptions.style.display === 'none' ? 'flex' : 'none';
-        };
-
-        telegramButton.onclick = function() {
-            telegramOptions.style.display = telegramOptions.style.display === 'none' ? 'flex' : 'none';
-        };
-
-        // Close dropdowns if the user clicks anywhere else
-        window.onclick = function(event) {
-            if (!event.target.matches('#shareButton') && !event.target.matches('#telegramButton')) {
-                shareOptions.style.display = 'none';
-                telegramOptions.style.display = 'none';
-            }
-        };
+    // Function to toggle a dropdown
+    function toggleDropdown(dropdown) {
+        // Toggle visibility between 'none' and 'flex'
+        if (dropdown.style.display === 'flex') {
+            dropdown.style.display = 'none';
+        } else {
+            dropdown.style.display = 'flex';
+        }
     }
+
+    // Use a single function for both touch and click events
+    const handleButtonClick = (button, dropdown) => (event) => {
+        // Prevent the default click event from affecting other elements
+        event.stopPropagation();
+        toggleDropdown(dropdown);
+    };
+
+    // Add event listeners for both 'click' and 'touchstart'
+    shareButton.addEventListener('click', handleButtonClick(shareButton, shareOptions));
+    shareButton.addEventListener('touchstart', handleButtonClick(shareButton, shareOptions));
+
+    telegramButton.addEventListener('click', handleButtonClick(telegramButton, telegramOptions));
+    telegramButton.addEventListener('touchstart', handleButtonClick(telegramButton, telegramOptions));
+
+    // Listen for clicks on the window to close the dropdowns
+    window.addEventListener('click', (event) => {
+        if (!shareButton.contains(event.target) && !telegramButton.contains(event.target)) {
+            shareOptions.style.display = 'none';
+            telegramOptions.style.display = 'none';
+        }
+    });
+
+    // Also listen for touch events to close the dropdowns
+    window.addEventListener('touchstart', (event) => {
+        if (!shareButton.contains(event.target) && !telegramButton.contains(event.target)) {
+            shareOptions.style.display = 'none';
+            telegramOptions.style.display = 'none';
+        }
+    });
+}
+
+// Call the new setup function on DOM content loaded
+window.addEventListener('DOMContentLoaded', () => {
+    populateCertificateData();
+    setupButtons();
+    updateShareLinks();
+});
     
     function updateShareLinks() {
         const playerName = document.getElementById("cert-player-name").textContent;
