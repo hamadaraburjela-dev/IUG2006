@@ -289,7 +289,72 @@
 </div>
 </div>
 <div id="toast-notification"></div>
-<script defer="True" src="assets/js/statusBar.js"></script>
+    <!-- Visual & audio small enhancements -->
+    <style>
+    /* subtle entrance animation */
+    @keyframes floatIn { from { opacity: 0; transform: translateY(12px) scale(.995); } to { opacity:1; transform: translateY(0) scale(1); } }
+    .hero-card { animation: floatIn 560ms cubic-bezier(.22,.9,.32,1) both; }
+    .feature-card { transition: transform .28s ease, box-shadow .28s ease; }
+    .feature-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 18px 40px rgba(6,80,45,0.08); }
+    .main-cta { transition: transform .18s ease, box-shadow .18s ease; }
+    .main-cta:active { transform: translateY(2px) scale(.995); }
+    .action-button:focus, .main-cta:focus { outline: 3px solid rgba(6,100,60,0.12); outline-offset: 4px; }
+    /* subtle pulse on load for CTA to draw attention */
+    @keyframes pulseCta { 0%{ box-shadow: 0 10px 30px rgba(5,75,45,0.16);}50%{box-shadow:0 16px 40px rgba(5,75,45,0.22);}100%{box-shadow:0 10px 30px rgba(5,75,45,0.16);} }
+    .main-cta.pulse { animation: pulseCta 2200ms ease-in-out 600ms infinite; }
+    </style>
+
+    <script>
+    // Lightweight audio unlocking and UI sounds. Uses existing audio elements in the page.
+    (function(){
+      let unlocked = false;
+      const clickAudio = document.getElementById('transition-sound');
+      const guideAudio = document.getElementById('guide-appears-sound');
+      // set gentle volumes
+      if (clickAudio) clickAudio.volume = 0.24;
+      if (guideAudio) guideAudio.volume = 0.18;
+
+      function unlockAudioOnce(){
+        if (unlocked) return;
+        unlocked = true;
+        try {
+          // small play/pause to unlock on browsers that require gesture
+          if (guideAudio) {
+            guideAudio.play().then(()=>{ guideAudio.pause(); guideAudio.currentTime = 0; }).catch(()=>{});
+          }
+        } catch(e){}
+        document.removeEventListener('pointerdown', unlockAudioOnce);
+      }
+
+      document.addEventListener('pointerdown', unlockAudioOnce, { once: true });
+
+      // play click sound on primary interactions
+      function playClick(){ if (clickAudio) { try { clickAudio.currentTime = 0; clickAudio.play().catch(()=>{}); } catch(e){} } }
+
+      // wire buttons and CTA
+      document.addEventListener('DOMContentLoaded', ()=>{
+        // add pulse to CTA briefly
+        const cta = document.querySelector('.main-cta');
+        if (cta) { cta.classList.add('pulse'); setTimeout(()=>cta.classList.remove('pulse'), 5000); }
+
+        document.querySelectorAll('.main-cta, .action-button, .feature-card, .share-btn').forEach(el=>{
+          el.addEventListener('click', (e)=>{ playClick(); });
+          // small pointer feedback for touch devices
+          el.addEventListener('pointerdown', ()=>{ el.style.transform = 'translateY(1px)'; setTimeout(()=>el.style.transform='',160); });
+        });
+
+        // friendly hover sound for feature cards (pointerenter, but only on pointer devices)
+        document.querySelectorAll('.feature-card').forEach(card=>{
+          card.addEventListener('pointerenter', (ev)=>{
+            if (ev.pointerType === 'mouse') return; // avoid playing on hover via mouse
+            playClick();
+          });
+        });
+      });
+    })();
+    </script>
+
+    <script defer="True" src="assets/js/statusBar.js"></script>
 <script defer="True" src="assets/js/script.js"></script>
 <script defer="True" src="assets/js/quiz-logic.js"></script>
 <script defer="True" src="assets/js/common-fixes.js"></script>
