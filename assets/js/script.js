@@ -192,6 +192,39 @@ window.correctAnswerAction = (points) => {
     }
 };
 document.addEventListener('DOMContentLoaded', () => {
+        function groupMapOptions() {
+            try {
+                const containers = document.querySelectorAll('#map-scene .options-container');
+                containers.forEach(container => {
+                    const children = Array.from(container.children);
+                    const wrapperNodes = [];
+                    for (let i = 0; i < children.length; i++) {
+                        const el = children[i];
+                        if (el.classList && el.classList.contains('option-btn')) {
+                            const wrap = document.createElement('div');
+                            wrap.className = 'option-wrap';
+                            wrap.appendChild(el);
+                            const next = children[i+1];
+                            if (next && next.classList && next.classList.contains('stage-points-pill')) {
+                                wrap.appendChild(next);
+                                i++; // skip the pill we just consumed
+                            }
+                            wrapperNodes.push(wrap);
+                        } else if (el.classList && el.classList.contains('stage-points-pill')) {
+                            // stray pill without button: wrap it alone
+                            const wrap = document.createElement('div');
+                            wrap.className = 'option-wrap';
+                            wrap.appendChild(el);
+                            wrapperNodes.push(wrap);
+                        }
+                    }
+                    // replace container content with wrappers
+                    container.innerHTML = '';
+                    wrapperNodes.forEach(w => container.appendChild(w));
+                });
+            } catch(e) { /* ignore */ }
+        }
+
         function injectStagePointsOnMap() {
             try {
                 const mapBtns = document.querySelectorAll('#map-scene .option-btn');
@@ -213,7 +246,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             } catch(e) { console.warn('injectStagePointsOnMap failed', e); }
         }
-        injectStagePointsOnMap();
+    // Group option buttons with their stage-points-pill so grid places items correctly
+    groupMapOptions();
+    injectStagePointsOnMap();
         try {
             if (window.gameState && window.gameState.attempts) {
                 Object.entries(window.gameState.attempts).forEach(([quizId, rec]) => {

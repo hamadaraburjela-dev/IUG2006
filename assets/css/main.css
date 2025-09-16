@@ -1043,7 +1043,8 @@ img[src*="first_faculties_q"] {
 /* --- قائمة التنقل الداخلية (الأيقونات) مع تأثير التوهج --- */
 .nav-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    /* Force two columns on desktop/laptop for consistent layout */
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
     gap: 25px;
 }
 .nav-item {
@@ -2960,7 +2961,8 @@ body {
 }
 
 .nav-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    /* Keep a consistent two-column layout on laptop/desktop; smaller screens overridden by media queries */
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
     gap: 15px;
 }
 .item-card-grid {
