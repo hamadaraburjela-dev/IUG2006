@@ -503,20 +503,30 @@
   // --- profile collection UI: branch (أدبي/علمي) + تقدير التوجيهي ---
   function showProfileForm(){
     choices.innerHTML = '';
-    // branch buttons
-    const branches = [ {id:'sci','label':'علمي'}, {id:'arts','label':'أدبي'} ];
-    const row = document.createElement('div'); row.style.display='flex'; row.style.gap='8px'; row.style.justifyContent='center';
+    // extended branch list per user request
+    const branches = [
+      {id:'sci', label:'الفرع العلمي'},
+      {id:'arts', label:'الفرع الأدبي'},
+      {id:'sharia', label:'الفرع الشرعي'},
+      {id:'biz', label:'الفرع التجاري (الإدارة والاقتصاد)'},
+      {id:'industrial', label:'الفرع الصناعي'},
+      {id:'it', label:'فرع تكنولوجيا المعلومات (IT)'},
+      {id:'agri', label:'الفرع الزراعي'},
+      {id:'hotel', label:'الفرع الفندقي والاقتصاد المنزلي'}
+    ];
+    const grid = document.createElement('div');
+    grid.style.display = 'flex'; grid.style.flexWrap = 'wrap'; grid.style.gap = '10px'; grid.style.justifyContent = 'center';
     branches.forEach(b=>{
-      const btn = document.createElement('button'); btn.className='choice'; btn.textContent = b.label;
+      const btn = document.createElement('button'); btn.className='choice'; btn.textContent = b.label; btn.style.minWidth='160px';
       btn.onclick = ()=>{
         profile.branch = b.id;
         addUser(b.label);
         // then ask for tawjihi grade
         renderTawjihiInput();
       };
-      row.appendChild(btn);
+      grid.appendChild(btn);
     });
-    choices.appendChild(row);
+    choices.appendChild(grid);
     // helper: render numeric input for Tawjihi
     function renderTawjihiInput(){
       choices.innerHTML = '';
@@ -671,24 +681,48 @@
       let s=0;
       for(const k in m.dom){ s += (m.dom[k]||0) * (norm[k]||0); }
       // قواعد واقعية إضافية:
-      // استخدم معلومات الملف الشخصي للتعديل الخفيف على النتيجة
-      if(profile.branch === 'arts'){
-        // إن كان أدبيًا، خفّف من أوزان التخصصات الهندسية والطبية قليلاً
-        if(['med','ee','me_ind','civil','math_phys'].includes(m.id)) s -= 0.06;
-      } else if(profile.branch === 'sci'){
-        // إن كان علميًّا، امنح دفعة طفيفة للتخصصات العلمية والطبية
-        if(['med','ee','me_ind','civil','math_phys','chem_bio_biotech'].includes(m.id)) s += 0.05;
+      // استخدم معلومات الملف الشخصي للتعديل على النتيجة (تأثير واضح لأن المستخدم طلب ذلك)
+      const branch = profile.branch;
+      if(branch){
+        // معاملة عامة: دفعات/تخفيضات معقولة حسب الفرع
+        if(branch === 'arts'){
+          if(['med','ee','me_ind','civil','math_phys','ai_cs'].includes(m.id)) s -= 0.09;
+          if(['lang','media','edu','hist_geo_arc','social'].includes(m.id)) s += 0.06;
+        }
+        if(branch === 'sci'){
+          if(['med','ee','me_ind','civil','math_phys','chem_bio_biotech','ai_cs'].includes(m.id)) s += 0.08;
+        }
+        if(branch === 'sharia'){
+          if(['law_sharia','islamic'].includes(m.id)) s += 0.10;
+        }
+        if(branch === 'biz'){
+          if(['biz','media','lang'].includes(m.id)) s += 0.08;
+        }
+        if(branch === 'industrial'){
+          if(['me_ind','ee','civil'].includes(m.id)) s += 0.09;
+        }
+        if(branch === 'it'){
+          if(['ai_cs','soft_web','it'].includes(m.id) || ['it'].includes(m.id)) s += 0.12;
+          if(['it','sw','ai_cs'].includes(m.id)) s += 0.02; // small extra for related
+        }
+        if(branch === 'agri'){
+          if(['earth_marine','chem_bio_biotech','health'].includes(m.id)) s += 0.07;
+        }
+        if(branch === 'hotel'){
+          if(['biz','social','media'].includes(m.id)) s += 0.06;
+        }
       }
       if(m.id==='med' && !(norm.health>0.7 && norm.sci_chem_bio>0.7)) s -= 0.15;
       if(['ee','me_ind','civil'].includes(m.id) && norm.sci_math<0.45) s -= 0.08;
       if(m.id==='arch' && norm.arch<0.5) s -= 0.08;
       if(m.id==='ai_cs' && norm.ai_cs<0.5) s -= 0.08;
-      // تعديل بسيط حسب تقدير التوجيهي: درجات أعلى تزيد من فرص القبول في بعض البرامج
+      // تعديل أكبر حسب تقدير التوجيهي لأن المستخدم أكد أهميته
       if(profile.tawjihi){
         const g = profile.tawjihi;
-        if(g >= 90) s += 0.04;
-        else if(g >= 80) s += 0.02;
-        else if(g < 60) s -= 0.03;
+        if(g >= 95) s += 0.08;
+        else if(g >= 90) s += 0.06;
+        else if(g >= 80) s += 0.03;
+        else if(g < 60) s -= 0.06;
       }
       return {...m, score: Math.max(0, s)};
     }).sort((a,b)=>b.score-a.score);
