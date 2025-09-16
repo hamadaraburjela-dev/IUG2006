@@ -290,19 +290,37 @@
 </div>
 <div id="toast-notification"></div>
     <!-- Visual & audio small enhancements -->
-    <style>
-    /* subtle entrance animation */
-    @keyframes floatIn { from { opacity: 0; transform: translateY(12px) scale(.995); } to { opacity:1; transform: translateY(0) scale(1); } }
-    .hero-card { animation: floatIn 560ms cubic-bezier(.22,.9,.32,1) both; }
-    .feature-card { transition: transform .28s ease, box-shadow .28s ease; }
-    .feature-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 18px 40px rgba(6,80,45,0.08); }
-    .main-cta { transition: transform .18s ease, box-shadow .18s ease; }
-    .main-cta:active { transform: translateY(2px) scale(.995); }
-    .action-button:focus, .main-cta:focus { outline: 3px solid rgba(6,100,60,0.12); outline-offset: 4px; }
-    /* subtle pulse on load for CTA to draw attention */
-    @keyframes pulseCta { 0%{ box-shadow: 0 10px 30px rgba(5,75,45,0.16);}50%{box-shadow:0 16px 40px rgba(5,75,45,0.22);}100%{box-shadow:0 10px 30px rgba(5,75,45,0.16);} }
-    .main-cta.pulse { animation: pulseCta 2200ms ease-in-out 600ms infinite; }
-    </style>
+  <style>
+  /* subtle entrance animation */
+  @keyframes floatIn { from { opacity: 0; transform: translateY(12px) scale(.995); } to { opacity:1; transform: translateY(0) scale(1); } }
+  .hero-card { animation: floatIn 560ms cubic-bezier(.22,.9,.32,1) both; }
+  .feature-card { transition: transform .28s ease, box-shadow .28s ease; }
+  .feature-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 18px 40px rgba(6,80,45,0.08); }
+  .main-cta { transition: transform .18s ease, box-shadow .18s ease; }
+  .main-cta:active { transform: translateY(2px) scale(.995); }
+  .action-button:focus, .main-cta:focus { outline: 3px solid rgba(6,100,60,0.12); outline-offset: 4px; }
+  /* subtle pulse on load for CTA to draw attention */
+  @keyframes pulseCta { 0%{ box-shadow: 0 10px 30px rgba(5,75,45,0.16);}50%{box-shadow:0 16px 40px rgba(5,75,45,0.22);}100%{box-shadow:0 10px 30px rgba(5,75,45,0.16);} }
+  .main-cta.pulse { animation: pulseCta 2200ms ease-in-out 600ms infinite; }
+
+  /* --- Prominent registration button styling (ripple + glow) --- */
+  .ripple-btn { position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; }
+  .ripple-btn.ripple-glow { transform: translateY(-2px) scale(1.01); box-shadow: 0 14px 36px rgba(7,96,59,0.18), 0 0 0 6px rgba(7,96,59,0.06); transition: box-shadow .36s ease, transform .12s ease; }
+  .ripple-btn:focus { outline: none; box-shadow: 0 0 0 6px rgba(7,96,59,0.12); }
+
+  /* ripple element */
+  .ripple { position: absolute; border-radius: 50%; pointer-events: none; transform: scale(0); opacity: 0.9; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(255,255,255,0.55)); }
+  @keyframes rippleAnim { to { transform: scale(1); opacity: 0; } }
+  .ripple-animate { animation: rippleAnim 560ms cubic-bezier(.2,.8,.25,1) forwards; }
+
+  /* subtle soft halo using pseudo-element for larger emphasis on hover/focus */
+  .ripple-btn::after { content: ''; position: absolute; inset: -6px; border-radius: 999px; pointer-events: none; transition: opacity .28s ease, filter .28s ease; opacity: 0; filter: blur(8px); }
+  .ripple-btn.ripple-glow::after { opacity: 1; background: linear-gradient(90deg, rgba(10,107,62,0.06), rgba(6,80,45,0.04)); }
+
+  /* ensure ripple inside rounded pill doesn't overflow visually */
+  .main-cta.ripple-btn { border-radius: 999px; }
+
+  </style>
 
     <script>
     // Lightweight audio unlocking and UI sounds. Uses existing audio elements in the page.
@@ -349,6 +367,43 @@
             if (ev.pointerType === 'mouse') return; // avoid playing on hover via mouse
             playClick();
           });
+        });
+      });
+    })();
+    </script>
+
+    <script>
+    // Visual ripple + glow for registration buttons (main CTA and form start button)
+    (function(){
+      function createRipple(e){
+        const btn = this;
+        const rect = btn.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height) * 1.6;
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple ripple-animate';
+        ripple.style.width = ripple.style.height = size + 'px';
+        // compute coordinates relative to button
+        const left = (e.clientX - rect.left) - size/2;
+        const top = (e.clientY - rect.top) - size/2;
+        ripple.style.left = left + 'px';
+        ripple.style.top = top + 'px';
+        btn.appendChild(ripple);
+        // glow class
+        btn.classList.add('ripple-glow');
+        setTimeout(()=>{ btn.classList.remove('ripple-glow'); }, 700);
+        // cleanup
+        setTimeout(()=>{ try{ ripple.remove(); }catch(e){} }, 700);
+      }
+
+      document.addEventListener('DOMContentLoaded', ()=>{
+        const sel = '#show-register-btn, #start-button';
+        document.querySelectorAll(sel).forEach(btn=>{
+          // ensure visual container and accessibility
+          btn.classList.add('ripple-btn');
+          btn.setAttribute('aria-pressed', 'false');
+          btn.addEventListener('click', createRipple);
+          // keyboard-triggered activation: simulate center ripple
+          btn.addEventListener('keydown', function(ev){ if (ev.key === 'Enter' || ev.key === ' ') { const fake = { clientX: btn.getBoundingClientRect().left + btn.offsetWidth/2, clientY: btn.getBoundingClientRect().top + btn.offsetHeight/2 }; createRipple.call(btn, fake); } });
         });
       });
     })();
