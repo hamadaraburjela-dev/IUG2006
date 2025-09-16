@@ -2,42 +2,7 @@
 
 // غيّر للرابط الخاص بك
 // ضع رابط نشر Google Apps Script هنا 👇
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-LAUgjFXgcySQv4_nVK3k_y2edp7JKc4LKjmCK7eIPae2vXD_bm9yvvoRnEkLmi-EkA/exec';
-
-// دالة لمزامنة النقاط مع Code.gs
-async function syncScoreToServer(uniqueId, score, currentScene = '', answeredQuestions = [], selectedGuide = '') {
-  if (!uniqueId) {
-    console.warn('No uniqueId to sync score with.');
-    return;
-  }
-  try {
-    const res = await fetch(SCRIPT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "updatePlayerState",
-        uniqueId,
-        score,
-        currentScene,
-        answeredQuestions,
-        selectedGuide
-      }),
-    });
-    const data = await res.json();
-    if (data.result === 'success') {
-      console.log("✅ Score synced:", score);
-    } else {
-      console.warn("⚠️ Score sync returned:", data);
-    }
-  } catch (err) {
-    console.error("❌ Score sync failed:", err);
-  }
-}
-
-// تحديث النقاط (تستخدمها الدوال الأخرى مثل incrementMainScore)
-function updatePlayerScore(uniqueId, score, currentScene = '', answeredQuestions = [], selectedGuide = '') {
-  syncScoreToServer(uniqueId, score, currentScene, answeredQuestions, selectedGuide);
-}
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwcQ3rUahMFDFqyiD_Do7M7SsgCUU2lPHGScI5MDajD1d8aV_eMsldX9CQaxUapMKqKxg/exec';
 
 // --- بداية منطق الشارات ---
 const allBadges = {
