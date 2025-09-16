@@ -348,7 +348,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalCloseBtn = document.getElementById('modal-close-btn');
     const correctSound = document.getElementById('correct-sound');
     const incorrectSound = document.getElementById('incorrect-sound');
-    const transitionSound = document.getElementById('transition-sound');
+    // Accept either id="transition-sound" or id="transitionSound" (some HTML files use camelCase)
+    const transitionSound = document.getElementById('transition-sound') || document.getElementById('transitionSound');
     const guideAppearsSound = document.getElementById('guide-appears-sound');
     const videoOverlay = document.getElementById('video-overlay');
     const welcomeVideo = document.getElementById('welcome-video');
@@ -369,6 +370,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         isAudioUnlocked = true;
     }
+
+    // Ensure audio is unlocked after the first user interaction (many browsers block autoplay)
+    try {
+        document.body.addEventListener('click', unlockAudio, { once: true });
+    } catch (e) {}
 
     function playSound(soundElement) {
         if (isAudioUnlocked && soundElement) {

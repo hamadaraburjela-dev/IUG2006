@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const contentSections = document.querySelectorAll('.content-section');
     const backButtons = document.querySelectorAll('.back-btn');
     const navGrid = document.querySelector('.nav-grid');
-    const transitionSound = document.getElementById('transitionSound');
+    // Accept either id="transition-sound" or id="transitionSound"
+    const transitionSound = document.getElementById('transition-sound') || document.getElementById('transitionSound');
 
     // Function to play sound effects
     function playSound(audioElement) {
