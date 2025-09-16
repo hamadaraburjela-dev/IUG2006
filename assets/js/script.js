@@ -223,6 +223,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         } catch(e) {}
+
+        // Intercept inline onclicks like: onclick="window.location.href='library.html'"
+        try {
+            const inlineNavEls = document.querySelectorAll('[onclick]');
+            inlineNavEls.forEach(el => {
+                const onclick = el.getAttribute('onclick') || '';
+                // simple regex to capture the destination when assigning window.location.href
+                const m = onclick.match(/window\.location\.href\s*=\s*['"]([^'"]+\.html)['"]/i);
+                if (m && m[1]) {
+                    const href = m[1];
+                    // remove inline onclick to avoid double navigation
+                    el.removeAttribute('onclick');
+                    el.addEventListener('click', function(evt){
+                        try { evt.preventDefault(); } catch(e){}
+                        try { unlockAudio(); } catch(e){}
+                        try {
+                            if (transitionSound) {
+                                transitionSound.currentTime = 0;
+                                transitionSound.play().catch(()=>{});
+                            }
+                        } catch(e){}
+                        setTimeout(() => { window.location.href = href; }, 220);
+                    });
+                }
+            });
+        } catch(e) { /* ignore */ }
     
     const allGuides = [
         { id: 'medicine', name: 'د. خالد', gender: 'male', college: 'كلية الطب', emoji: '⚕️', description: 'الدقة والتشخيص السليم هما مفتاح النجاح. سأرشدك في رحلة معرفية صحية.' },
