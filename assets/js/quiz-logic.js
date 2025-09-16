@@ -1487,7 +1487,7 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
         initializeQuiz('start-exchange-quiz-btn', exchangeQuizData, 'تحدي التبادل الأكاديمي');
         initializeQuiz('start-studentaffairs-quiz-btn', studentAffairsQuizData, 'تحدي شؤون الطلبة');
         initializeQuiz('start-library-quiz-btn', libraryQuizData, 'تحدي المكتبة');
-        initializeQuiz('start-cafeteria-quiz-btn', cafeteriaQuizData, 'تحدي الكليات');
+        initializeQuiz('start-cafeteria-quiz-btn', cafeteriaQuizData, 'تحدي الكافتيريا');       
         initializeQuiz('start-faculties-quiz-btn', facultiesQuizData, 'تحدي الكليات');
         initializeQuiz('start-gate-quiz-btn', gateQuizData, 'تحدي بوابة الجامعة');
         const closeQuiz = () => {
