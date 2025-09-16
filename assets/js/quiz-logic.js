@@ -1502,8 +1502,7 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
         initializeQuiz('start-gate-quiz-btn', gateQuizData, 'تحدي بوابة الجامعة');
         const closeQuiz = () => {
             clearInterval(questionTimer);
-            if (quizModal) quizModal.classList.remove('active');
-             if(typeof checkAndAwardBadges === 'function') {     
+            if (quizModal) quizModal.classList.remove('active'); {     
     }
         };
         if (closeQuizModalBtn) {
