@@ -34,7 +34,19 @@
   .feature-card .icon { font-size:34px; display:block; margin-bottom:10px; }
   .main-cta { margin-top:26px; padding:16px 40px; border-radius:999px; font-size:18px; background: linear-gradient(180deg,#0a6b3e,#075836); color:#fff; box-shadow: 0 10px 30px rgba(5,75,45,0.18); border:none; }
   .reset-link-container { margin-top:14px; }
-  @media (max-width:900px) { .features-grid { grid-template-columns: 1fr; } .hero-card{padding:22px} .hero-title{font-size:22px} }
+  /* Responsive tweaks: 2 columns on medium mobile, 1 column on small phones */
+  @media (max-width:900px) { .features-grid { grid-template-columns: repeat(2,1fr); gap:14px; } .hero-card{padding:22px} .hero-title{font-size:22px} }
+  @media (max-width:600px) {
+    .features-grid { grid-template-columns: 1fr; gap:12px; }
+    .feature-card { padding:14px; }
+    .feature-card .icon { font-size:28px; margin-bottom:8px; }
+    .feature-card h4 { font-size:16px; margin:6px 0; }
+    .feature-card p { font-size:13px; color: #64736b; line-height:1.45; }
+    .hero-card { padding:14px; }
+    .hero-title { font-size:20px; }
+    /* reduce hero margins so cards have breathing room on small screens */
+    #landing-screen { padding-left:10px; padding-right:10px; }
+  }
   </style>
   <style>
   /* Form helper and error styles */
