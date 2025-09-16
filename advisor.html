@@ -11,57 +11,68 @@
 
 <style>
   :root{
-    --iug-green: #0a6b3a;
-    --iug-green-700: #075836;
-    --bg: #f6fbf9;
-    --card: #ffffff;
-    --muted: #5c6d63;
-    --radius: 14px;
-    --shadow-soft: 0 12px 30px rgba(6,60,40,0.06);
+    --iug-green:#0a6b3a; --iug-green-700:#075836; --bg:#f4fbf7; --card:#ffffff;
+    --muted:#5c6d63; --radius:14px; --shadow-soft:0 10px 30px rgba(6,60,40,0.06);
+    --accent:linear-gradient(90deg,var(--iug-green),var(--iug-green-700));
   }
-
   *{box-sizing:border-box}
-  body{font-family:'Cairo',sans-serif;background:var(--bg);margin:0;color:#153;}
+  html,body{height:100%} 
+  body{font-family:'Cairo',sans-serif;background:var(--bg);margin:0;color:#153;line-height:1.4}
   #status-bar-placeholder{height:12px}
 
-  .shell{width:100%;max-width:1100px;margin:18px auto;padding:12px}
-  .container{background:var(--card);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-soft)}
+  .shell{width:100%;max-width:980px;margin:16px auto;padding:12px}
+  .container{background:var(--card);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-soft);border:1px solid rgba(10,107,58,0.04)}
 
-  /* Intro / Hero */
-  .intro{padding:26px 22px 18px;border-bottom:1px solid #f0f5f2}
-  .intro h1{color:var(--iug-green);text-align:center;font-size:1.6rem;margin-bottom:6px}
-  .intro p{color:var(--muted);text-align:center;margin-bottom:12px}
-  .hero{display:flex;align-items:center;justify-content:center;margin:0 auto 12px;width:min(560px,92%);height:120px;border-radius:12px;background:linear-gradient(180deg,rgba(10,107,58,0.06),rgba(7,130,79,0.04));font-size:44px}
+  /* Intro */
+  .intro{padding:22px 20px;border-bottom:1px solid #edf6ef}
+  .intro h1{color:var(--iug-green);text-align:center;font-size:1.45rem;margin:0 0 8px}
+  .intro p{color:var(--muted);text-align:center;margin:0 0 12px}
+  .hero{display:flex;align-items:center;justify-content:center;margin:12px auto;width:min(620px,92%);height:110px;border-radius:12px;background:linear-gradient(180deg,rgba(10,107,58,0.06),rgba(7,130,79,0.04));font-size:40px}
 
-  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
-  .feature{background:#fbfffb;border-radius:12px;padding:12px;border:1px solid rgba(10,107,58,0.04);text-align:center}
-  .feature h3{color:var(--iug-green);font-size:1rem;margin-bottom:6px}
-  .feature p{color:var(--muted);font-size:.95rem}
+  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+  .feature{background:#fbfffb;border-radius:10px;padding:12px;border:1px solid rgba(10,107,58,0.04);text-align:center}
+  .feature h3{color:var(--iug-green);font-size:0.98rem;margin-bottom:6px}
 
   .center{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:14px}
   .btn{border:none;border-radius:999px;padding:12px 18px;font-size:1rem;color:#fff;cursor:pointer}
-  .btn.primary{background:linear-gradient(180deg,var(--iug-green),var(--iug-green-700));box-shadow:0 10px 30px rgba(10,107,58,0.12)}
+  .btn.primary{background:var(--accent);box-shadow:0 8px 24px rgba(10,107,58,0.12)}
   .btn.ghost{background:transparent;color:var(--iug-green);border:1px solid rgba(10,107,58,0.08)}
 
-  /* Choices */
-  .choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;padding:6px;margin-top:10px}
-  .choice{padding:10px;border-radius:999px;background:#fff;border:1px solid #eef6ef;cursor:pointer;text-align:center;transition:transform .14s ease,box-shadow .14s}
-  .choice:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(6,60,40,0.04)}
-  .choice.selected{background:linear-gradient(90deg,var(--iug-green),var(--iug-green-700));color:#fff}
+  /* Choices (mobile-first) */
+  .choices{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px;margin-top:10px}
+  .choice{padding:12px;border-radius:12px;background:#fff;border:1px solid #eef6ef;cursor:pointer;text-align:center;transition:transform .14s ease,box-shadow .14s,color .12s}
+  .choice:hover{transform:translateY(-4px);box-shadow:0 10px 26px rgba(6,60,40,0.04)}
+  .choice[aria-pressed='true']{background:var(--iug-green);color:#fff;border-color:var(--iug-green)}
+  .choice:disabled{opacity:0.6;cursor:not-allowed}
 
   /* Chat area */
-  .chat-wrap{display:grid;grid-template-rows:auto 1fr auto;gap:8px;padding:14px}
+  .chat-wrap{display:grid;grid-template-rows:auto 1fr auto;gap:10px;padding:14px}
   .progress{display:flex;align-items:center;gap:10px}
   .bar{height:8px;background:#eef6f0;border-radius:999px;overflow:hidden;flex:1}
-  .fill{height:100%;background:linear-gradient(90deg,var(--iug-green),var(--iug-green-700));width:0%;transition:width .2s linear}
-  .progress .txt{color:var(--muted);font-size:.95rem}
+  .fill{height:100%;background:var(--accent);width:0%;transition:width .2s linear}
+  .progress .txt{color:var(--muted);font-size:.92rem}
 
-  .chat{overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px;background:#fff;border:1px solid #f0f5f2;border-radius:12px}
-  .row{display:flex;gap:10px}
-  .bot .bubble{background:#f6fff7;border:1px solid #eef7ee;padding:10px;border-radius:12px;max-width:78%}
-  .user .bubble{background:#e8f8ff;border:1px solid #e0f0fb;padding:10px;border-radius:12px;max-width:78%;align-self:flex-end}
+  .chat{overflow:auto;padding:14px;display:flex;flex-direction:column;gap:12px;background:#fbfffb;border-radius:12px;border:1px solid #f0f5f2}
+  .row{display:flex;gap:10px;align-items:flex-end}
+  .row.bot{justify-content:flex-start}
+  .row.user{justify-content:flex-end}
 
-  .typing{display:flex;align-items:center;gap:8px;color:var(--muted);padding:8px;border-radius:12px}
+  .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#f6fff6);border:1px solid rgba(10,107,58,0.06);font-size:18px}
+
+  .bubble{padding:10px 12px;border-radius:12px;max-width:78%;box-shadow:0 6px 18px rgba(6,60,40,0.04);animation:pop .16s ease;position:relative}
+  .bot .bubble{background:linear-gradient(180deg,#f7fff8,#ffffff);border:1px solid rgba(8,120,60,0.04);color:#0b3b24}
+  .user .bubble{background:linear-gradient(180deg,#e8f8ff,#ffffff);border:1px solid rgba(0,140,210,0.06);color:#053047}
+
+  .bubble .meta{display:block;font-size:0.78rem;color:var(--muted);margin-top:6px}
+  .timestamp{font-size:0.72rem;color:rgba(20,40,30,0.45);margin-inline-start:8px}
+
+  @keyframes pop{from{transform:translateY(6px) scale(.995);opacity:0}to{transform:none;opacity:1}}
+
+  .typing{display:flex;align-items:center;gap:10px;color:var(--muted);padding:8px;border-radius:12px}
+  .dot{width:8px;height:8px;border-radius:50%;background:rgba(10,107,58,0.12);animation:blink 1s infinite}
+  .dot:nth-child(2){animation-delay:.12s}
+  .dot:nth-child(3){animation-delay:.24s}
+  @keyframes blink{0%{transform:translateY(0);opacity:.35}50%{transform:translateY(-4px);opacity:1}100%{transform:translateY(0);opacity:.35}}
 
   .controls{position:sticky;bottom:0;background:transparent;padding-top:6px}
   .actions{display:flex;justify-content:center;gap:8px;margin-top:10px}
@@ -69,19 +80,20 @@
   /* Results */
   .results{padding:18px;background:transparent}
   .results h2{text-align:center;color:var(--iug-green);margin-bottom:8px}
-  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:10px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px}
   .card{background:#fff;border-radius:12px;padding:12px;border:1px solid #f0f5f2}
 
   /* Responsive tweaks */
   @media (max-width:900px){.features{grid-template-columns:repeat(2,1fr)} }
   @media (max-width:600px){
     .features{grid-template-columns:1fr}
-    .hero{height:110px;font-size:36px}
+    .hero{height:100px;font-size:32px}
     .container{margin:8px}
     .intro{padding:16px}
+    .choices{grid-template-columns:repeat(2,1fr)}
+    .avatar{width:32px;height:32px}
   }
 
-  /* small helpers */
   .muted{color:var(--muted)}
 </style>
 </head>
@@ -285,13 +297,15 @@
      ========================= */
   function scrollChat(){ chat.scrollTop = chat.scrollHeight; }
   function addBot(text){
-    const row = document.createElement('div'); row.className='row bot';
-    row.innerHTML = `<div class="avatar">🤖</div><div class="bubble">${text}</div>`;
+  const row = document.createElement('div'); row.className='row bot';
+  const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  row.innerHTML = `<div class="avatar" aria-hidden>🤖</div><div class="bubble">${text}<span class="meta"><span class="timestamp">${time}</span></span></div>`;
     chat.appendChild(row); scrollChat();
   }
   function addUser(text){
-    const row = document.createElement('div'); row.className='row user';
-    row.innerHTML = `<div class="bubble">${text}</div>`;
+  const row = document.createElement('div'); row.className='row user';
+  const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  row.innerHTML = `<div class="bubble">${text}<span class="meta"><span class="timestamp">${time}</span></span></div>`;
     chat.appendChild(row); scrollChat();
   }
   function showTyping(show){ typing.style.display = show ? 'flex' : 'none'; }
@@ -303,46 +317,77 @@
     progTxt.textContent = `تمت الإجابة على ${answered}/${TOTAL} (${pct}٪)`;
   }
 
+  function setChoicesEnabled(enabled){
+    const btns = Array.from(choices.querySelectorAll('.choice'));
+    btns.forEach(b=>{ b.disabled = !enabled; });
+  }
+
   function renderChoices(){
     choices.innerHTML = '';
-    ['1 لا ينطبق','2 ينطبق قليلاً ','3 محايد','4 ينطبق','5 ينطبق جدّاً'].forEach((lbl, i)=>{
+    const labels = ['1 لا ينطبق','2 ينطبق قليلاً','3 محايد','4 ينطبق','5 ينطبق جدّاً'];
+    labels.forEach((lbl, i)=>{
       const b = document.createElement('button');
-      b.className='choice'; b.textContent=lbl;
-      b.onclick = ()=>{
-        const val = i+1;
-        responses[idx] = val;
-        addUser(lbl);
-        idx++;
-        updateProgress();
-        if(idx < TOTAL) {
-          nextQuestion();
-        } else {
-          endQuestions();
-        }
-      };
+      b.className='choice'; b.textContent=lbl; b.setAttribute('role','button');
+      b.setAttribute('aria-pressed','false');
+      b.onclick = ()=>{ choose(i); };
       choices.appendChild(b);
     });
+    // keyboard support: 1..5 to choose
+    function onKey(e){
+      if(document.activeElement && document.activeElement.tagName==='INPUT') return;
+      const k = e.key;
+      if(/[1-5]/.test(k)){
+        const n = parseInt(k,10)-1;
+        choose(n);
+      }
+    }
+    function choose(i){
+      // disable while typing
+      if(typing.style.display !== 'none') return;
+      const btns = Array.from(choices.querySelectorAll('.choice'));
+      const b = btns[i]; if(!b) return;
+      btns.forEach(x=>x.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true');
+      const val = i+1;
+      responses[idx] = val;
+      addUser(labels[i]);
+      idx++;
+      updateProgress();
+      window.removeEventListener('keydown', onKey);
+      if(idx < TOTAL) {
+        nextQuestion();
+      } else {
+        endQuestions();
+      }
+    }
+    window.addEventListener('keydown', onKey);
     btnBack.style.display = idx>0 ? 'inline-block' : 'none';
   }
 
   function askQuestion(){
     const q = ITEMS[idx];
-    addBot(`سؤال ${idx+1} من ${TOTAL}: ${q.t}`);
-    renderChoices();
+    // bot 'typing' then show question
+    showTyping(true); setChoicesEnabled(false);
+    setTimeout(()=>{
+      showTyping(false);
+      addBot(`سؤال ${idx+1} من ${TOTAL}: ${q.t}`);
+      renderChoices();
+      setChoicesEnabled(true);
+    }, 420 + Math.min(900, ITEMS[idx].t.length*8));
   }
 
   function nextQuestion(){
-    choices.innerHTML = ''; showTyping(true);
-    setTimeout(()=>{ showTyping(false); askQuestion(); }, 450); // مؤشر يكتب لإحساس الدردشة
+  choices.innerHTML = ''; showTyping(true); setChoicesEnabled(false);
+  setTimeout(()=>{ showTyping(false); askQuestion(); }, 420);
   }
 
   function startChat(){
     intro.style.display='none';
     chatUI.style.display='grid';
     chat.innerHTML=''; choices.innerHTML='';
-    addBot('مرحباً! أنا مستشارك الأكاديمي الذكي للجامعة الإسلامية بغزة.');
-    setTimeout(()=>addBot('سأطرح عليك 60 سؤال قصيرة. اختر لكل عبارة درجة من 1 إلى 5.'),300);
-    setTimeout(()=>{ updateProgress(); askQuestion(); },650);
+  showTyping(true);
+  setTimeout(()=>{ showTyping(false); addBot('مرحباً! أنا مستشارك الأكاديمي الذكي للجامعة الإسلامية بغزة.'); }, 260);
+  setTimeout(()=>{ addBot('سأطرح عليك 60 سؤال قصيرة. اختر لكل عبارة درجة من 1 إلى 5. يمكنك اختيار من 1 إلى 5 أو النقر على الأزرار.') ; updateProgress(); askQuestion(); }, 700);
   }
 
   btnReady.onclick = startChat;
