@@ -1,6 +1,6 @@
 /* --- script.js (Final Updated Version with Badges Fix) --- */
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxpUJufSV4Krq9U3PKGmPUO9yWLdUYwX75nTMPnSNViLff-i3pe_hhZHpG85xYrzvxKHQ/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwKRy_pihHLrgpLtaVPgd-CFfy7RbdmyQ7zDSC67WhajEvwZE7GX1ua60abXzkhzjWzUw/exec';
 
 // --- بداية منطق الشارات ---
 const allBadges = {
