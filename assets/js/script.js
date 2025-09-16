@@ -1,6 +1,79 @@
 /* --- script.js (Final Updated Version with Badges Fix) --- */
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw9ryi8HlAuf8EGZIny9hKUsAYJKekNQOjleIPuEyf2KMArEycfu8vee7RIyEqP_E7TQQ/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxtSIj2ntj1o7GU_i9ttg7d4flk8hnq_JndiCQtuKjkyU2JYVuQD4FnTiX09KfswjLErA/exec';
+// غيّر للرابط الخاص بك
+
+// 🟢 حفظ الحالة محليًا
+function saveLocalState(uid, score) {
+  localStorage.setItem("playerUid", uid);
+  localStorage.setItem("playerScore", score);
+}
+
+// 🟢 قراءة الحالة من التخزين المحلي
+function loadLocalState() {
+  return {
+    uid: localStorage.getItem("playerUid"),
+    score: parseInt(localStorage.getItem("playerScore") || "0", 10)
+  };
+}
+
+// 🟢 تسجيل لاعب جديد
+async function registerPlayer(name, phone, year) {
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "register", name, phone, year })
+  });
+  const data = await res.json();
+
+  if (data.result === "success") {
+    saveLocalState(data.uniqueId, data.score);
+  }
+  return data;
+}
+
+// 🟢 تحديث حالة اللاعب
+async function updatePlayerState(score, scene, answeredQuestions, guide) {
+  const state = loadLocalState();
+  if (!state.uid) throw new Error("لا يوجد UID مخزن محليًا");
+
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "updatePlayerState",
+      uniqueId: state.uid,
+      score, // ← تحديث النقاط
+      currentScene: scene,
+      answeredQuestions,
+      selectedGuide: guide
+    })
+  });
+  const data = await res.json();
+
+  if (data.result === "success") {
+    saveLocalState(state.uid, score); // ← تحديث التخزين المحلي
+  }
+  return data;
+}
+
+// 🟢 جلب حالة اللاعب
+async function fetchPlayerState() {
+  const state = loadLocalState();
+  if (!state.uid) throw new Error("لا يوجد UID مخزن محليًا");
+
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "fetchPlayerState", uniqueId: state.uid })
+  });
+  const data = await res.json();
+
+  if (data.result === "success") {
+    saveLocalState(state.uid, data.playerState.score); // ← مزامنة التخزين المحلي مع السيرفر
+  }
+  return data;
+}
 
 // --- بداية منطق الشارات ---
 const allBadges = {
