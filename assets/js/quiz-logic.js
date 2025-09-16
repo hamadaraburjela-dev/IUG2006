@@ -1292,7 +1292,8 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
             
             try {
                 if (typeof window.finalizeQuizScore === 'function') {
-                    window.finalizeQuizScore(currentQuizId, score, allQuestions.length);
+                    // لا تمرر النقاط مرة أخرى حتى لا تتكرر في شريط الحالة
+                    window.finalizeQuizScore(currentQuizId, 0, allQuestions.length);
                 }
             } catch(e) { console.warn('finalizeQuizScore failed', e); }
             playSound(successSound);
