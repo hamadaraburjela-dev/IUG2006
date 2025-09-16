@@ -385,7 +385,6 @@
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
     function populateCertificateData() {
-        // Functions to populate certificate data
         const params = new URLSearchParams(window.location.search);
         let playerName = params.get("name");
         let playerScore = parseInt(params.get("score"));
@@ -424,14 +423,12 @@
                 ? `منحة ${scholarshipPercentage}% للفصل الدراسي الأول`
                 : "لم يتم الحصول على منحة";
 
-        // تشغيل الصوت
         const audio = document.getElementById("success-audio");
         if (audio) {
             audio.currentTime = 0;
             audio.play().catch(err => console.log("Autoplay blocked:", err));
         }
 
-        // تحديث QR
         const qrcodeContainer = document.getElementById("qrcode");
         if (qrcodeContainer) {
             qrcodeContainer.innerHTML = '';
@@ -485,49 +482,53 @@
         const whatsappLink = `https://wa.me/?text=${encodedMessage}`;
         document.getElementById('share-whatsapp').href = whatsappLink;
     }
-    
+
     function setupButtons() {
         const shareButton = document.getElementById('shareButton');
         const telegramButton = document.getElementById('telegramButton');
         const shareOptions = document.getElementById('shareOptions');
         const telegramOptions = document.getElementById('telegramOptions');
-        const allDropdowns = [shareOptions, telegramOptions];
 
-        function toggleDropdown(dropdown) {
-            const isVisible = dropdown.style.display === 'flex';
+        const allDropdowns = [
+            { button: shareButton, dropdown: shareOptions },
+            { button: telegramButton, dropdown: telegramOptions }
+        ];
+
+        function toggleDropdown(targetDropdown) {
+            const isVisible = targetDropdown.style.display === 'flex';
             
-            // Close all other dropdowns
-            allDropdowns.forEach(d => {
-                if (d !== dropdown) {
-                    d.style.display = 'none';
-                }
+            allDropdowns.forEach(item => {
+                item.dropdown.style.display = 'none';
             });
             
-            // Toggle the clicked dropdown
-            dropdown.style.display = isVisible ? 'none' : 'flex';
+            if (!isVisible) {
+                targetDropdown.style.display = 'flex';
+            }
         }
 
-        const handleButtonClick = (dropdown) => (event) => {
-            event.stopPropagation();
-            toggleDropdown(dropdown);
+        allDropdowns.forEach(item => {
+            item.button.addEventListener('click', (event) => {
+                event.stopPropagation();
+                toggleDropdown(item.dropdown);
+            });
+            item.button.addEventListener('touchstart', (event) => {
+                event.stopPropagation();
+                toggleDropdown(item.dropdown);
+            });
+        });
+
+        const closeAllDropdowns = (event) => {
+            allDropdowns.forEach(item => {
+                if (!item.button.contains(event.target)) {
+                    item.dropdown.style.display = 'none';
+                }
+            });
         };
 
-        shareButton.addEventListener('click', handleButtonClick(shareOptions));
-        shareButton.addEventListener('touchstart', handleButtonClick(shareOptions));
-
-        telegramButton.addEventListener('click', handleButtonClick(telegramOptions));
-        telegramButton.addEventListener('touchstart', handleButtonClick(telegramOptions));
-
-        const closeDropdowns = (event) => {
-            if (!shareButton.contains(event.target) && !telegramButton.contains(event.target)) {
-                allDropdowns.forEach(d => d.style.display = 'none');
-            }
-        };
-
-        window.addEventListener('click', closeDropdowns);
-        window.addEventListener('touchstart', closeDropdowns);
+        window.addEventListener('click', closeAllDropdowns);
+        window.addEventListener('touchstart', closeAllDropdowns);
     }
-    
+
     window.addEventListener('DOMContentLoaded', () => {
         populateCertificateData();
         setupButtons();
