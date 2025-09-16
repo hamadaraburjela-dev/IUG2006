@@ -133,6 +133,29 @@
             text-align: center;
         }
 
+        /* Ensure QR and its caption stack vertically and do not overlap */
+        .qr-code-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            position: relative;
+        }
+
+        #qrcode {
+            position: relative;
+            z-index: 2; /* make sure QR is above caption */
+            background: #fff; /* ensure white background to prevent text bleed */
+        }
+
+        .qr-code-area p {
+            margin: 0;
+            z-index: 1;
+            position: relative;
+            padding-top: 2px;
+        }
+
         .signature-area p {
             margin: 0;
             font-size: 0.9rem;
