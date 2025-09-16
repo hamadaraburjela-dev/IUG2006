@@ -1,5 +1,13 @@
 // track remaining attempts (stored key kept for compatibility)
-let quizAttemptsRemaining = parseInt(localStorage.getItem("quizRestartAttempts")) || null;
+// NOTE: don't treat a stored 0 as 'missing' — preserve zero attempts left across reloads
+let quizAttemptsRemaining = null;
+{
+    const stored = localStorage.getItem('quizRestartAttempts');
+    if (stored !== null) {
+        const n = parseInt(stored, 10);
+        quizAttemptsRemaining = Number.isNaN(n) ? null : n;
+    }
+}
 const MAX_ATTEMPTS = 3;
 
 if (window.quizLogicLoaded) {
