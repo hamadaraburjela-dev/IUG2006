@@ -374,8 +374,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalCloseBtn = document.getElementById('modal-close-btn');
     const correctSound = document.getElementById('correct-sound');
     const incorrectSound = document.getElementById('incorrect-sound');
-    // Accept either id="transition-sound" or id="transitionSound" (some HTML files use camelCase)
-    const transitionSound = document.getElementById('transition-sound') || document.getElementById('transitionSound');
+    // Accept id variants: 'transition-sound', 'transitionSound', or 'turning' (some pages use different ids)
+    const transitionSound = document.getElementById('transition-sound') || document.getElementById('transitionSound') || document.getElementById('turning');
     const guideAppearsSound = document.getElementById('guide-appears-sound');
     const videoOverlay = document.getElementById('video-overlay');
     const welcomeVideo = document.getElementById('welcome-video');

@@ -1016,8 +1016,8 @@ if (window.quizLogicLoaded) {
         const feedbackContent = feedbackPopup ? feedbackPopup.querySelector('.feedback-popup-content') : null;
         const correctSound = document.getElementById('correct-sound');
         const incorrectSound = document.getElementById('incorrect-sound');
-    // Accept either id="transition-sound" or id="transitionSound" (some pages differ)
-    const transitionSound = document.getElementById('transition-sound') || document.getElementById('transitionSound');
+    // Accept id variants: 'transition-sound', 'transitionSound', or 'turning' (some pages differ)
+    const transitionSound = document.getElementById('transition-sound') || document.getElementById('transitionSound') || document.getElementById('turning');
         const guideAppearsSound = document.getElementById('guide-appears-sound');
         const successSound = document.getElementById('badge-sound');
         let isAudioUnlocked = false;
