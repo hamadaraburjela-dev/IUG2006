@@ -488,47 +488,58 @@
         const telegramButton = document.getElementById('telegramButton');
         const shareOptions = document.getElementById('shareOptions');
         const telegramOptions = document.getElementById('telegramOptions');
+        const allDropdowns = [shareOptions, telegramOptions];
+        const allButtons = [shareButton, telegramButton];
 
-        const allDropdowns = [
-            { button: shareButton, dropdown: shareOptions },
-            { button: telegramButton, dropdown: telegramOptions }
-        ];
-
+        // This function will toggle a dropdown and close all others
         function toggleDropdown(targetDropdown) {
             const isVisible = targetDropdown.style.display === 'flex';
             
-            allDropdowns.forEach(item => {
-                item.dropdown.style.display = 'none';
+            // First, close all dropdowns
+            allDropdowns.forEach(d => {
+                d.style.display = 'none';
             });
             
+            // Then, if the target was not visible, show it
             if (!isVisible) {
                 targetDropdown.style.display = 'flex';
             }
         }
 
-        allDropdowns.forEach(item => {
-            item.button.addEventListener('click', (event) => {
+        // Add a single click/touch listener for each button
+        allButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
                 event.stopPropagation();
-                toggleDropdown(item.dropdown);
+                if (button.id === 'shareButton') {
+                    toggleDropdown(shareOptions);
+                } else if (button.id === 'telegramButton') {
+                    toggleDropdown(telegramOptions);
+                }
             });
-            item.button.addEventListener('touchstart', (event) => {
+            // Add touchstart for better mobile responsiveness
+            button.addEventListener('touchstart', (event) => {
                 event.stopPropagation();
-                toggleDropdown(item.dropdown);
+                if (button.id === 'shareButton') {
+                    toggleDropdown(shareOptions);
+                } else if (button.id === 'telegramButton') {
+                    toggleDropdown(telegramOptions);
+                }
             });
         });
 
-        const closeAllDropdowns = (event) => {
-            allDropdowns.forEach(item => {
-                if (!item.button.contains(event.target)) {
-                    item.dropdown.style.display = 'none';
-                }
-            });
-        };
-
-        window.addEventListener('click', closeAllDropdowns);
-        window.addEventListener('touchstart', closeAllDropdowns);
+        // Close dropdowns if the user clicks/touches anywhere else on the window
+        window.addEventListener('click', (event) => {
+            if (!shareButton.contains(event.target) && !telegramButton.contains(event.target)) {
+                allDropdowns.forEach(d => d.style.display = 'none');
+            }
+        });
+        window.addEventListener('touchstart', (event) => {
+            if (!shareButton.contains(event.target) && !telegramButton.contains(event.target)) {
+                allDropdowns.forEach(d => d.style.display = 'none');
+            }
+        });
     }
-
+    
     window.addEventListener('DOMContentLoaded', () => {
         populateCertificateData();
         setupButtons();
