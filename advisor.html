@@ -758,8 +758,29 @@
       cards.appendChild(div);
     });
     chatUI.style.display='none';
+    // ensure results visible and not covered by the fixed status bar
     results.style.display='block';
-    window.scrollTo({top:0,behavior:'smooth'});
+    // compute offset caused by the status bar (if present)
+    (function ensureVisible(){
+      try{
+        const statusBar = document.getElementById('status-bar');
+        const placeholder = document.getElementById('status-bar-placeholder');
+        let offset = 0;
+        if (statusBar){
+          // Use its offsetHeight; if it's hidden the placeholder may carry the height
+          offset = statusBar.offsetHeight || (placeholder ? placeholder.offsetHeight : 0);
+        } else if (placeholder){
+          offset = placeholder.offsetHeight || 0;
+        }
+        // Add a small margin so the content isn't flush under the bar
+        const margin = 12;
+        results.style.position = results.style.position || 'relative';
+        results.style.zIndex = results.style.zIndex || '1100';
+        results.style.scrollMarginTop = (offset + margin) + 'px';
+        const top = results.getBoundingClientRect().top + window.scrollY - offset - margin;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      }catch(e){ window.scrollTo({top:0,behavior:'smooth'}); }
+    })();
   }
 
   btnFinish.onclick = showResults;
