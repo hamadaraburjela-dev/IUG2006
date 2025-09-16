@@ -21,6 +21,7 @@
             --social-linkedin: #0a66c2;
             --social-whatsapp: #25d366;
             --social-telegram: #0088cc;
+            --social-instagram: #E1306C;
         }
 
         body {
@@ -203,6 +204,7 @@
         .btn-linkedin { background-color: var(--social-linkedin); }
         .btn-whatsapp { background-color: var(--social-whatsapp); }
         .btn-telegram { background-color: var(--social-telegram); }
+        .btn-instagram { background-color: var(--social-instagram); }
         
         /* Media query for mobile devices */
         @media (max-width: 600px) {
@@ -359,6 +361,9 @@
         <a id="share-whatsapp" href="#" target="_blank" class="btn-social btn-whatsapp">
             <i class="fa-brands fa-square-whatsapp"></i> واتساب
         </a>
+        <a id="share-instagram" href="#" target="_blank" class="btn-social btn-instagram">
+            <i class="fa-brands fa-square-instagram"></i> انستغرام
+        </a>
     </div>
 
     <div class="actions-group">
@@ -461,6 +466,9 @@
 
         const whatsappLink = "https://wa.me/?text=" + encodedMessage;
         document.getElementById('share-whatsapp').href = whatsappLink;
+
+        const instagramLink = `https://www.instagram.com/share?text=${encodedMessage}`;
+        document.getElementById('share-instagram').href = instagramLink;
     }
 
     function downloadCertificate() {
