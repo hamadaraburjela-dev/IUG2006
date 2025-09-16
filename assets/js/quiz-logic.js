@@ -1266,10 +1266,12 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
                 selectedOption.classList.add('incorrect');
                 showFeedback(false, "إجابة خاطئة!");
             }
+            // advance after appropriate feedback duration
+            const delayAfter = (selectedKey === question.correctAnswer) ? FEEDBACK_DURATION : FEEDBACK_INCORRECT_DURATION;
             setTimeout(() => {
                 currentQuestionIndex++;
                 displayQuestion();
-            }, FEEDBACK_DURATION);
+            }, delayAfter);
         }
 
         function handleTimeOut() {
@@ -1284,35 +1286,26 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
             setTimeout(() => {
                 currentQuestionIndex++;
                 displayQuestion();
-            }, FEEDBACK_DURATION);
+            }, FEEDBACK_INCORRECT_DURATION);
         }
 
         function showFeedback(isCorrect, message) {
-            if (!feedbackPopup || !feedbackContent) {
-                console.error("Feedback popup elements not found!");
-                return;
-            }
-            feedbackContent.classList.remove('correct', 'incorrect');
-            if (feedbackHint) feedbackHint.innerHTML = '';
-            if (feedbackMessage) feedbackMessage.textContent = '';
-            playSound(guideAppearsSound);
-            if (feedbackMessage) {
-                feedbackMessage.textContent = message;
-            }
-            feedbackContent.classList.remove('correct', 'incorrect');
-            if (isCorrect) {
-                if (feedbackEmoji) feedbackEmoji.textContent = '✅';
-                feedbackContent.classList.add('correct');
-                if (feedbackHint) feedbackHint.innerHTML = '';
-            } else {
-                if (feedbackEmoji) feedbackEmoji.textContent = '🤔';
-                feedbackContent.classList.add('incorrect');
-                const currentQuestion = allQuestions[currentQuestionIndex];
-                if (feedbackHint && currentQuestion.hint) {
-                    feedbackHint.innerHTML = `💡 ${currentQuestion.hint}`;
+            // delegate to the progress-enabled helper so the bar animates and timing matches
+            try{
+                playSound(guideAppearsSound);
+                const hint = (!isCorrect && allQuestions[currentQuestionIndex] && allQuestions[currentQuestionIndex].hint) ? `💡 ${allQuestions[currentQuestionIndex].hint}` : '';
+                if (typeof window.showFeedbackWithProgress === 'function') {
+                    window.showFeedbackWithProgress({ correct: !!isCorrect, emoji: isCorrect ? '✅' : '🤔', message: message || (isCorrect ? 'إجابة رائعة!' : 'إجابة خاطئة!'), hint });
+                } else {
+                    // fallback: simple visible toggle
+                    if (!feedbackPopup || !feedbackContent) return;
+                    feedbackContent.classList.remove('correct', 'incorrect');
+                    feedbackContent.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    if (feedbackMessage) feedbackMessage.textContent = message || '';
+                    if (feedbackHint) feedbackHint.innerHTML = hint;
+                    feedbackPopup.classList.add('visible');
                 }
-            }
-            feedbackPopup.classList.add('visible');
+            }catch(e){ console.warn('showFeedback delegate error', e); }
         }
 
         function displayResults() {
