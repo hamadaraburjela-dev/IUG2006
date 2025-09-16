@@ -2,7 +2,7 @@
 
 // غيّر للرابط الخاص بك
 // ضع رابط نشر Google Apps Script هنا 👇
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxr8FgoeGQAq8FDmvWc4Afb6ruyNEX49pA2Vhp1kr9_eWqAwYMmQrqtquE2FBZgdC0BxQ/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDE2TIOovme5P7ekjuj3vUUtUqaRkJVVRXQMu2I-WMthB8KEMQdT0ZPviesqEZ3Dz5gw/exec';
 
 // --- بداية منطق الشارات ---
 const allBadges = {
