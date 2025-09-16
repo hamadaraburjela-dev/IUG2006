@@ -1,10 +1,17 @@
-// قائمة الإعلانات بصيغة webp
+// قائمة الإعلانات (يمكنك إضافة أكثر من إعلان)
 const ads = [
   {
-    img: "assets/ads/eng.webp",  // صورة الإعلان
-    link: "https://www.iugaza.edu.ps/p29815/" // رابط التفاصيل
+    img: "assets/ads/eng.webp",
+    link: "https://www.iugaza.edu.ps/p29815/"
+  },
+  {
+    img: "assets/ads/ad2.webp",
+    link: "https://example.com/ad2"
+  },
+  {
+    img: "assets/ads/ad3.webp",
+    link: "https://example.com/ad3"
   }
-  // يمكنك إضافة إعلانات أخرى بنفس التنسيق
 ];
 
 const modal = document.getElementById("adModal");
@@ -25,7 +32,7 @@ function showRandomAd() {
 closeBtn.onclick = () => modal.style.display = "none";
 closeX.onclick = () => modal.style.display = "none";
 
-// عرض الإعلان بعد 15 ثانية مثلاً
+// عرض إعلان بعد 15 ثانية من تحميل الصفحة
 window.addEventListener("load", () => {
   setTimeout(showRandomAd, 15000);
 });
