@@ -27,3 +27,15 @@ document.addEventListener('DOMContentLoaded', function () {
     document.documentElement.setAttribute('lang','ar');
   }
 });
+window.showAttemptsModal = function({ title, message }){
+  const modal = document.getElementById("odv-modal");
+  const titleEl = document.getElementById("odv-modal-title");
+  const descEl = document.getElementById("odv-modal-desc");
+  if (title) titleEl.textContent = title;
+  if (message) descEl.textContent = message;
+  modal.removeAttribute("hidden");
+
+  document.getElementById("odv-modal-ok").onclick = () => {
+    modal.setAttribute("hidden","");
+  };
+};

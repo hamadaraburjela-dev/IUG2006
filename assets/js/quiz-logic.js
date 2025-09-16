@@ -1065,7 +1065,11 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
 
   startQuizBtn.addEventListener("click", () => {
     if (!canRestartQuiz()) {
-      alert("لقد أكملت جميع المحاولات.");
+ showAttemptsModal({
+  title: "لقد أكملت جميع المحاولات",
+  message: "لا مزيد من المحاولات المسموح بها."
+});
+
       return;
     }
     quizRestartAttempts++;

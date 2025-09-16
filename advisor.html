@@ -1,399 +1,506 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>منصة الإرشاد الأكاديمي</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet"/>
-  <style>
-    :root{
-      --primary:#4f46e5; --primary-dark:#3730a3; --accent:#06b6d4;
-      --bg:#f9fafb; --card:#ffffff; --text:#111827; --muted:#6b7280;
-      --success:#22c55e; --radius:14px; --shadow:0 8px 30px rgba(0,0,0,.08);
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:'Cairo',sans-serif;
-      background:linear-gradient(135deg,var(--primary),var(--accent));
-      min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
-    }
-    .container{width:100%;max-width:980px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:36px;animation:fade .4s ease}
-    header{text-align:center;margin-bottom:8px}
-    header h1{color:var(--primary);font-size:2.2rem;margin-bottom:10px}
-    header p{color:var(--muted)}
-    .hero{
-      display:grid;grid-template-columns:1fr;gap:16px;text-align:center;margin-top:12px
-    }
-    .hero .icon{font-size:56px}
-    .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:22px 0}
-    .feature{background:#f3f4f6;border-radius:12px;padding:14px}
-    .feature h3{color:var(--primary);margin-bottom:6px}
-    .btn{display:inline-block;border:none;border-radius:12px;padding:14px 22px;font-size:1rem;color:#fff;background:var(--success);cursor:pointer;transition:.2s}
-    .btn:hover{background:#15803d}
-    /* Quiz */
-    .progress-wrap{margin:8px 0 16px}
-    .progress-bar{height:10px;background:#e5e7eb;border-radius:12px;overflow:hidden}
-    .progress{height:100%;background:var(--primary);width:0%}
-    .section-title{font-weight:700;color:var(--primary);margin:10px 0}
-    .q-card{background:#fff;border:1px solid #eee;border-radius:12px;padding:16px;margin-bottom:10px}
-    .q-text{font-weight:600;margin-bottom:10px}
-    .likert{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{
-      flex:1;min-width:70px;text-align:center;padding:10px;border-radius:12px;border:2px solid #e5e7eb;cursor:pointer;background:#fff;transition:.2s
-    }
-    .chip:hover{border-color:var(--primary);background:#f5f3ff}
-    .chip.selected{border-color:var(--primary);background:#ede9fe}
-    .nav{display:flex;gap:10px;margin-top:10px}
-    .btn-nav{flex:1;background:var(--primary)}
-    .btn-nav:hover{background:var(--primary-dark)}
-    .btn-submit{background:var(--success)}
-    .results h2{text-align:center;color:var(--primary);margin-bottom:8px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
-    .result{background:#f3f4f6;border-radius:12px;padding:12px}
-    .result .tag{display:inline-block;background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:4px 10px;font-size:.85rem;margin-top:6px}
-    .muted{color:var(--muted);font-size:.95rem}
-    .intro-hide{display:none}
-    @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    @media(min-width:900px){
-      .hero{grid-template-columns:1.1fr .9fr;text-align:start;align-items:center}
-      .hero-visual{background:linear-gradient(135deg,#eef2ff,#cffafe);border-radius:16px;min-height:220px;display:flex;align-items:center;justify-content:center;font-size:100px}
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>المستشار الأكاديمي الذكي – الجامعة الإسلامية بغزة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#4f46e5; --primary-dark:#3730a3; --accent:#06b6d4;
+    --bg:#f3f4f6; --card:#ffffff; --text:#111827; --muted:#6b7280;
+    --success:#22c55e; --danger:#ef4444; --radius:18px;
+    --shadow:0 10px 35px rgba(0,0,0,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Cairo',sans-serif;background:linear-gradient(135deg,var(--primary),var(--accent));
+    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:14px;
+  }
+  .shell{width:100%;max-width:980px}
+  .container{
+    background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+
+  /* Header / Intro */
+  .intro{
+    padding:22px 22px 26px;background:#fff;
+    display:grid;gap:14px;
+  }
+  .intro h1{color:var(--primary);text-align:center;font-size:1.8rem}
+  .intro p{color:var(--muted);text-align:center}
+  .hero{
+    background:linear-gradient(135deg,#eef2ff,#cffafe);border-radius:16px;
+    min-height:140px;display:flex;align-items:center;justify-content:center;font-size:64px;margin:6px auto;width:min(90%,560px);
+  }
+  .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:6px}
+  .feature{background:#f9fafb;border:1px solid #eee;border-radius:14px;padding:10px}
+  .feature h3{color:var(--primary);font-size:1rem;margin-bottom:4px}
+  .center{display:flex;justify-content:center;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap}
+  .btn{
+    border:none;border-radius:999px;padding:12px 20px;font-size:1rem;color:#fff;cursor:pointer;transition:.2s;
+  }
+  .btn.primary{background:var(--success)}
+  .btn.primary:hover{background:#15803d}
+  .btn.ghost{background:var(--primary)}
+  .btn.ghost:hover{background:var(--primary-dark)}
+
+  /* Chat Area */
+  .chat-wrap{
+    background:var(--bg);padding:12px;display:grid;grid-template-rows:auto 1fr auto;min-height:70vh;max-height:80vh;
+  }
+  .progress{
+    display:flex;align-items:center;gap:10px;margin:6px 2px 8px;
+  }
+  .bar{height:8px;background:#e5e7eb;border-radius:999px;overflow:hidden;flex:1}
+  .fill{height:100%;background:var(--primary);width:0%}
+  .progress .txt{color:var(--muted);font-size:.95rem}
+
+  .chat{
+    overflow-y:auto;padding:8px 6px;display:flex;flex-direction:column;gap:8px;
+    background:#fff;border:1px solid #eee;border-radius:16px;
+  }
+  .row{display:flex;gap:8px;align-items:flex-end;animation:fade .25s ease}
+  .bot{justify-content:flex-start}
+  .user{justify-content:flex-end}
+  .avatar{
+    width:40px;height:40px;border-radius:999px;background:linear-gradient(135deg,#e9d5ff,#bae6fd);
+    display:flex;align-items:center;justify-content:center;font-size:18px;flex:0 0 40px
+  }
+  .bubble{
+    max-width:80%;padding:10px 14px;border-radius:16px;line-height:1.6;font-size:1rem;box-shadow:0 2px 8px rgba(0,0,0,.05)
+  }
+  .bot .bubble{background:#ede9fe;border:1px solid #e9d5ff;border-bottom-left-radius:6px;color:#111}
+  .user .bubble{background:#dbeafe;border:1px solid #bfdbfe;border-bottom-right-radius:6px;color:#111}
+
+  .controls{
+    position:sticky;bottom:0;background:var(--bg);padding-top:10px;
+  }
+  .choices{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .choice{
+    padding:10px 14px;border-radius:999px;border:2px solid #e5e7eb;background:#fff;cursor:pointer;font-size:1rem;
+  }
+  .choice:hover{background:#f0f9ff;border-color:#60a5fa}
+
+  .actions{display:flex;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .actions .btn{padding:11px 18px}
+
+  .typing{display:flex;align-items:center;gap:6px;color:#6b7280;font-size:.95rem;margin:4px 10px}
+  .dot{
+    width:7px;height:7px;border-radius:999px;background:#9ca3af;animation:bounce 1.2s infinite alternate;
+  }
+  .dot:nth-child(2){animation-delay:.2s}
+  .dot:nth-child(3){animation-delay:.4s}
+
+  @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-4px)}}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+  /* Results */
+  .results{
+    padding:18px;background:#fff;border-top:1px solid #eee;
+  }
+  .results h2{text-align:center;color:var(--primary);margin-bottom:6px}
+  .muted{color:var(--muted)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:10px}
+  .card{background:#f9fafb;border:1px solid #eee;border-radius:14px;padding:12px}
+  .tag{display:inline-block;background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:4px 10px;font-size:.85rem;margin-top:6px}
+
+  /* Mobile tweaks */
+  @media (max-width:600px){
+    .bubble{max-width:90%;font-size:1rem}
+    .choice{min-width:120px}
+    .chat-wrap{min-height:85vh;max-height:88vh}
+  }
+</style>
 </head>
 <body>
+<div class="shell">
   <div class="container">
-    <!-- صفحة البداية -->
-    <div id="intro">
-      <div class="hero">
-        <div>
-          <header>
-            <h1>منصة الإرشاد الأكاديمي</h1>
-            <p>اختبار احترافي مبني على نموذج RIASEC + قيم مهنية، لاقتراح تخصصات ملائمة لك.</p>
-          </header>
-          <div class="features">
-            <div class="feature">
-              <h3>🎯 مبني على علم</h3>
-              <p class="muted">RIASEC مُوثّق على نطاق واسع، وتستخدمه أدوات رسمية مثل O*NET.</p>
-            </div>
-            <div class="feature">
-              <h3>🧭 42 سؤال دقيق</h3>
-              <p class="muted">يقيس 6 ميول وظيفية + 3 قيم مهنية تؤثر في القرار.</p>
-            </div>
-            <div class="feature">
-              <h3>📈 توصيات واضحة</h3>
-              <p class="muted">نُظهر أعلى الشفرات (الكودات) مع تخصصات مناسبة وتفسير موجز.</p>
-            </div>
-          </div>
-          <button id="btnStart" class="btn">ابدأ الاستشارة</button>
+    <!-- INTRO -->
+    <section id="intro" class="intro">
+      <h1>المستشار الأكاديمي الذكي 🤖</h1>
+      <p>سأرشدك لاختيار التخصص الأنسب لك ضمن برامج <strong>الجامعة الإسلامية بغزة</strong> من خلال <strong>60 سؤال</strong> قصيرة وواقعية.</p>
+      <div class="hero">🎓</div>
+      <div class="features">
+        <div class="feature"><h3>🎯 منطق واقعي</h3><p>الأسئلة مبنية على مهارات ومتطلبات حقيقية لكل مسار.</p></div>
+        <div class="feature"><h3>💬 محادثة طبيعية</h3><p>واجهة فقاعات رسائل تشبه تطبيقات الدردشة، مناسبة للجوال واللاب.</p></div>
+        <div class="feature"><h3>📈 توصيات دقيقة</h3><p>نرتّب برامج IUG فقط حسب توافقك مع محاورها.</p></div>
+      </div>
+      <div class="center">
+        <button id="btnReady" class="btn primary">✅ أنا جاهز للأسئلة</button>
+      </div>
+    </section>
+
+    <!-- CHAT -->
+    <section id="chatUI" class="chat-wrap" style="display:none">
+      <div class="progress">
+        <div class="bar"><div id="fill" class="fill"></div></div>
+        <div id="progTxt" class="txt"></div>
+      </div>
+
+      <div id="chat" class="chat"></div>
+
+      <div class="controls">
+        <div id="typing" class="typing" style="display:none">
+          <span>المستشار يكتب</span>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
         </div>
-        <div class="hero-visual">🎓</div>
+        <div id="choices" class="choices"></div>
+        <div class="actions">
+          <button id="btnBack" class="btn ghost" style="display:none">⬅️ رجوع</button>
+          <button id="btnFinish" class="btn primary" style="display:none">إظهار النتائج</button>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <!-- الاستبيان -->
-    <div id="quizSection" class="intro-hide">
-      <div class="progress-wrap">
-        <div class="progress-bar"><div id="progress" class="progress"></div></div>
-        <div class="muted" id="progressText"></div>
+    <!-- RESULTS -->
+    <section id="results" class="results" style="display:none">
+      <h2>ترشيحات المستشار الذكي</h2>
+      <p id="summary" class="muted" style="text-align:center"></p>
+      <div id="cards" class="cards"></div>
+      <div class="center" style="margin-top:10px">
+        <button id="btnRestart" class="btn primary">🔄 بدء من جديد</button>
       </div>
-
-      <div id="pageTitle" class="section-title"></div>
-      <div id="questionsWrap"></div>
-
-      <div class="nav">
-        <button id="btnPrev" class="btn btn-nav">السابق</button>
-        <button id="btnNext" class="btn btn-nav">التالي</button>
-        <button id="btnSubmit" class="btn btn-submit intro-hide">إظهار النتائج</button>
-      </div>
-    </div>
-
-    <!-- النتائج -->
-    <div id="results" class="intro-hide">
-      <h2>نتائج الاستشارة</h2>
-      <p class="muted" id="summaryLine"></p>
-      <div id="recommendations" class="grid" style="margin-top:10px"></div>
-      <div style="margin-top:12px;display:flex;gap:10px">
-        <button id="btnRestart" class="btn">🔄 بدء من جديد</button>
-      </div>
-      <p class="muted" style="margin-top:10px">تنبيه: هذا الاستبيان إرشادي وليس تشخيصاً نفسياً. يُفضَّل مناقشة النتائج مع المرشد الأكاديمي.</p>
-    </div>
+      <p class="muted" style="text-align:center;margin-top:6px">تنبيه: هذه أداة إرشادية، ناقش خياراتك مع المرشد الأكاديمي.</p>
+    </section>
   </div>
+</div>
 
-  <script>
-    /* ======================
-       1) تعريف البُنى
-       ====================== */
-    // أسئلة RIASEC (36): 6 لكل بعد. مقياس 1 (لا أميل إطلاقاً) إلى 5 (أميل جداً)
-    const RIASEC_ITEMS = [
-      // R - واقعي Realistic: أنشطة عملية/ميدانية/أدوات
-      {t:"أستمتع بالأعمال اليدوية واستخدام الأدوات.", d:"R"},
-      {t:"أفضل المهام العملية على العمل المكتبي الطويل.", d:"R"},
-      {t:"أُفضِّل بيئات عمل ميدانية أو خارجية.", d:"R"},
-      {t:"أجد تركيب/إصلاح الأشياء ممتعاً.", d:"R"},
-      {t:"أفضل التعلّم بالتجربة المباشرة.", d:"R"},
-      {t:"أرتاح في الأعمال التي تطلب نشاطاً بدنياً.", d:"R"},
-      // I - تحليلي Investigative: تحليل/بحث/علم
-      {t:"أستمتع بحل المسائل المعقّدة.", d:"I"},
-      {t:"أحب تحليل البيانات واكتشاف الأنماط.", d:"I"},
-      {t:"أميل للبحث والتعمّق قبل اتخاذ القرار.", d:"I"},
-      {t:"الموضوعات العلمية/الرياضية تثير اهتمامي.", d:"I"},
-      {t:"أستمتع بتجربة أفكار وفرضيّات جديدة.", d:"I"},
-      {t:"أُفضّل مهام تتطلّب تفكيراً نقدياً.", d:"I"},
-      // A - فني Artistic: إبداع/تصميم/تعبير
-      {t:"أميل للتعبير الإبداعي (كتابة/رسم/تصميم).", d:"A"},
-      {t:"أستمتع بابتكار حلول غير تقليدية.", d:"A"},
-      {t:"أُفضِّل عملاً يمنحني حرية فنية.", d:"A"},
-      {t:"أهتم بجماليات العرض والتصميم.", d:"A"},
-      {t:"أحب صناعة المحتوى المرئي أو السردي.", d:"A"},
-      {t:"أختار مهاماً تسمح لي بالتجربة والابتكار.", d:"A"},
-      // S - اجتماعي Social: مساعدة/تعليم/تواصل
-      {t:"أستمتع بمساعدة الآخرين على التعلّم أو التطوّر.", d:"S"},
-      {t:"أفضّل العمل الذي يتواصل مع الناس بشكل مباشر.", d:"S"},
-      {t:"أستمد طاقتي من العمل ضمن فرق وتوجيهها.", d:"S"},
-      {t:"أُتقن الإصغاء وتفهّم احتياجات الآخرين.", d:"S"},
-      {t:"أحب تقديم الإرشاد أو الدعم للأشخاص.", d:"S"},
-      {t:"أميل للأدوار التي لها أثر مجتمعي واضح.", d:"S"},
-      // E - مبادر Enterprising: قيادة/مبيعات/أعمال
-      {t:"أحب قيادة المشاريع واتخاذ القرارات.", d:"E"},
-      {t:"أستمتع بالتفاوض والإقناع وبيع الأفكار.", d:"E"},
-      {t:"أطمح لبناء عمل/مشروع خاص بي.", d:"E"},
-      {t:"أستمتع بأهداف طموحة ومنافسة.", d:"E"},
-      {t:"أميل لأدوار تنظيم الموارد وتوزيعها.", d:"E"},
-      {t:"أقتنع بسرعة بفكرة جيّدة وأدفع الفريق لتنفيذها.", d:"E"},
-      // C - تقليدي Conventional: تنظيم/تفاصيل/أنظمة
-      {t:"أستمتع بتنظيم المعلومات وتبويبها.", d:"C"},
-      {t:"أفضّل بيئة عمل ذات إجراءات واضحة وثابتة.", d:"C"},
-      {t:"أُتقن التعامل مع الجداول/الملفات بدقة.", d:"C"},
-      {t:"أميل لاتباع القواعد لضمان الجودة.", d:"C"},
-      {t:"أستمتع بالمهام التي تتطلب دقة وتفاصيل.", d:"C"},
-      {t:"أفضل إنهاء الأعمال خطوة بخطوة وفق خطة.", d:"C"},
-    ];
+<script>
+  /* =========================
+     1) بنية الأسئلة (60 سؤال)
+     ========================= */
+  // 20 محور × 3 بنود = 60 سؤال. محاور مرتبطة مباشرة بتخصصات IUG.
+  const DOMAINS = [
+    {key:'ai_cs', title:'ذكاء اصطناعي/علوم الحاسوب', items:[
+      'أستمتع بكتابة الشيفرة وحلّ الأخطاء.',
+      'أحب تحليل البيانات واكتشاف الأنماط.',
+      'ألتزم بتعلّم خوارزميات جديدة بانتظام.'
+    ]},
+    {key:'soft_web', title:'تطوير برمجيات/ويب/موبايل', items:[
+      'أحب بناء تطبيقات واجهاتها سهلة الاستخدام.',
+      'أجيد تقسيم المشروع إلى مهام واضحة.',
+      'العمل ضمن فريق برمجي يناسبني.'
+    ]},
+    {key:'it_media', title:'تكنولوجيا معلومات/وسائط متعددة', items:[
+      'أستمتع بإدارة أنظمة/شبكات ودعم المستخدمين.',
+      'أحب إنتاج المحتوى الرقمي والتصميم.',
+      'أتعامل مع الأعطال التقنية بهدوء وحلول عملية.'
+    ]},
+    {key:'civil', title:'هندسة مدنية', items:[
+      'أفضل مواقع العمل الميدانية ومتابعة التنفيذ.',
+      'أستمتع بالحسابات الإنشائية ومعايير السلامة.',
+      'التخطيط الزمني والجودة يناسبان طريقتي.'
+    ]},
+    {key:'arch', title:'هندسة معمارية/تصميم عمراني', items:[
+      'لدي حس بصري وتصميمي قوي.',
+      'أوازن بين الجماليات والمتطلبات الفنية.',
+      'أستمتع بنمذجة المباني والعرض المعماري.'
+    ]},
+    {key:'me_ind', title:'هندسة ميكانيكية/صناعية', items:[
+      'أفهم الأنظمة الميكانيكية وحركتها.',
+      'أميل لتحسين العمليات والكفاءة.',
+      'التجارب العملية والمختبر ممتعة بالنسبة لي.'
+    ]},
+    {key:'ee_comm', title:'هندسة كهربائية/اتصالات', items:[
+      'أهتم بالإلكترونيات والدوائر.',
+      'أجد متعة في أنظمة الاتصالات والتحكم.',
+      'القياسات الدقيقة والمعملية تناسبني.'
+    ]},
+    {key:'sci_math', title:'علوم أساسية: رياضيات/فيزياء', items:[
+      'أستمتع بالرياضيات النظرية والمسائل المعقّدة.',
+      'أحب فهم قوانين الفيزياء والتجريب.',
+      'التجريد والمنطق لا يزعجاني.'
+    ]},
+    {key:'sci_chem_bio', title:'علوم: كيمياء/أحياء/تقنية حيوية', items:[
+      'أحب التجارب المخبرية والتحليل الكيميائي/البيولوجي.',
+      'أهتم بالتقنية الحيوية وتطبيقاتها.',
+      'ألتزم بإجراءات السلامة والدقة.'
+    ]},
+    {key:'earth_marine', title:'علوم: أرض/بحار/بيئة', items:[
+      'أهتم بعلوم الأرض والبحار والبيئة.',
+      'أفضل العمل الميداني وجمع العينات.',
+      'أحب قراءة الخرائط والبيانات الجغرافية.'
+    ]},
+    {key:'health', title:'علوم صحية (علاج/تصوير/تغذية)', items:[
+      'أحب مساعدة الناس صحياً بشكل مباشر.',
+      'ألتزم بالبروتوكولات الصحية بدقة.',
+      'أتواصل مهنياً مع المرضى والفِرق'
+    ]},
+    {key:'nursing', title:'تمريض/قابلة', items:[
+      'أستطيع تقديم رعاية مباشرة لساعات طويلة.',
+      'أتحمل ضغط العمل والدقة العالية.',
+      'أشعر بالرضا عند العناية بالآخرين.'
+    ]},
+    {key:'biz', title:'إدارة/اقتصاد/تسويق/محاسبة/تمويل', items:[
+      'أحب تحليل الأسواق واتخاذ قرارات أعمال.',
+      'أميل للقيادة وريادة المشاريع.',
+      'أتعامل براحة مع البيانات المالية.'
+    ]},
+    {key:'law_sharia', title:'شريعة وقانون', items:[
+      'أحب دراسة القوانين/الأحكام وتحليل النصوص.',
+      'أبني حججاً منطقية وأقنع بها.',
+      'الالتزام بالنظام والعدالة مهم لي.'
+    ]},
+    {key:'islamic', title:'أصول دين/دعوة وإعلام', items:[
+      'أهتم بالعلوم الشرعية والتفسير والحديث.',
+      'أحب توصيل رسالة هادفة للمجتمع.',
+      'ألتزم بالقيم وأريد أثراً إيجابياً.'
+    ]},
+    {key:'media', title:'إعلام/صحافة/علاقات عامة/رقمي', items:[
+      'أحب صناعة المحتوى والسرد القصصي.',
+      'أجيد التواصل وبناء الرسائل للجمهور.',
+      'أميل للأدوات الرقمية والإعلام الجديد.'
+    ]},
+    {key:'lang', title:'لغات/ترجمة (عربي/إنجليزي)', items:[
+      'أستمتع باللغات وصياغة النصوص.',
+      'أحب الترجمة بدقة وسلاسة.',
+      'التدقيق اللغوي والأسلوب يهمني.'
+    ]},
+    {key:'edu', title:'تربية وتعليم', items:[
+      'أحب الشرح وتبسيط المفاهيم.',
+      'أدير صفاً وأنمّي دافعية المتعلمين.',
+      'أصمم أنشطة تعليمية متنوعة.'
+    ]},
+    {key:'social', title:'خدمة اجتماعية/مجتمع', items:[
+      'أساند الفئات المحتاجة وأرشدهم.',
+      'أجيد الاستماع والتعاطف.',
+      'الأثر المجتمعي المباشر مهم لي.'
+    ]},
+    {key:'hist_geo_arc', title:'تاريخ/جغرافيا/آثار', items:[
+      'أحب دراسة التاريخ وتحليل الأحداث.',
+      'أهتم بالجغرافيا ونظم المعلومات الجغرافية.',
+      'يناسبني البحث الميداني.'
+    ]},
+  ];
+  // مسطّح: 60 بند
+  const ITEMS = DOMAINS.flatMap(d=>d.items.map(t=>({t,key:d.key})));
+  const TOTAL = ITEMS.length;
 
-    // قيم مهنية (6): تضبط ترتيب النتائج (راتب/استقرار/خدمة مجتمع)
-    const VALUE_ITEMS = [
-      {t:"أفضل وظيفة ذات دخل مرتفع حتى لو كانت أقل متعة.", k:"salary"},
-      {t:"أقدّم الاستقرار الوظيفي على المغامرة.", k:"stability"},
-      {t:"أبحث عن عمل له أثر مجتمعي مباشر.", k:"altruism"},
-      {t:"أفضل التعلّم المستمر حتى لو تطلب جهداً إضافياً.", k:"growth"},
-      {t:"أفضل مرونة الوقت على دوام ثابت وصارم.", k:"flexibility"},
-      {t:"أفضل وضوح المسار الوظيفي على تغيّر المهام المتكرر.", k:"clarity"},
-    ];
+  /* =========================
+     2) عناصر الواجهة
+     ========================= */
+  const intro   = document.getElementById('intro');
+  const btnReady= document.getElementById('btnReady');
 
-    // تقسيم الصفحات: 7 أسئلة في الصفحة (6 صفحات RIASEC) + صفحة قيم (أخيرة)
-    const PAGE_SIZE = 7;
-    const TOTAL_R_ITEMS = RIASEC_ITEMS.length; // 36
-    const TOTAL_V_ITEMS = VALUE_ITEMS.length;  // 6
-    const TOTAL_ITEMS = TOTAL_R_ITEMS + TOTAL_V_ITEMS; // 42
-    const R_PAGES = Math.ceil(TOTAL_R_ITEMS / PAGE_SIZE); // 6
-    const TOTAL_PAGES = R_PAGES + 1; // + صفحة القيم
+  const chatUI  = document.getElementById('chatUI');
+  const chat    = document.getElementById('chat');
+  const choices = document.getElementById('choices');
+  const typing  = document.getElementById('typing');
+  const btnBack = document.getElementById('btnBack');
+  const btnFinish=document.getElementById('btnFinish');
+  const fill    = document.getElementById('fill');
+  const progTxt = document.getElementById('progTxt');
 
-    // التخصصات وقواعد الربط تقرأ أعلى شفرات RIASEC + القيم
-    const MAJORS = [
-      {id:'cs', name:'هندسة/علوم الحاسوب', codes:['I','C','R'], note:'تحليل وذكاء اصطناعي/برمجة/أنظمة'},
-      {id:'ai', name:'الذكاء الاصطناعي وعلوم البيانات', codes:['I','C'], note:'تحليل بيانات، تعلم آلي، بحث وتطوير'},
-      {id:'civil', name:'الهندسة المدنية', codes:['R','I','C'], note:'ميداني + حسابات وتصميم وتنفيذ'},
-      {id:'me', name:'الهندسة الميكانيكية', codes:['R','I'], note:'تصميم ميكانيكي ونُظم مادية'},
-      {id:'ee', name:'هندسة كهربائية/اتصالات', codes:['I','R','C'], note:'إلكترونيات، نظم اتصالات، تحكم'},
-      {id:'arch', name:'الهندسة المعمارية', codes:['A','R','I'], note:'إبداع بصري + متطلبات تقنية'},
-      {id:'design', name:'التصميم الجرافيكي/المنتج', codes:['A'], note:'هوية بصرية، تجربة مستخدم، محتوى'},
-      {id:'med', name:'الطب البشري', codes:['S','I'], note:'مساعدة بشر + معرفة علمية عميقة'},
-      {id:'pharm', name:'الصيدلة', codes:['I','C','S'], note:'علمي دقيق + التزام معايير'},
-      {id:'nursing', name:'التمريض/العلوم الصحية', codes:['S','C'], note:'رعاية مباشرة + بروتوكولات ثابتة'},
-      {id:'law', name:'القانون', codes:['S','E','C'], note:'تواصل/حجج + التزام أنظمة'},
-      {id:'biz', name:'إدارة الأعمال', codes:['E','S','C'], note:'قيادة/تنظيم/عمليات'},
-      {id:'mkt', name:'التسويق/المبيعات', codes:['E','A','S'], note:'إقناع، سرد قصصي، فهم العملاء'},
-      {id:'acc', name:'محاسبة/تمويل', codes:['C','I'], note:'دقة عالية، أنظمة وتقارير'},
-      {id:'edu', name:'التربية والتعليم', codes:['S','A'], note:'تعليم وتواصل وإبداع في الشرح'}
-    ];
+  const results = document.getElementById('results');
+  const summary = document.getElementById('summary');
+  const cards   = document.getElementById('cards');
+  const btnRestart = document.getElementById('btnRestart');
 
-    /* ======================
-       2) عناصر الواجهة
-       ====================== */
-    const intro = document.getElementById('intro');
-    const quizSection = document.getElementById('quizSection');
-    const resultsView = document.getElementById('results');
-    const btnStart = document.getElementById('btnStart');
-    const btnPrev = document.getElementById('btnPrev');
-    const btnNext = document.getElementById('btnNext');
-    const btnSubmit = document.getElementById('btnSubmit');
-    const progress = document.getElementById('progress');
-    const progressText = document.getElementById('progressText');
-    const pageTitle = document.getElementById('pageTitle');
-    const questionsWrap = document.getElementById('questionsWrap');
-    const btnRestart = document.getElementById('btnRestart');
-    const recommendations = document.getElementById('recommendations');
-    const summaryLine = document.getElementById('summaryLine');
+  /* =========================
+     3) حالة الجلسة
+     ========================= */
+  let idx = 0;                  // فهرس السؤال الحالي
+  const responses = {};         // index -> 1..5
 
-    /* ======================
-       3) حالة الاختبار
-       ====================== */
-    let page = 0; // 0..TOTAL_PAGES-1
-    const responses = {}; // idx -> 1..5
-    const values = {};    // key -> 1..5
+  /* =========================
+     4) أدوات عرض المحادثة
+     ========================= */
+  function scrollChat(){ chat.scrollTop = chat.scrollHeight; }
+  function addBot(text){
+    const row = document.createElement('div'); row.className='row bot';
+    row.innerHTML = `<div class="avatar">🤖</div><div class="bubble">${text}</div>`;
+    chat.appendChild(row); scrollChat();
+  }
+  function addUser(text){
+    const row = document.createElement('div'); row.className='row user';
+    row.innerHTML = `<div class="bubble">${text}</div>`;
+    chat.appendChild(row); scrollChat();
+  }
+  function showTyping(show){ typing.style.display = show ? 'flex' : 'none'; }
 
-    /* ======================
-       4) وظائف المساعدة
-       ====================== */
-    function show(el){ el.classList.remove('intro-hide'); }
-    function hide(el){ el.classList.add('intro-hide'); }
-    function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+  function updateProgress(){
+    const answered = Object.keys(responses).length;
+    const pct = Math.round(answered / TOTAL * 100);
+    fill.style.width = pct + '%';
+    progTxt.textContent = `تمت الإجابة على ${answered}/${TOTAL} (${pct}٪)`;
+  }
 
-    function renderPage(){
-      questionsWrap.innerHTML = '';
-      const isValuePage = (page === TOTAL_PAGES - 1);
-
-      // عنوان القسم
-      pageTitle.textContent = isValuePage ? 'القيم المهنية' : `ميول العمل (RIASEC) — الصفحة ${page + 1} من ${TOTAL_PAGES - 1}`;
-
-      // مصدر الأسئلة في هذه الصفحة
-      let items = [];
-      if(!isValuePage){
-        const start = page * PAGE_SIZE;
-        items = RIASEC_ITEMS.slice(start, start + PAGE_SIZE);
-      }else{
-        items = VALUE_ITEMS;
-      }
-
-      // بناء البطاقات
-      items.forEach((item, idxOnPage) => {
-        const globalIdx = isValuePage ? (`val_${item.k}`) : (page * PAGE_SIZE + idxOnPage);
-        const card = document.createElement('div');
-        card.className = 'q-card';
-
-        const q = document.createElement('div');
-        q.className = 'q-text';
-        q.textContent = isValuePage ? item.t : `${globalIdx+1}. ${item.t}`;
-        card.appendChild(q);
-
-        const likert = document.createElement('div');
-        likert.className = 'likert';
-
-        const labels = ["1 لا أميل", "2", "3 محايد", "4", "5 أميل جداً"];
-        for(let v=1; v<=5; v++){
-          const chip = document.createElement('div');
-          chip.className = 'chip';
-          chip.textContent = labels[v-1];
-          const selected = isValuePage
-            ? (values[item.k] === v)
-            : (responses[globalIdx] === v);
-          if(selected) chip.classList.add('selected');
-          chip.onclick = () => {
-            if(isValuePage){
-              values[item.k] = v;
-            }else{
-              responses[globalIdx] = v;
-            }
-            renderPage(); // إعادة الرسم لتحديث التحديد
-          };
-          likert.appendChild(chip);
+  function renderChoices(){
+    choices.innerHTML = '';
+    ['1 لا ينطبق','2','3 محايد','4','5 ينطبق جدّاً'].forEach((lbl, i)=>{
+      const b = document.createElement('button');
+      b.className='choice'; b.textContent=lbl;
+      b.onclick = ()=>{
+        const val = i+1;
+        responses[idx] = val;
+        addUser(lbl);
+        idx++;
+        updateProgress();
+        if(idx < TOTAL) {
+          nextQuestion();
+        } else {
+          endQuestions();
         }
+      };
+      choices.appendChild(b);
+    });
+    btnBack.style.display = idx>0 ? 'inline-block' : 'none';
+  }
 
-        card.appendChild(likert);
-        questionsWrap.appendChild(card);
-      });
+  function askQuestion(){
+    const q = ITEMS[idx];
+    addBot(`سؤال ${idx+1} من ${TOTAL}: ${q.t}`);
+    renderChoices();
+  }
 
-      // شريط التقدم
-      const answeredCount = Object.keys(responses).length + Object.keys(values).length;
-      const pct = Math.round( (answeredCount / TOTAL_ITEMS) * 100 );
-      progress.style.width = pct + '%';
-      progressText.textContent = `أجبت على ${answeredCount} من ${TOTAL_ITEMS} (${pct}٪)`;
+  function nextQuestion(){
+    choices.innerHTML = ''; showTyping(true);
+    setTimeout(()=>{ showTyping(false); askQuestion(); }, 450); // مؤشر يكتب لإحساس الدردشة
+  }
 
-      // أزرار
-      btnPrev.disabled = page === 0;
-      btnNext.classList.remove('intro-hide');
-      btnSubmit.classList.add('intro-hide');
-      if(page === TOTAL_PAGES - 1){
-        btnNext.classList.add('intro-hide');
-        btnSubmit.classList.remove('intro-hide');
-      }
+  function startChat(){
+    intro.style.display='none';
+    chatUI.style.display='grid';
+    chat.innerHTML=''; choices.innerHTML='';
+    addBot('مرحباً! أنا مستشارك الأكاديمي الذكي للجامعة الإسلامية بغزة.');
+    setTimeout(()=>addBot('سأطرح عليك 60 سؤال قصيرة. اختر لكل عبارة درجة من 1 إلى 5.'),300);
+    setTimeout(()=>{ updateProgress(); askQuestion(); },650);
+  }
+
+  btnReady.onclick = startChat;
+
+  btnBack.onclick = ()=>{
+    if(idx>0){
+      delete responses[idx-1];
+      idx = idx-1;
+      chat.innerHTML='';
+      addBot('حسناً، رجعناك خطوة لتعديل الإجابة السابقة.');
+      updateProgress();
+      askQuestion();
     }
+  };
 
-    function scoreRIASEC(){
-      const scores = {R:0,I:0,A:0,S:0,E:0,C:0};
-      for(let i=0;i<RIASEC_ITEMS.length;i++){
-        const item = RIASEC_ITEMS[i];
-        const v = responses[i] || 0;
-        scores[item.d] += v;
-      }
-      return scores;
-    }
+  function endQuestions(){
+    showTyping(true);
+    setTimeout(()=>{
+      showTyping(false);
+      addBot('أحسنت! أنهيت جميع الأسئلة. جاهز تشوف توصياتي؟');
+      btnFinish.style.display='inline-block';
+      choices.innerHTML='';
+    }, 500);
+  }
 
-    function topCodes(scores){
-      const arr = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
-      return arr.slice(0,3).map(([k])=>k); // أعلى 3
-    }
+  /* =========================
+     5) حساب الدرجات والنتائج
+     ========================= */
+  // برامج IUG وربطها بالمحاور (أوزان تقريبية واقعية)
+  const MAJORS = [
+    // IT & CS
+    {id:'ai_cs',    name:'علوم الحاسوب/ذكاء اصطناعي وعلوم البيانات', dom:{ai_cs:1.0,soft_web:0.8,sci_math:0.6}, note:'أساس رياضيات/منطق قوي وتعلم ذاتي مستمر.'},
+    {id:'sw',       name:'تطوير البرمجيات/الويب والموبايل',         dom:{soft_web:1.0,ai_cs:0.6,it_media:0.5}, note:'مشاريع طويلة وتعاون فريق برمجي.'},
+    {id:'it',       name:'تكنولوجيا المعلومات/وسائط متعددة',        dom:{it_media:1.0,soft_web:0.5,media:0.4}, note:'تعامل عملي مع الأنظمة والمستخدمين والمحتوى.'},
 
-    function rankMajors(scores){
-      const codes = topCodes(scores);
-      const weights = {salary:(values.salary||3)-3, stability:(values.stability||3)-3, altruism:(values.altruism||3)-3};
-      // تحويل -2..+2 إلى مضاعفات بسيطة
-      function codeMatchScore(m){
-        // تشابه الشفرات
-        let s = 0;
-        m.codes.forEach((c, idx)=>{
-          s += (scores[c]||0) * (idx===0?1.0:idx===1?0.7:0.5);
-        });
-        // تعديلات القيم (تقريبية)
-        if(['med','nursing','edu'].includes(m.id)) s += (weights.altruism*2);
-        if(['acc','pharm','civil','ee'].includes(m.id)) s += (weights.stability*1.5);
-        if(['biz','mkt','ai','cs'].includes(m.id)) s += (weights.salary*1.5);
-        return s;
-      }
-      const ranked = MAJORS
-        .map(m => ({...m, s: codeMatchScore(m)}))
-        .sort((a,b)=>b.s-a.s);
-      return {codes, ranked};
-    }
+    // هندسة
+    {id:'civil',    name:'الهندسة المدنية',                           dom:{civil:1.0,sci_math:0.5}, note:'ميداني + حسابات ومعايير سلامة.'},
+    {id:'arch',     name:'الهندسة المعمارية/تصميم عمراني',           dom:{arch:1.0,civil:0.6,media:0.4}, note:'ذائقة بصرية وفهم تقني.'},
+    {id:'me_ind',   name:'الهندسة الميكانيكية/الصناعية',             dom:{me_ind:1.0,sci_math:0.5}, note:'تفكير نظامي وتطبيق عملي وتحسين كفاءة.'},
+    {id:'ee',       name:'الهندسة الكهربائية/الاتصالات',             dom:{ee_comm:1.0,sci_math:0.6}, note:'رياضيات/فيزياء وإلكترونيات وقياسات.'},
 
-    function codeToLabel(c){
-      return {R:'واقعي', I:'تحليلي/بحثي', A:'فني/إبداعي', S:'اجتماعي', E:'مبادر/قيادي', C:'تقليدي/منظّم'}[c] || c;
-    }
+    // علوم
+    {id:'math_phys',name:'رياضيات/فيزياء',                           dom:{sci_math:1.0,ai_cs:0.5}, note:'تجريد وتحليل عاليان.'},
+    {id:'chem_bio_biotech',name:'كيمياء/أحياء/تقنية حيوية',          dom:{sci_chem_bio:1.0,health:0.4}, note:'دقة مخبرية واهتمام بالبحث.'},
+    {id:'earth_marine',name:'علوم الأرض والبحار والبيئة',             dom:{earth_marine:1.0}, note:'عمل ميداني وتحليل بيئي.'},
 
-    function showResults(){
-      // تحقق بسيط: جميع الأسئلة مجابة
-      const needed = TOTAL_ITEMS;
-      const got = Object.keys(responses).length + Object.keys(values).length;
-      if(got < needed){
-        alert('يرجى إكمال جميع الأسئلة قبل عرض النتائج.');
-        return;
-      }
-      const scores = scoreRIASEC();
-      const {codes, ranked} = rankMajors(scores);
+    // صحية وتمريض
+    {id:'health',   name:'علوم صحية (علاج/تصوير/تغذية)',            dom:{health:1.0,sci_chem_bio:0.5}, note:'تواصل إنساني وبروتوكولات واضحة.'},
+    {id:'nursing',  name:'التمريض/القابلة',                           dom:{nursing:1.0,health:0.6}, note:'رعاية مباشرة وتحمل ضغط.'},
+    {id:'med',      name:'الطب البشري',                                dom:{health:0.8,sci_chem_bio:0.8}, note:'أساس علمي قوي والتزام طويل.'},
 
-      // ملخص
-      const codeStr = codes.map(codeToLabel).join(' • ');
-      summaryLine.textContent = `أعلى ميول لديك: ${codeStr}`;
+    // اقتصاد وإدارة
+    {id:'biz',      name:'إدارة/اقتصاد/تسويق/محاسبة/تمويل',         dom:{biz:1.0,soft_web:0.3,ai_cs:0.3}, note:'أسواق وقيادة وتحليل مالي.'},
 
-      // توصيات
-      recommendations.innerHTML = '';
-      ranked.slice(0,6).forEach(m=>{
-        const div = document.createElement('div');
-        div.className = 'result';
-        div.innerHTML = `
-          <div style="font-weight:700">${m.name}</div>
-          <div class="muted">${m.note}</div>
-          <div class="tag">رموز مرتبطة: ${m.codes.join('-')}</div>
-        `;
-        recommendations.appendChild(div);
-      });
+    // شريعة وقانون وأصول دين
+    {id:'law_sharia',name:'الشريعة والقانون',                          dom:{law_sharia:1.0}, note:'التزام أنظمة وبناء حجج.'},
+    {id:'islamic',  name:'أصول دين/دعوة وإعلام',                      dom:{islamic:1.0,media:0.4}, note:'علوم شرعية وتأثير مجتمعي.'},
 
-      hide(quizSection);
-      show(resultsView);
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
+    // آداب/إعلام/لغات
+    {id:'media',    name:'إعلام/صحافة/علاقات عامة/رقمي',             dom:{media:1.0,it_media:0.4}, note:'سرد قصصي وتواصل رقمي.'},
+    {id:'lang',     name:'لغة عربية/إنجليزية/ترجمة/تدقيق لغوي',      dom:{lang:1.0}, note:'شغف باللغة ودقة الأسلوب.'},
 
-    /* ======================
-       5) أحداث
-       ====================== */
-    btnStart.onclick = () => { hide(intro); show(quizSection); renderPage(); };
-    btnPrev.onclick = () => { page = clamp(page-1, 0, TOTAL_PAGES-1); renderPage(); };
-    btnNext.onclick = () => { page = clamp(page+1, 0, TOTAL_PAGES-1); renderPage(); };
-    btnSubmit.onclick = showResults;
-    btnRestart.onclick = () => {
-      page = 0; for(const k in responses) delete responses[k];
-      for(const k in values) delete values[k];
-      hide(resultsView); show(intro); window.scrollTo({top:0,behavior:'smooth'});
-    };
-  </script>
+    // تربية وخدمة اجتماعية وتاريخ/جغرافيا/آثار
+    {id:'edu',      name:'تربية/تعليم (أساسي/مواد)',                dom:{edu:1.0,lang:0.3}, note:'تبسيط مفاهيم وإدارة صف.'},
+    {id:'social',   name:'الخدمة الاجتماعية',                         dom:{social:1.0}, note:'تعاطف وإرشاد مجتمعي.'},
+    {id:'hist_geo_arc',name:'تاريخ/جغرافيا/آثار',                     dom:{hist_geo_arc:1.0}, note:'بحث وتحليل وأعمال ميدانية.'},
+  ];
+
+  function computeNormScores(){
+    const sums = {}; const counts = {};
+    DOMAINS.forEach(d=>{ sums[d.key]=0; counts[d.key]=d.items.length; });
+    ITEMS.forEach((item,i)=>{ const v = responses[i]||0; sums[item.key]+=v; });
+    const norm = {};
+    for(const k in sums){ norm[k] = sums[k] / (counts[k]*5); } // 0..1
+    return norm;
+  }
+
+  function rankMajors(norm){
+    const ranked = MAJORS.map(m=>{
+      let s=0;
+      for(const k in m.dom){ s += (m.dom[k]||0) * (norm[k]||0); }
+      // قواعد واقعية إضافية:
+      if(m.id==='med' && !(norm.health>0.7 && norm.sci_chem_bio>0.7)) s -= 0.15;
+      if(['ee','me_ind','civil'].includes(m.id) && norm.sci_math<0.45) s -= 0.08;
+      if(m.id==='arch' && norm.arch<0.5) s -= 0.08;
+      if(m.id==='ai_cs' && norm.ai_cs<0.5) s -= 0.08;
+      return {...m, score: Math.max(0, s)};
+    }).sort((a,b)=>b.score-a.score);
+    return ranked;
+  }
+
+  function topDomainStr(norm){
+    const top = Object.entries(norm).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    const label = k => (DOMAINS.find(d=>d.key===k)?.title || k);
+    return top.map(([k,v])=>`${label(k)} (${Math.round(v*100)}٪)`).join(' • ');
+  }
+
+  function showResults(){
+    const answered = Object.keys(responses).length;
+    if(answered < TOTAL){ alert('رجاءً أكمل جميع الأسئلة.'); return; }
+    const norm = computeNormScores();
+    const ranked = rankMajors(norm);
+    // ملخص
+    summary.textContent = `أعلى محاور قوّتك: ${topDomainStr(norm)}. فيما يلي ترشيحاتي الواقعية ضمن برامج الجامعة الإسلامية بغزة:`;
+    // بطاقات
+    cards.innerHTML='';
+    ranked.slice(0,8).forEach(m=>{
+      const topTags = Object.keys(m.dom).map(k=>DOMAINS.find(d=>d.key===k)?.title || k).slice(0,3).join('، ');
+      const div = document.createElement('div');
+      div.className='card';
+      div.innerHTML = `
+        <div style="font-weight:700">${m.name}</div>
+        <div class="muted">محاور بارزة: ${topTags}</div>
+        <div class="tag">ملاءمة تقديرية: ${Math.round(m.score*100)}%</div>
+        <div style="margin-top:6px">${m.note}</div>
+        ${m.id==='med' ? '<div class="muted" style="margin-top:6px">تنبيه: يحتاج معدلات مرتفعة وأساس علمي قوي واستعداد لسنوات دراسة طويلة.</div>' : ''}
+      `;
+      cards.appendChild(div);
+    });
+    chatUI.style.display='none';
+    results.style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  btnFinish.onclick = showResults;
+  btnRestart.onclick = ()=>{
+    idx=0; for(const k in responses) delete responses[k];
+    results.style.display='none';
+    // رجوع للمقدمة
+    intro.style.display='grid';
+    fill.style.width='0%'; progTxt.textContent='';
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+</script>
 </body>
 </html>

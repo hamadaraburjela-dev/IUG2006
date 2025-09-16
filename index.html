@@ -182,20 +182,14 @@
 <div class="modal-actions">
 <button class="action-button danger" id="confirm-logout-btn">نعم، اخرج</button>
 <button class="action-button secondary" id="cancel-logout-btn">لا، ابقَ هنا</button>
-<!-- Attempt Modal -->
-<div id="odv-modal" class="odv-modal" role="dialog" aria-modal="true" aria-labelledby="odv-modal-title" aria-describedby="odv-modal-desc" hidden>
+<!-- مودال المحاولات -->
+<div id="odv-modal" class="odv-modal" hidden>
   <div class="odv-modal__overlay" data-close></div>
   <div class="odv-modal__dialog" dir="rtl">
-    <button class="odv-modal__close" type="button" aria-label="إغلاق" data-close>
-      <!-- X icon -->
-      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.3 5.71a1 1 0 0 0-1.41 0L12 10.59 7.11 5.7A1 1 0 1 0 5.7 7.11L10.59 12l-4.9 4.89a1 1 0 1 0 1.41 1.41L12 13.41l4.89 4.9a1 1 0 0 0 1.41-1.41L13.41 12l4.9-4.89a1 1 0 0 0-.01-1.4Z" fill="currentColor"/></svg>
-    </button>
-
-    <div class="odv-modal__icon" id="odv-modal-icon" aria-hidden="true"></div>
-
+    <button class="odv-modal__close" type="button" data-close>×</button>
+    <div class="odv-modal__icon" id="odv-modal-icon"></div>
     <h2 class="odv-modal__title" id="odv-modal-title">لقد أكملت جميع المحاولات</h2>
     <p class="odv-modal__desc" id="odv-modal-desc">لا مزيد من المحاولات المسموح بها.</p>
-
     <div class="odv-modal__actions">
       <button id="odv-modal-ok" class="odv-btn odv-btn--primary" type="button">حسنًا</button>
     </div>
@@ -210,5 +204,7 @@
 <script defer="True" src="assets/js/quiz-logic.js"></script>
 <script defer="True" src="assets/js/common-fixes.js"></script>
 <script defer="True" src="assets/js/faculty-page.js"></script>
+<script src="assets/js/common-fixes.js"></script>
+
 </body>
 </html>
