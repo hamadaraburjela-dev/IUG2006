@@ -1,6 +1,6 @@
 /* --- script.js (Final Updated Version with Badges Fix) --- */
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwKRy_pihHLrgpLtaVPgd-CFfy7RbdmyQ7zDSC67WhajEvwZE7GX1ua60abXzkhzjWzUw/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxfG_8M1nZjkylixsFDgPKSc6LjqBkpLwOnr6y2mLEirxATeWW2M3NiLiJvHXuYkIXx9w/exec';
 
 // --- بداية منطق الشارات ---
 const allBadges = {
@@ -11,6 +11,51 @@ const allBadges = {
     medic: { id: 'medic', name: 'الطبيب الناشئ', icon: '⚕️', description: 'أكملت تحدي الكليات بنجاح', earned: false },
     engineer: { id: 'engineer', name: 'المهندس الواعد', icon: '🏗️', description: 'أكملت تحدي الكليات بنجاح', earned: false }
 };
+// 🟢 دالة تسجيل المستخدم
+async function registerUser(data) {
+  // نولّد UID محليًا (عشان يرجع للمستخدم فورًا)
+  const uid = crypto.randomUUID();
+
+  // نعرض للمستخدم أنه تسجّل بنجاح بدون انتظار
+  showMessage("✅ تم تسجيل دخولك، استمتع بالمتابعة 🎉");
+
+  // نرجع له الـ UID مباشرة
+  return { result: "success", uniqueId: uid };
+
+  // 🔹 نرسل البيانات للسيرفر/Google Apps Script في الخلفية
+  fetch("https://script.google.com/macros/s/AKfycbxxxxx/exec", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "register",
+      name: data.name,
+      phone: data.phone,
+      year: data.year,
+      uniqueId: uid, // نحافظ على الـ UID
+    }),
+  })
+    .then(res => res.json())
+    .then(res => {
+      console.log("تم الحفظ في الخلفية:", res);
+    })
+    .catch(err => {
+      console.error("مشكلة في التسجيل بالخلفية:", err);
+    });
+}
+
+// 🟢 مثال استخدام
+document.querySelector("#registerBtn").addEventListener("click", async () => {
+  const name = document.querySelector("#name").value;
+  const phone = document.querySelector("#phone").value;
+  const year = document.querySelector("#year").value;
+
+  const result = await registerUser({ name, phone, year });
+  console.log("UID للمستخدم:", result.uniqueId);
+});
+
+function showMessage(msg) {
+  document.querySelector("#status").textContent = msg;
+}
 
 function checkAndAwardBadges() {
     const state = JSON.parse(localStorage.getItem('iugGameProgress'));
