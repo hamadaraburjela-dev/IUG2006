@@ -10,135 +10,210 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&amp;family=Marhey:wght@500&amp;display=swap" rel="stylesheet"/>
 <audio id="success-audio" preload="auto" src="assets/sounds/nashed.mp3"></audio>
 <style>
-  :root {
-    --primary-color: #004d40; /* Deep Teal */
-    --secondary-color: #bcaaa4; /* Light Brown/Gold Accent */
-    --text-color: #333;
-    --bg-color: #f9f9f7;
-  }
-  body {
-    font-family: "Cairo", sans-serif;
-    background: var(--bg-color);
-    text-align: center;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  #printable-certificate {
-    width: 800px;
-    background: white;
-    border: 10px solid var(--primary-color);
-    padding: 25px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    position: relative;
-    background-image: url('assets/images/logo-watermark.webp'); /* Optional: Add a light watermark */
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 400px;
-  }
-  .cert-border {
-    border: 2px solid var(--secondary-color);
-    padding: 20px;
-  }
-  .cert-header {
-    margin-bottom: 25px;
-  }
-  .cert-header img {
-    width: 120px;
-    margin-bottom: 10px;
-  }
-  .cert-header h1 {
-    font-family: 'Marhey', cursive;
-    font-size: 2.5rem;
-    color: var(--primary-color);
-    margin: 0;
-  }
-  .cert-header h2 {
-    font-size: 1.5rem;
-    color: var(--text-color);
-    margin: 5px 0;
-  }
-  .cert-body .intro-text {
-    font-size: 1.2rem;
-    margin: 20px 0 5px 0;
-  }
-  .cert-body .student-name {
-    font-family: 'Marhey', cursive;
-    font-size: 2.2rem;
-    color: var(--primary-color);
-    margin: 0 0 15px 0;
-  }
-  .cert-body .main-text {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    margin: 0 auto 30px auto;
-    max-width: 90%;
-  }
-  .results-section {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    margin-bottom: 30px;
-    padding: 15px;
-    background-color: rgba(240, 240, 240, 0.5);
-    border-radius: 10px;
-  }
-  .score-container, .scholarship-container {
-    text-align: center;
-  }
-  .results-section p {
-    margin: 0;
-    font-size: 1rem;
-    color: #555;
-  }
-  .results-section strong {
-    font-size: 1.8rem;
-    color: var(--primary-color);
-    display: block;
-    margin-top: 5px;
-  }
-  .cert-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-top: 40px;
-  }
-  .signature-area, .qr-code-area {
-    text-align: center;
-  }
-  .signature-area p {
-    margin: 0;
-    font-size: 0.9rem;
-  }
-  #qrcode {
-    width: 90px;
-    height: 90px;
-    margin: 0 auto 5px auto;
-    border: 1px solid #eee;
-    padding: 5px;
-  }
+/* هذا هو ملف الـ CSS المعدل والجاهز */
+:root {
+  --primary-color: #004d40; /* Deep Teal */
+  --secondary-color: #bcaaa4; /* Light Brown/Gold Accent */
+  --text-color: #333;
+  --bg-color: #f9f9f7;
+}
 
-  .certificate-actions {
-    margin-top: 2rem;
-  }
-  .certificate-actions button {
-    font-family: 'Cairo', sans-serif;
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-    border: none;
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: 5px;
-    margin: 0 5px;
-    transition: background-color 0.3s;
-  }
-  .certificate-actions button:hover {
-    background-color: #00251a;
-  }
-  /* Media query for mobile devices */
+body {
+  font-family: "Cairo", sans-serif;
+  background: var(--bg-color);
+  text-align: center;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#printable-certificate {
+  width: 800px;
+  background: white;
+  border: 10px solid var(--primary-color);
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  position: relative;
+  background-image: url('assets/images/logo-watermark.webp');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 400px;
+}
+
+.cert-border {
+  border: 2px solid var(--secondary-color);
+  padding: 20px;
+}
+
+.cert-header {
+  margin-bottom: 25px;
+}
+
+.cert-header img {
+  width: 120px;
+  margin-bottom: 10px;
+}
+
+.cert-header h1 {
+  font-family: 'Marhey', cursive;
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.cert-header h2 {
+  font-size: 1.5rem;
+  color: var(--text-color);
+  margin: 5px 0;
+}
+
+.cert-body .intro-text {
+  font-size: 1.2rem;
+  margin: 20px 0 5px 0;
+}
+
+.cert-body .student-name {
+  font-family: 'Marhey', cursive;
+  font-size: 2.2rem;
+  color: var(--primary-color);
+  margin: 0 0 15px 0;
+}
+
+.cert-body .main-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin: 0 auto 30px auto;
+  max-width: 90%;
+}
+
+.results-section {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 30px;
+  padding: 15px;
+  background-color: rgba(240, 240, 240, 0.5);
+  border-radius: 10px;
+}
+
+.score-container, .scholarship-container {
+  text-align: center;
+}
+
+.results-section p {
+  margin: 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+.results-section strong {
+  font-size: 1.8rem;
+  color: var(--primary-color);
+  display: block;
+  margin-top: 5px;
+}
+
+.cert-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 40px;
+}
+
+.signature-area, .qr-code-area {
+  text-align: center;
+}
+
+.signature-area p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+#qrcode {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 5px auto;
+  border: 1px solid #eee;
+  padding: 5px;
+}
+
+.certificate-actions {
+  margin-top: 2rem;
+}
+
+.certificate-actions button {
+  font-family: 'Cairo', sans-serif;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 5px;
+  margin: 0 5px;
+  transition: background-color 0.3s;
+}
+
+.certificate-actions button:hover {
+  background-color: #00251a;
+}
+
+/* New styles for dropdown containers */
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.dropdown-options {
+  position: absolute;
+  bottom: 100%; /* Position above the button */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  border: 1px solid var(--primary-color);
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  min-width: 150px;
+  z-index: 10;
+  margin-bottom: 5px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-options a {
+  padding: 8px 12px;
+  text-decoration: none;
+  color: var(--primary-color);
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+  text-align: center;
+}
+
+.dropdown-options a:hover {
+  background-color: #f0f0f0;
+}
+
+/* New styles for a professional button layout */
+.certificate-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px; /* Adds space between button groups */
+}
+
+.actions-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Adds space between buttons within each group */
+  flex-wrap: wrap; /* Allows buttons to wrap to the next line on small screens */
+}
+
+/* Media query for mobile devices */
 @media (max-width: 600px) {
   #printable-certificate {
     width: 95%; /* Make the certificate take up most of the screen width */
@@ -203,96 +278,7 @@
     font-size: 0.9rem; /* Smaller button font */
     padding: 8px 15px; /* Smaller button padding */
   }
-}
 
-  @media print {
-    body * { visibility: hidden; }
-    #printable-certificate, #printable-certificate * {
-      visibility: visible;
-    }
-    #printable-certificate {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-      box-shadow: none;
-      margin: 0;
-      padding: 20px;
-    }
-    .certificate-actions { display: none; }
-  }
-  /* New styles for dropdown containers */
-.dropdown-container {
-  position: relative;
-  display: inline-block;
-  margin: 0 5px;
-}
-
-.dropdown-options {
-  position: absolute;
-  bottom: 100%; /* Position above the button */
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: white;
-  border: 1px solid var(--primary-color);
-  border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  min-width: 150px;
-  z-index: 10;
-  margin-bottom: 5px;
-  padding: 5px;
-  display: flex;
-  flex-direction: column;
-}
-
-.dropdown-options a {
-  padding: 8px 12px;
-  text-decoration: none;
-  color: var(--primary-color);
-  font-size: 0.9rem;
-  transition: background-color 0.3s;
-  text-align: center;
-}
-
-.dropdown-options a:hover {
-  background-color: #f0f0f0;
-}
-/* Adjustments for mobile view */
-@media (max-width: 600px) {
-    .dropdown-options {
-        bottom: auto;
-        top: 100%;
-        margin-top: 5px;
-    }
-}
-/* New styles for a professional button layout */
-.certificate-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px; /* Adds space between button groups */
-}
-
-.actions-group {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px; /* Adds space between buttons within each group */
-    flex-wrap: wrap; /* Allows buttons to wrap to the next line on small screens */
-}
-
-/* Adjustments for mobile view */
-@media (max-width: 600px) {
-    .actions-group {
-        flex-direction: column; /* Stacks buttons vertically on small screens */
-    }
-}
-/*
- * هذه التنسيقات الإضافية تضمن أن الأزرار تعمل بشكل صحيح على الجوال.
- */
-@media (max-width: 600px) {
   /* تعديل موضع القائمة المنسدلة على الجوال */
   .dropdown-options {
     position: absolute; /* احتفاظ بالموضع النسبي */
@@ -309,6 +295,25 @@
     flex-direction: column;
     gap: 10px;
   }
+}
+
+@media print {
+  body * { visibility: hidden; }
+  #printable-certificate, #printable-certificate * {
+    visibility: visible;
+  }
+  #printable-certificate {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    box-shadow: none;
+    margin: 0;
+    padding: 20px;
+  }
+  .certificate-actions { display: none; }
 }
 </style>
 <link href="favicon.png" rel="icon" type="image/png"/><link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/></head>
@@ -352,34 +357,34 @@
 </div>
 </div>
 <div class="certificate-actions">
-    <div class="actions-group">
-        <button onclick="window.print()">🖨️ طباعة الشهادة</button>
-        <button onclick="downloadCertificate()">📷 تحميل كصورة</button>
+  <div class="actions-group">
+    <button onclick="window.print()">🖨️ طباعة الشهادة</button>
+    <button onclick="downloadCertificate()">📷 تحميل كصورة</button>
+  </div>
+
+  <div class="actions-group">
+    <div class="dropdown-container">
+      <button id="shareButton">🌐 مشاركة الشهادة</button>
+      <div class="dropdown-options" id="shareOptions" style="display:none;">
+        <a href="#" id="share-facebook" target="_blank" class="share-btn facebook">فيسبوك</a>
+        <a href="#" id="share-twitter" target="_blank" class="share-btn twitter">تويتر (X)</a>
+        <a href="#" id="share-linkedin" target="_blank" class="share-btn linkedin">لينكدإن</a>
+        <a href="#" id="share-whatsapp" target="_blank" class="share-btn whatsapp">واتساب</a>
+      </div>
     </div>
 
-    <div class="actions-group">
-        <div class="dropdown-container">
-            <button id="shareButton">🌐 مشاركة الشهادة</button>
-            <div class="dropdown-options" id="shareOptions" style="display:none;">
-                <a href="#" id="share-facebook" target="_blank" class="share-btn facebook">فيسبوك</a>
-                <a href="#" id="share-twitter" target="_blank" class="share-btn twitter">تويتر (X)</a>
-                <a href="#" id="share-linkedin" target="_blank" class="share-btn linkedin">لينكدإن</a>
-                <a href="#" id="share-whatsapp" target="_blank" class="share-btn whatsapp">واتساب</a>
-            </div>
-        </div>
-
-        <div class="dropdown-container">
-            <button id="telegramButton">👥 انضم لمجتمع الطلاب</button>
-            <div class="dropdown-options" id="telegramOptions" style="display:none;">
-                <a href="https://t.me/iug2006" target="_blank" class="telegram-btn">طلاب 2006</a>
-                <a href="https://t.me/Iug2007" target="_blank" class="telegram-btn">طلاب 2007</a>
-            </div>
-        </div>
+    <div class="dropdown-container">
+      <button id="telegramButton">👥 انضم لمجتمع الطلاب</button>
+      <div class="dropdown-options" id="telegramOptions" style="display:none;">
+        <a href="https://t.me/iug2006" target="_blank" class="telegram-btn">طلاب 2006</a>
+        <a href="https://t.me/Iug2007" target="_blank" class="telegram-btn">طلاب 2007</a>
+      </div>
     </div>
-    
-    <div class="actions-group">
-        <button onclick="window.location.href='index.html'">🏠 العودة للعبة</button>
-    </div>
+  </div>
+  
+  <div class="actions-group">
+    <button onclick="window.location.href='index.html'">🏠 العودة للعبة</button>
+  </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -435,7 +440,7 @@ function populateCertificateData() {
   if (qrcodeContainer) {
     qrcodeContainer.innerHTML = '';
     new QRCode(qrcodeContainer, {
-      text: `شهادة إتمام رحلة\\nالطالب: ${playerName}\\nالنقاط: ${playerScore}\\nالجامعة الإسلامية بغزة`,
+      text: `شهادة إتمام رحلة\nالطالب: ${playerName}\nالنقاط: ${playerScore}\nالجامعة الإسلامية بغزة`,
       width: 90,
       height: 90,
       colorDark: "#000000",
