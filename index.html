@@ -9,6 +9,32 @@
 <link href="assets/css/main.css" rel="stylesheet"/>
 <link rel="icon" type="image/png" href="assets/images/favicon.png">
 
+  <style>
+  /* Hero card redesign (centered, rounded, soft shadow) */
+  #landing-screen { display:flex; justify-content:center; }
+  .hero-card {
+    width: 100%;
+    max-width: 920px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 36px 44px;
+    box-shadow: 0 18px 40px rgba(2, 48, 32, 0.08);
+    border: 6px solid #e8f3ee;
+    text-align: center;
+    margin: 24px 12px;
+  }
+  .hero-top .logo { width: 84px; height: auto; margin: 0 auto 8px; }
+  .hero-title { color: var(--primary-dark, #0b5a3a); font-size: 30px; margin: 6px 0 6px; font-weight:700; }
+  .hero-sub { color: #556b63; font-size: 14px; margin-bottom: 20px; }
+  .info-card { background: #f6fbf9; border-radius: 12px; padding: 18px; margin: 18px auto; max-width:760px; color:#224d3a; box-shadow: inset 0 1px 0 rgba(255,255,255,0.6); }
+  .features-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:18px; margin-top:18px; }
+  .feature-card { background:#fff; border-radius:12px; padding:20px; box-shadow: 0 6px 18px rgba(4,40,28,0.04); border:1px solid #eef6f1; text-align:center; }
+  .feature-card .icon { font-size:34px; display:block; margin-bottom:10px; }
+  .main-cta { margin-top:26px; padding:16px 40px; border-radius:999px; font-size:18px; background: linear-gradient(180deg,#0a6b3e,#075836); color:#fff; box-shadow: 0 10px 30px rgba(5,75,45,0.18); border:none; }
+  .reset-link-container { margin-top:14px; }
+  @media (max-width:900px) { .features-grid { grid-template-columns: 1fr; } .hero-card{padding:22px} .hero-title{font-size:22px} }
+  </style>
+
 <meta content="مرحباً بكم في جامعة المعرفة – منصة تعليمية متكاملة تقدم أحدث البرامج الأكاديمية وخدمات للطلاب." name="description"/><meta content="جامعة المعرفة | الصفحة الرئيسية" property="og:title"/><meta content="مرحباً بكم في جامعة المعرفة – منصة تعليمية متكاملة تقدم أحدث البرامج الأكاديمية وخدمات للطلاب." property="og:description"/><meta content="/assets/images/arts-logo.webp" property="og:image"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="True" href="https://fonts.gstatic.com" rel="preconnect"/><meta content="ar_AR" property="og:locale"/><meta content="summary_large_image" name="twitter:card"/><meta content="جامعة المعرفة | الصفحة الرئيسية" name="twitter:title"/><meta content="مرحباً بكم في جامعة المعرفة – منصة تعليمية متكاملة تقدم أحدث البرامج الأكاديمية وخدمات للطلاب." name="twitter:description"/><meta content="/assets/images/arts-logo.webp" name="twitter:image"/><link href="https://example.com/index.html" rel="canonical"/></head>
 <body>
 <audio id="correct-sound" preload="auto" src="assets/sounds/correct.mp3"></audio>
@@ -19,26 +45,24 @@
 <div id="status-bar-placeholder"></div>
 <div class="game-container">
 <div id="landing-screen">
-<img alt="شعار الجامعة الإسلامية" class="logo" height="250" loading="lazy" src="assets/images/logo.webp" width="250"/>
-<h1>رحلتك نحو المعرفة والتميز تبدأ الآن</h1>
-<p class="subtitle">تطلق الجامعة الإسلامية بغزة مسابقة تفاعلية فريدة لطلبة الثانوية العامة، استعد لتحدي معلوماتك والفوز بجوائز قيمة.</p>
-<div class="competition-details">
-<h4>🏆 كيف تفوز في المسابقة؟</h4>
-<ul>
-<li>أجب عن التحديات في كل محطة لجمع النقاط.</li>
-<li>كل إجابة صحيقة تزيد من رصيدك</li>
-<li>حوّل نقاطك إلى منحة دراسية عند قبولك في الجامعة</li>
-</ul>
-</div>
-<div class="features-grid">
-<div class="feature-card"><span class="icon">🎓</span><h3>حوّلها إلى منحة</h3><p>حوّل أرباحك لمنحة دراسية حقيقية عند التحاقك بالجامعة.</p></div>
-<div class="feature-card"><span class="icon">💰</span><h3>اربح جوائز فورية</h3><p>اجمع "نقاط" إلكترونية مع كل إجابة صحيحة تضاف إلى رصيدك.</p></div>
-<div class="feature-card"><span class="icon">🏆</span><h3>تحديات ممتعة</h3><p>أجب عن أسئلة شيقة في مجالات متنوعة واختر تخصصك.</p></div>
-</div>
-<button class="action-button main-cta" id="show-register-btn">
-<span class="btn-icon">📅</span> سجّل الآن وابدأ التحدي!
-            </button>
-<p class="reset-link-container"><a href="#" id="reset-progress-btn">هل تريد بدء رحلة جديدة؟ (سيتم حذف التقدم الحالي)</a></p>
+  <div class="hero-card">
+    <div class="hero-top">
+      <img class="logo" src="assets/images/logo.webp" alt="شعار الجامعة"/>
+      <h2 class="hero-title">رحلتك نحو المعرفة والتميز تبدأ الآن</h2>
+      <p class="hero-sub">منصة تفاعلية لطلبة الثانوية العامة — اجمع النقاط، اربح جوائز، وحوّل مجهودك إلى منح دراسية.</p>
+    </div>
+
+    <div class="info-card">كيف تفوز في المسابقة؟ أجب بدقة، اجمع نقاطًا، واحصل على فرص منحة حقيقية.</div>
+
+    <div class="features-grid">
+      <div class="feature-card"><span class="icon">🎓</span><h4>حوّلها إلى منحة</h4><p>استبدل نقاطك بمنح عند قبولك بالجامعة.</p></div>
+      <div class="feature-card"><span class="icon">💰</span><h4>جوائز فورية</h4><p>مكافآت فورية على إجاباتك الصحيحة.</p></div>
+      <div class="feature-card"><span class="icon">🏆</span><h4>تحديات ممتعة</h4><p>أسئلة مشوقة تساعدك لاختيار تخصصك.</p></div>
+    </div>
+
+    <button id="show-register-btn" class="main-cta">سجّل الآن وابدأ التحدي!</button>
+    <p class="reset-link-container"><a href="#" id="reset-progress-btn">هل تريد بدء رحلة جديدة؟ (سيتم حذف التقدم الحالي)</a></p>
+  </div>
 </div>
 <div class="hidden" id="start-screen">
 <img alt="شعار الجامعة الإسلامية" class="logo" height="250" loading="lazy" src="assets/images/logo.webp" width="250"/>
