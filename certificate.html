@@ -491,50 +491,49 @@
         const allDropdowns = [shareOptions, telegramOptions];
         const allButtons = [shareButton, telegramButton];
 
-        // This flag helps to prevent the dropdown from immediately closing on touch devices
-        let dropdownOpen = false;
+        let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
         function toggleDropdown(targetDropdown) {
             const isVisible = targetDropdown.style.display === 'flex';
             
-            // Close all other dropdowns
-            allDropdowns.forEach(d => {
-                d.style.display = 'none';
-            });
+            allDropdowns.forEach(d => d.style.display = 'none');
             
             if (!isVisible) {
                 targetDropdown.style.display = 'flex';
-                // Set the flag after a short delay to ensure it's not immediately closed
-                setTimeout(() => { dropdownOpen = true; }, 100);
-            } else {
-                dropdownOpen = false;
             }
         }
 
-        // Use a single event listener for all relevant events
         allButtons.forEach(button => {
             const dropdown = button.id === 'shareButton' ? shareOptions : telegramOptions;
             
-            button.addEventListener('click', (event) => {
-                event.stopPropagation();
-                toggleDropdown(dropdown);
-            });
-            
-            button.addEventListener('touchstart', (event) => {
-                event.stopPropagation();
-                if (!dropdownOpen) {
+            if (isTouchDevice) {
+                button.addEventListener('touchstart', (event) => {
+                    event.preventDefault(); // This is the key change
+                    event.stopPropagation();
                     toggleDropdown(dropdown);
-                }
-            });
-        });
-
-        // Event listener on the window to close the dropdowns
-        window.addEventListener('click', (event) => {
-            if (dropdownOpen && !shareButton.contains(event.target) && !telegramButton.contains(event.target)) {
-                allDropdowns.forEach(d => d.style.display = 'none');
-                dropdownOpen = false;
+                });
+            } else {
+                button.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    toggleDropdown(dropdown);
+                });
             }
         });
+
+        // Close dropdowns if the user clicks/touches anywhere else on the window
+        window.addEventListener('click', (event) => {
+            if (!shareButton.contains(event.target) && !telegramButton.contains(event.target)) {
+                allDropdowns.forEach(d => d.style.display = 'none');
+            }
+        });
+        
+        if (isTouchDevice) {
+            window.addEventListener('touchstart', (event) => {
+                if (!shareButton.contains(event.target) && !telegramButton.contains(event.target)) {
+                    allDropdowns.forEach(d => d.style.display = 'none');
+                }
+            });
+        }
     }
     
     window.addEventListener('DOMContentLoaded', () => {
