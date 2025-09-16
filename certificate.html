@@ -349,21 +349,21 @@
     </div>
 
     <div class="actions-group">
-        <a id="share-facebook" href="#" target="_blank" class="btn-social btn-facebook">
+        <button class="btn-social btn-facebook" onclick="shareCertificate('facebook')">
             <i class="fa-brands fa-square-facebook"></i> فيسبوك
-        </a>
-        <a id="share-twitter" href="#" target="_blank" class="btn-social btn-twitter">
+        </button>
+        <button class="btn-social btn-twitter" onclick="shareCertificate('twitter')">
             <i class="fa-brands fa-square-x-twitter"></i> تويتر (X)
-        </a>
-        <a id="share-linkedin" href="#" target="_blank" class="btn-social btn-linkedin">
+        </button>
+        <button class="btn-social btn-linkedin" onclick="shareCertificate('linkedin')">
             <i class="fa-brands fa-linkedin"></i> لينكدإن
-        </a>
-        <a id="share-whatsapp" href="#" target="_blank" class="btn-social btn-whatsapp">
+        </button>
+        <button class="btn-social btn-whatsapp" onclick="shareCertificate('whatsapp')">
             <i class="fa-brands fa-square-whatsapp"></i> واتساب
-        </a>
-        <a id="share-instagram" href="#" target="_blank" class="btn-social btn-instagram">
+        </button>
+        <button class="btn-social btn-instagram" onclick="shareCertificate('instagram')">
             <i class="fa-brands fa-square-instagram"></i> انستغرام
-        </a>
+        </button>
     </div>
 
     <div class="actions-group">
@@ -444,31 +444,53 @@
         }
     }
 
-    function updateShareLinks() {
-        const playerName = document.getElementById("cert-player-name").textContent;
-        const playerScore = document.getElementById("cert-final-score").textContent;
-        
-        const title = "أنا '"+playerName+"' وقد أنهيت رحلة الجامعة الإسلامية الافتراضية بنجاح!";
-        const scoreText = "حصلت على " + playerScore + " نقطة!";
-        const websiteUrl = window.location.href;
-        
-        const message = `${title}\n${scoreText}\nتعرف على الجامعة عبر الرابط: ${websiteUrl}`;
-        const encodedMessage = encodeURIComponent(message);
-        
-        const facebookLink = "https://www.facebook.com/sharer/sharer.php?quote=" + encodedMessage + "&u=" + encodeURIComponent(websiteUrl);
-        document.getElementById('share-facebook').href = facebookLink;
-        
-        const twitterLink = "https://twitter.com/intent/tweet?text=" + encodedMessage;
-        document.getElementById('share-twitter').href = twitterLink;
+    async function shareCertificate(platform) {
+        const certificate = document.getElementById('printable-certificate');
+        const canvas = await html2canvas(certificate, { scale: 2, useCORS: true, logging: true });
+        const imageBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+        const file = new File([imageBlob], "شهادة-إتمام-الرحلة.png", { type: "image/png" });
 
-        const linkedinLink = "https://www.linkedin.com/shareArticle?mini=true&url=" + encodeURIComponent(websiteUrl) + "&title=" + encodeURIComponent(title) + "&summary=" + encodedMessage;
-        document.getElementById('share-linkedin').href = linkedinLink;
+        const title = "أنا أنهيت رحلة الجامعة الإسلامية الافتراضية بنجاح!";
+        const text = `أنا "${document.getElementById("cert-player-name").textContent}" وقد أنهيت رحلة الجامعة الإسلامية الافتراضية بنجاح! حصلت على ${document.getElementById("cert-final-score").textContent} نقطة!`;
+        const url = window.location.href;
 
-        const whatsappLink = "https://wa.me/?text=" + encodedMessage;
-        document.getElementById('share-whatsapp').href = whatsappLink;
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+                await navigator.share({
+                    files: [file],
+                    title: title,
+                    text: text,
+                    url: url,
+                });
+                console.log("Certificate shared successfully!");
+                return;
+            } catch (error) {
+                console.error("Error sharing:", error);
+            }
+        }
 
-        const instagramLink = `https://www.instagram.com/share?text=${encodedMessage}`;
-        document.getElementById('share-instagram').href = instagramLink;
+        // Fallback for desktop or unsupported browsers
+        switch (platform) {
+            case 'facebook':
+                // Facebook doesn't support sharing an image blob directly via URL.
+                // We'll revert to sharing the URL as a fallback.
+                window.open(`https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(text)}&u=${encodeURIComponent(url)}`, '_blank');
+                break;
+            case 'twitter':
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+                break;
+            case 'whatsapp':
+                window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`, '_blank');
+                break;
+            case 'linkedin':
+                window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(text)}`, '_blank');
+                break;
+            case 'instagram':
+                // Instagram sharing via web is very limited. This might not work on all browsers.
+                alert('مشاركة قصص إنستغرام متاحة فقط من خلال تطبيق الهاتف المحمول. يرجى حفظ الصورة ومشاركتها يدويًا.');
+                downloadCertificate();
+                break;
+        }
     }
 
     function downloadCertificate() {
@@ -481,10 +503,7 @@
         });
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-        populateCertificateData();
-        updateShareLinks();
-    });
+    window.addEventListener('DOMContentLoaded', populateCertificateData);
 </script>
 </body>
 </html>
