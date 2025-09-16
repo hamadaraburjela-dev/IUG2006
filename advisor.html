@@ -63,6 +63,22 @@
   .bot .bubble{background:linear-gradient(180deg,#f7fff8,#ffffff);border:1px solid rgba(8,120,60,0.04);color:#0b3b24}
   .user .bubble{background:linear-gradient(180deg,#e8f8ff,#ffffff);border:1px solid rgba(0,140,210,0.06);color:#053047}
 
+  /* grouped messages support */
+  .messages{display:flex;flex-direction:column;gap:8px}
+
+  /* message tails */
+  .bot .bubble::after, .user .bubble::after{content:'';position:absolute;width:12px;height:12px;transform:rotate(45deg)}
+  .bot .bubble::after{right:-6px;bottom:6px;background:linear-gradient(180deg,#f7fff8,#ffffff);border-right:1px solid rgba(8,120,60,0.04);border-bottom:1px solid rgba(8,120,60,0.04)}
+  .user .bubble::after{left:-6px;bottom:6px;background:linear-gradient(180deg,#e8f8ff,#ffffff);border-left:1px solid rgba(0,140,210,0.06);border-bottom:1px solid rgba(0,140,210,0.06)}
+
+  /* typing row (inserted into chat) */
+  .typing-row{display:flex;gap:10px;align-items:flex-end;opacity:0.92}
+  .typing-row .bubble{padding:8px 12px;border-radius:12px;background:linear-gradient(180deg,#fff,#f6fff6);border:1px solid rgba(10,107,58,0.06);color:var(--muted);display:flex;align-items:center;gap:8px}
+  .typing-dots{display:flex;gap:6px}
+  .typing-dots span{width:8px;height:8px;border-radius:50%;background:rgba(10,107,58,0.16);animation:blink 1s infinite}
+
+  .choice:focus{outline:3px solid rgba(7,120,64,0.12);outline-offset:3px}
+
   .bubble .meta{display:block;font-size:0.78rem;color:var(--muted);margin-top:6px}
   .timestamp{font-size:0.72rem;color:rgba(20,40,30,0.45);margin-inline-start:8px}
 
@@ -297,16 +313,59 @@
      ========================= */
   function scrollChat(){ chat.scrollTop = chat.scrollHeight; }
   function addBot(text){
-  const row = document.createElement('div'); row.className='row bot';
-  const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-  row.innerHTML = `<div class="avatar" aria-hidden>🤖</div><div class="bubble">${text}<span class="meta"><span class="timestamp">${time}</span></span></div>`;
-    chat.appendChild(row); scrollChat();
+    // try to group with previous bot message when recent
+    const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    const last = chat.lastElementChild;
+    if(last && last.classList.contains('row') && last.classList.contains('bot')){
+      // append as a following bubble for grouped look
+      const bubble = document.createElement('div'); bubble.className='bubble';
+      bubble.innerHTML = `${text}<span class="meta"><span class="timestamp">${time}</span></span>`;
+      last.appendChild(bubble);
+      animateIn(bubble);
+      scrollChat();
+      return;
+    }
+    const row = document.createElement('div'); row.className='row bot';
+    row.innerHTML = `<div class="avatar" aria-hidden>🤖</div><div class="bubble">${text}<span class="meta"><span class="timestamp">${time}</span></span></div>`;
+    chat.appendChild(row);
+    animateIn(row);
+    scrollChat();
   }
   function addUser(text){
-  const row = document.createElement('div'); row.className='row user';
-  const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-  row.innerHTML = `<div class="bubble">${text}<span class="meta"><span class="timestamp">${time}</span></span></div>`;
-    chat.appendChild(row); scrollChat();
+    const row = document.createElement('div'); row.className='row user';
+    const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    row.innerHTML = `<div class="bubble">${text}<span class="meta"><span class="timestamp">${time}</span></span></div>`;
+    chat.appendChild(row);
+    animateIn(row);
+    scrollChat();
+  }
+
+  function showTypingRow(show){
+    // insert a typing-row element into chat for realism
+    let tr = chat.querySelector('.typing-row');
+    if(show){
+      if(!tr){
+        tr = document.createElement('div'); tr.className='row bot typing-row';
+        tr.innerHTML = `<div class="avatar">🤖</div><div class="bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+        chat.appendChild(tr);
+        scrollChat();
+      }
+    } else {
+      if(tr) tr.remove();
+    }
+  }
+
+  function animateIn(el){
+    try{
+      if(window.gsap && typeof window.gsap.from === 'function'){
+        window.gsap.from(el, {y:8,opacity:0,duration:0.36,ease:'power2.out'});
+      } else {
+        // fallback: add slight opacity transition
+        el.style.transition = 'opacity .28s, transform .28s';
+        el.style.opacity = '0'; el.style.transform = 'translateY(8px)';
+        requestAnimationFrame(()=>{ el.style.opacity='1'; el.style.transform='none'; });
+      }
+    }catch(e){/* ignore animation errors */}
   }
   function showTyping(show){ typing.style.display = show ? 'flex' : 'none'; }
 
@@ -366,11 +425,12 @@
 
   function askQuestion(){
     const q = ITEMS[idx];
-    // bot 'typing' then show question
-    showTyping(true); setChoicesEnabled(false);
-    setTimeout(()=>{
+  // bot 'typing' then show question
+  showTypingRow(true); setChoicesEnabled(false);
+  setTimeout(()=>{
       showTyping(false);
-      addBot(`سؤال ${idx+1} من ${TOTAL}: ${q.t}`);
+    showTypingRow(false);
+    addBot(`سؤال ${idx+1} من ${TOTAL}: ${q.t}`);
       renderChoices();
       setChoicesEnabled(true);
     }, 420 + Math.min(900, ITEMS[idx].t.length*8));
@@ -378,14 +438,14 @@
 
   function nextQuestion(){
   choices.innerHTML = ''; showTyping(true); setChoicesEnabled(false);
-  setTimeout(()=>{ showTyping(false); askQuestion(); }, 420);
+  setTimeout(()=>{ showTypingRow(false); askQuestion(); }, 420);
   }
 
   function startChat(){
     intro.style.display='none';
     chatUI.style.display='grid';
     chat.innerHTML=''; choices.innerHTML='';
-  showTyping(true);
+  showTypingRow(true);
   setTimeout(()=>{ showTyping(false); addBot('مرحباً! أنا مستشارك الأكاديمي الذكي للجامعة الإسلامية بغزة.'); }, 260);
   setTimeout(()=>{ addBot('سأطرح عليك 60 سؤال قصيرة. اختر لكل عبارة درجة من 1 إلى 5. يمكنك اختيار من 1 إلى 5 أو النقر على الأزرار.') ; updateProgress(); askQuestion(); }, 700);
   }
@@ -404,9 +464,9 @@
   };
 
   function endQuestions(){
-    showTyping(true);
+    showTypingRow(true); setChoicesEnabled(false);
     setTimeout(()=>{
-      showTyping(false);
+      showTypingRow(false);
       addBot('أحسنت! أنهيت جميع الأسئلة. جاهز تشوف توصياتي؟');
       btnFinish.style.display='inline-block';
       choices.innerHTML='';
