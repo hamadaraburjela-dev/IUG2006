@@ -17,11 +17,14 @@
   }
   *{box-sizing:border-box}
   html,body{height:100%} 
-  body{font-family:'Cairo',sans-serif;background:var(--bg);margin:0;color:#153;line-height:1.4}
+  /* Use flex centering similar to the site's global layout, but keep a top offset for the fixed status bar */
+  /* center content visually while keeping top offset for the fixed status bar */
+  body{display:flex;justify-content:center;align-items:center;min-height:100vh;padding-top:70px;padding-left:0;padding-right:0; font-family:'Cairo',sans-serif;background:var(--bg);margin:0;color:#153;line-height:1.4}
   #status-bar-placeholder{height:12px}
 
-  .shell{width:100%;max-width:980px;margin:16px auto;padding:12px}
-  .container{background:var(--card);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-soft);border:1px solid rgba(10,107,58,0.04)}
+  /* shell is centered by the body; make it an explicit flex container to guarantee centering */
+  .shell{width:100%;max-width:980px;margin:36px auto;padding:12px;display:flex;justify-content:center}
+  .container{width:100%;max-width:980px;background:var(--card);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-soft);border:1px solid rgba(10,107,58,0.04);margin-inline:auto}
 
   /* Intro */
   .intro{padding:22px 20px;border-bottom:1px solid #edf6ef}
