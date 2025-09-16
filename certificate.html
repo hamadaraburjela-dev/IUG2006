@@ -1,547 +1,373 @@
 <!DOCTYPE html>
-
 <html dir="rtl" lang="ar">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>شهادة إتمام الرحلة</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&amp;family=Marhey:wght@500&amp;display=swap" rel="stylesheet"/>
-<audio id="success-audio" preload="auto" src="assets/sounds/nashed.mp3"></audio>
-<style>
-  :root {
-    --primary-color: #004d40; /* Deep Teal */
-    --secondary-color: #bcaaa4; /* Light Brown/Gold Accent */
-    --text-color: #333;
-    --bg-color: #f9f9f7;
-  }
-  body {
-    font-family: "Cairo", sans-serif;
-    background: var(--bg-color);
-    text-align: center;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  #printable-certificate {
-    width: 800px;
-    background: white;
-    border: 10px solid var(--primary-color);
-    padding: 25px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    position: relative;
-    background-image: url('assets/images/logo-watermark.webp'); /* Optional: Add a light watermark */
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 400px;
-  }
-  .cert-border {
-    border: 2px solid var(--secondary-color);
-    padding: 20px;
-  }
-  .cert-header {
-    margin-bottom: 25px;
-  }
-  .cert-header img {
-    width: 120px;
-    margin-bottom: 10px;
-  }
-  .cert-header h1 {
-    font-family: 'Marhey', cursive;
-    font-size: 2.5rem;
-    color: var(--primary-color);
-    margin: 0;
-  }
-  .cert-header h2 {
-    font-size: 1.5rem;
-    color: var(--text-color);
-    margin: 5px 0;
-  }
-  .cert-body .intro-text {
-    font-size: 1.2rem;
-    margin: 20px 0 5px 0;
-  }
-  .cert-body .student-name {
-    font-family: 'Marhey', cursive;
-    font-size: 2.2rem;
-    color: var(--primary-color);
-    margin: 0 0 15px 0;
-  }
-  .cert-body .main-text {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    margin: 0 auto 30px auto;
-    max-width: 90%;
-  }
-  .results-section {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    margin-bottom: 30px;
-    padding: 15px;
-    background-color: rgba(240, 240, 240, 0.5);
-    border-radius: 10px;
-  }
-  .score-container, .scholarship-container {
-    text-align: center;
-  }
-  .results-section p {
-    margin: 0;
-    font-size: 1rem;
-    color: #555;
-  }
-  .results-section strong {
-    font-size: 1.8rem;
-    color: var(--primary-color);
-    display: block;
-    margin-top: 5px;
-  }
-  .cert-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-top: 40px;
-  }
-  .signature-area, .qr-code-area {
-    text-align: center;
-  }
-  .signature-area p {
-    margin: 0;
-    font-size: 0.9rem;
-  }
-  #qrcode {
-    width: 90px;
-    height: 90px;
-    margin: 0 auto 5px auto;
-    border: 1px solid #eee;
-    padding: 5px;
-  }
-
-  .certificate-actions {
-    margin-top: 2rem;
-  }
-  .certificate-actions button {
-    font-family: 'Cairo', sans-serif;
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-    border: none;
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: 5px;
-    margin: 0 5px;
-    transition: background-color 0.3s;
-  }
-  .certificate-actions button:hover {
-    background-color: #00251a;
-  }
-  /* Media query for mobile devices */
-@media (max-width: 600px) {
-  #printable-certificate {
-    width: 95%; /* Make the certificate take up most of the screen width */
-    padding: 10px; /* Reduce padding to save space */
-  }
-
-  .cert-border {
-    padding: 10px; /* Reduce border padding */
-  }
-
-  .cert-header img {
-    width: 70px; /* Smaller logo */
-  }
-  
-  .cert-header h1 {
-    font-size: 1.2rem; /* Smaller main heading */
-  }
-  
-  .cert-header h2 {
-    font-size: 0.9rem; /* Smaller sub-heading */
-  }
-
-  .cert-body .intro-text,
-  .cert-body .main-text,
-  .signature-area p,
-  .qr-code-area p {
-    font-size: 0.8rem; /* Smaller body text */
-  }
-  
-  .cert-body .student-name {
-    font-size: 1.5rem; /* Smaller name font */
-  }
-
-  .results-section {
-    flex-direction: column; /* Stack results vertically */
-    gap: 10px; /* Smaller gap */
-    padding: 8px;
-  }
-  
-  .results-section strong {
-    font-size: 1.1rem; /* Smaller score/scholarship font */
-  }
-
-  .cert-footer {
-    flex-direction: column; /* Stack footer elements vertically */
-    align-items: center; /* Center footer items */
-    gap: 15px; /* Add some space between them */
-  }
-  
-  #qrcode {
-    width: 60px; /* Smaller QR code for mobile */
-    height: 60px;
-  }
-
-  .certificate-actions {
-    flex-direction: column; /* Stack buttons vertically */
-    gap: 10px;
-    width: 100%;
-  }
-
-  .certificate-actions button {
-    font-size: 0.9rem; /* Smaller button font */
-    padding: 8px 15px; /* Smaller button padding */
-  }
-}
-
-  @media print {
-    body * { visibility: hidden; }
-    #printable-certificate, #printable-certificate * {
-      visibility: visible;
-    }
-    #printable-certificate {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-      box-shadow: none;
-      margin: 0;
-      padding: 20px;
-    }
-    .certificate-actions { display: none; }
-  }
-  /* New styles for dropdown containers */
-.dropdown-container {
-  position: relative;
-  display: inline-block;
-  margin: 0 5px;
-}
-
-.dropdown-options {
-  position: absolute;
-  bottom: 100%; /* Position above the button */
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: white;
-  border: 1px solid var(--primary-color);
-  border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  min-width: 150px;
-  z-index: 10;
-  margin-bottom: 5px;
-  padding: 5px;
-  display: flex;
-  flex-direction: column;
-}
-
-.dropdown-options a {
-  padding: 8px 12px;
-  text-decoration: none;
-  color: var(--primary-color);
-  font-size: 0.9rem;
-  transition: background-color 0.3s;
-  text-align: center;
-}
-
-.dropdown-options a:hover {
-  background-color: #f0f0f0;
-}
-/* Adjustments for mobile view */
-@media (max-width: 600px) {
-    .dropdown-options {
-        bottom: auto;
-        top: 100%;
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>شهادة إتمام الرحلة</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&amp;family=Marhey:wght@500&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <audio id="success-audio" preload="auto" src="assets/sounds/nashed.mp3"></audio>
+    <style>
+      :root {
+        --primary-color: #004d40; /* Deep Teal */
+        --secondary-color: #bcaaa4; /* Light Brown/Gold Accent */
+        --text-color: #333;
+        --bg-color: #f9f9f7;
+      }
+      body {
+        font-family: "Cairo", sans-serif;
+        background: var(--bg-color);
+        text-align: center;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      #printable-certificate {
+        width: 800px;
+        background: white;
+        border: 10px solid var(--primary-color);
+        padding: 25px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        position: relative;
+        box-sizing: border-box;
+      }
+      .header h1 {
+        font-family: "Marhey", sans-serif;
+        font-weight: 500;
+        color: var(--primary-color);
+        font-size: 3rem;
+        margin: 0;
+      }
+      .header p {
+        color: var(--secondary-color);
+        font-size: 1.2rem;
         margin-top: 5px;
-    }
-}
-/* New styles for a professional button layout */
-.certificate-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px; /* Adds space between button groups */
-}
-
-.actions-group {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px; /* Adds space between buttons within each group */
-    flex-wrap: wrap; /* Allows buttons to wrap to the next line on small screens */
-}
-
-/* Adjustments for mobile view */
-@media (max-width: 600px) {
-    .actions-group {
-        flex-direction: column; /* Stacks buttons vertically on small screens */
-    }
-}
-/*
- * هذه التنسيقات الإضافية تضمن أن الأزرار تعمل بشكل صحيح على الجوال.
- */
-@media (max-width: 600px) {
-  /* تعديل موضع القائمة المنسدلة على الجوال */
-  .dropdown-options {
-    position: absolute; /* احتفاظ بالموضع النسبي */
-    bottom: auto; /* إزالة خاصية bottom التي قد تسبب مشاكل */
-    top: 100%; /* وضع القائمة أسفل الزر مباشرةً */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 150px; /* تحديد عرض ثابت لضمان عدم الخروج من الشاشة */
-    padding: 5px;
-  }
-
-  /* جعل حاوية الأزرار الرئيسية مرنة لترتيب الأزرار بشكل عمودي */
-  .certificate-actions {
-    flex-direction: column;
-    gap: 10px;
-  }
-}
-</style>
-<link href="favicon.png" rel="icon" type="image/png"/><link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/></head>
+      }
+      .title h2 {
+        font-family: "Marhey", sans-serif;
+        font-size: 2.5rem;
+        color: #333;
+        margin: 20px 0 10px;
+      }
+      .info p {
+        font-size: 1.3rem;
+        color: #555;
+        line-height: 1.8;
+      }
+      .info .name {
+        font-weight: bold;
+        font-size: 1.8rem;
+        color: var(--primary-color);
+        border-bottom: 2px solid var(--secondary-color);
+        padding-bottom: 5px;
+        display: inline-block;
+      }
+      .signatures {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-end;
+        margin-top: 40px;
+      }
+      .signature-block {
+        text-align: center;
+      }
+      .signature-block .sign-img {
+        width: 150px;
+        height: auto;
+        margin-bottom: 5px;
+      }
+      .signature-block h3 {
+        font-size: 1.3rem;
+        margin: 0;
+      }
+      .signature-block p {
+        font-size: 0.9rem;
+        color: #777;
+        margin: 0;
+      }
+      .qr-code {
+        position: absolute;
+        bottom: 25px;
+        left: 25px;
+      }
+      .qr-code img {
+        width: 100px;
+        height: 100px;
+      }
+      #buttons-container {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+      }
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .action-buttons a, .action-buttons button {
+        background-color: var(--primary-color);
+        color: #fff;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+      }
+      .action-buttons a:hover, .action-buttons button:hover {
+        background-color: #00332c;
+      }
+      .share-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 10px;
+      }
+      .share-buttons a {
+        background-color: transparent;
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+        padding: 8px;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2rem;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .share-buttons a:hover {
+        background-color: var(--primary-color);
+        color: #fff;
+      }
+      @media print {
+        body {
+          background: none;
+          padding: 0;
+        }
+        #printable-certificate {
+          width: 100%;
+          border: none;
+          box-shadow: none;
+          padding: 0;
+          margin: 0;
+        }
+        #buttons-container, .audio-control {
+          display: none;
+        }
+      }
+      @media (max-width: 820px) {
+        #printable-certificate {
+          width: 100%;
+          border-width: 5px;
+        }
+        .header h1 {
+          font-size: 2rem;
+        }
+        .header p {
+          font-size: 1rem;
+        }
+        .title h2 {
+          font-size: 2rem;
+        }
+        .info p {
+          font-size: 1rem;
+        }
+        .info .name {
+          font-size: 1.5rem;
+        }
+        .signatures {
+          flex-direction: column;
+          align-items: center;
+        }
+        .qr-code {
+          position: static;
+          margin-top: 20px;
+        }
+      }
+      .logo {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        width: 100px;
+      }
+      .logo img {
+        width: 100%;
+        height: auto;
+      }
+    </style>
+</head>
 <body>
-<div id="printable-certificate">
-<div class="cert-border">
-<div class="cert-header">
-<img alt="شعار الجامعة الإسلامية" src="assets/images/logo.webp"/>
-<h1>الجامعة الإسلامية - غزة</h1>
-<h2>شهادة إتمام رحلة تعريفية</h2>
-</div>
-<div class="cert-body">
-<p class="intro-text">تشهد عمادة شؤون الطلبة بأن الطالب/ة</p>
-<h2 class="student-name" id="cert-player-name">[اسم الطالب]</h2>
-<p class="main-text">قد أتم بنجاح رحلة "رحلتي في الإسلامية" التعريفية الافتراضية، وأظهر معرفة ممتازة بمرافق الجامعة وكلياتها المتنوعة.</p>
-<div class="results-section">
-<div class="score-container">
-<p>النقاط المكتسبة</p>
-<strong id="cert-final-score">0</strong>
-</div>
-<div class="scholarship-container">
-<p>المنحة المستحقة</p>
-<strong id="cert-scholarship-details">---</strong>
-</div>
-</div>
-</div>
-<div class="cert-footer">
-<div class="signature-area">
-<p>___________________</p>
-<p><strong>عميد شؤون الطلبة</strong></p>
-</div>
-<div class="qr-code-area">
-<div id="qrcode"></div>
-<p>رمز التحقق</p>
-</div>
-<div class="signature-area">
-<p>___________________</p>
-<p><strong>رئيس الجامعة</strong></p>
-</div>
-</div>
-</div>
-</div>
-<div class="certificate-actions">
-    <div class="actions-group">
-        <button onclick="window.print()">🖨️ طباعة الشهادة</button>
-        <button onclick="downloadCertificate()">📷 تحميل كصورة</button>
-    </div>
-
-    <div class="actions-group">
-        <div class="dropdown-container">
-            <button id="shareButton">🌐 مشاركة الشهادة</button>
-            <div class="dropdown-options" id="shareOptions" style="display:none;">
-                <a href="#" id="share-facebook" target="_blank" class="share-btn facebook">فيسبوك</a>
-                <a href="#" id="share-twitter" target="_blank" class="share-btn twitter">تويتر (X)</a>
-                <a href="#" id="share-linkedin" target="_blank" class="share-btn linkedin">لينكدإن</a>
-                <a href="#" id="share-whatsapp" target="_blank" class="share-btn whatsapp">واتساب</a>
+    <div id="printable-certificate">
+        <div class="logo">
+            <img alt="الجامعة الإسلامية بغزة" src="assets/img/iug-logo.png"/>
+        </div>
+        <div class="header">
+            <h1>شهادة إتمام</h1>
+            <p>مقدمة من الجامعة الإسلامية بغزة</p>
+        </div>
+        <div class="title">
+            <h2>تقديرًا لجهودكم في إتمام</h2>
+            <h2>رحلة الجامعة الإسلامية الافتراضية</h2>
+        </div>
+        <div class="info">
+            <p>تشهد الجامعة بأن الطالب <span class="name" id="cert-player-name">اسم الطالب</span> قد أنهى بنجاح</p>
+            <p>جميع محطات الرحلة الافتراضية، وحقق تقدماً مبهراً.</p>
+            <p>النقاط النهائية: <span id="cert-final-score">0</span> نقطة</p>
+            <p id="cert-scholarship-details"></p>
+            <p>صدرت في <span id="cert-completion-date">أغسطس 2024</span></p>
+        </div>
+        <div class="signatures">
+            <div class="signature-block">
+                <img alt="د. مروان أبو الهشيم" class="sign-img" src="assets/img/sign1.png"/>
+                <h3>د. مروان أبو الهشيم</h3>
+                <p>مساعد نائب الرئيس للشؤون الأكاديمية</p>
+            </div>
+            <div class="signature-block">
+                <img alt="د. أحمد الفرا" class="sign-img" src="assets/img/sign2.png"/>
+                <h3>أ.د. أحمد الفرا</h3>
+                <p>نائب الرئيس للشؤون الإدارية</p>
             </div>
         </div>
-
-        <div class="dropdown-container">
-            <button id="telegramButton">👥 انضم لمجتمع الطلاب</button>
-            <div class="dropdown-options" id="telegramOptions" style="display:none;">
-                <a href="https://t.me/iug2006" target="_blank" class="telegram-btn">طلاب 2006</a>
-                <a href="https://t.me/Iug2007" target="_blank" class="telegram-btn">طلاب 2007</a>
-            </div>
+        <div class="qr-code" id="qrcode"></div>
+    </div>
+    
+    <div id="buttons-container">
+        <div class="action-buttons">
+            <button onclick="window.print()"><i class="fas fa-print"></i> طباعة الشهادة</button>
+            <button onclick="downloadCertificate()"><i class="fas fa-camera"></i> تحميل كصورة</button>
+            <a href="https://iugaza.edu.ps/telegram/" target="_blank"><i class="fab fa-telegram-plane"></i> انضم لمجتمع الطلاب</a>
+        </div>
+        
+        <div class="share-buttons">
+            <a id="share-facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a id="share-twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a id="share-linkedin" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            <a id="share-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i></a>
         </div>
     </div>
-    
-    <div class="actions-group">
-        <button onclick="window.location.href='index.html'">🏠 العودة للعبة</button>
-    </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<script>
-    function populateCertificateData() {
-        const params = new URLSearchParams(window.location.search);
-        let playerName = params.get("name");
-        let playerScore = parseInt(params.get("score"));
 
-        try {
-            const saved = localStorage.getItem('iugGameProgress');
-            if (saved) {
-                const state = JSON.parse(saved);
-                if (!playerName || playerName.trim() === "") {
-                    if (state.playerName) playerName = state.playerName;
-                    else if (state.name) playerName = state.name;
-                    else if (state.player) playerName = state.player;
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="assets/js/qrcode.min.js"></script>
+    <script>
+        function populateCertificateData() {
+            const params = new URLSearchParams(window.location.search);
+            let playerName = params.get("name");
+            let playerScore = parseInt(params.get("score"));
+
+            try {
+                const saved = localStorage.getItem('iugGameProgress');
+                if (saved) {
+                    const state = JSON.parse(saved);
+                    if (!playerName || playerName.trim() === "") {
+                        if (state.playerName) playerName = state.playerName;
+                        else if (state.name) playerName = state.name;
+                        else if (state.player) playerName = state.player;
+                    }
+                    if (!Number.isFinite(playerScore)) {
+                        if (typeof state.score === "number") playerScore = state.score;
+                        else if (typeof state.totalScore === "number") playerScore = state.totalScore;
+                        else if (typeof state.points === "number") playerScore = state.points;
+                    }
                 }
-                if (!Number.isFinite(playerScore)) {
-                    if (typeof state.score === "number") playerScore = state.score;
-                    else if (typeof state.totalScore === "number") playerScore = state.totalScore;
-                    else if (typeof state.points === "number") playerScore = state.points;
-                }
+            } catch (e) {
+                console.warn("Failed to read game state:", e);
             }
-        } catch (e) {
-            console.warn("Failed to read game state:", e);
-        }
 
-        if (!playerName || playerName.trim() === "") playerName = "اسم الطالب";
-        if (!Number.isFinite(playerScore)) playerScore = 0;
+            if (!playerName || playerName.trim() === "") playerName = "اسم الطالب";
+            if (!Number.isFinite(playerScore)) playerScore = 0;
 
-        document.getElementById("cert-player-name").textContent = playerName;
-        document.getElementById("cert-final-score").textContent = playerScore;
+            document.getElementById("cert-player-name").textContent = playerName;
+            document.getElementById("cert-final-score").textContent = playerScore;
 
-        const scholarshipEl = document.getElementById("cert-scholarship-details");
-        let scholarshipPercentage = 0;
-        if (playerScore >= 50) scholarshipPercentage = 50;
-        else if (playerScore > 0) scholarshipPercentage = playerScore;
-        scholarshipEl.textContent =
-            scholarshipPercentage > 0
-                ? `منحة ${scholarshipPercentage}% للفصل الدراسي الأول`
-                : "لم يتم الحصول على منحة";
+            const scholarshipEl = document.getElementById("cert-scholarship-details");
+            let scholarshipPercentage = 0;
+            if (playerScore >= 50) scholarshipPercentage = 50;
+            else if (playerScore > 0) scholarshipPercentage = playerScore;
+            scholarshipEl.textContent =
+                scholarshipPercentage > 0
+                    ? `منحة ${scholarshipPercentage}% للفصل الدراسي الأول`
+                    : "لم يتم الحصول على منحة";
 
-        const audio = document.getElementById("success-audio");
-        if (audio) {
-            audio.currentTime = 0;
-            audio.play().catch(err => console.log("Autoplay blocked:", err));
-        }
-
-        const qrcodeContainer = document.getElementById("qrcode");
-        if (qrcodeContainer) {
-            qrcodeContainer.innerHTML = '';
-            new QRCode(qrcodeContainer, {
-                text: `شهادة إتمام رحلة\\nالطالب: ${playerName}\\nالنقاط: ${playerScore}\\nالجامعة الإسلامية بغزة`,
-                width: 90,
-                height: 90,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-        }
-    }
-
-    function downloadCertificate() {
-        const certificate = document.getElementById('printable-certificate');
-        const options = {
-            scale: 2,
-            useCORS: true,
-            backgroundColor: null
-        };
-
-        html2canvas(certificate, options).then(canvas => {
-            const link = document.createElement('a');
-            link.download = 'certificate.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        });
-    }
-
-    function updateShareLinks() {
-        const playerName = document.getElementById("cert-player-name").textContent;
-        const playerScore = document.getElementById("cert-final-score").textContent;
-        
-        const title = `أنا ${playerName} وقد أنهيت رحلة الجامعة الإسلامية الافتراضية بنجاح!`;
-        const scoreText = `حصلت على ${playerScore} نقطة!`;
-        const websiteUrl = window.location.href;
-        
-        const message = `${title}\n${scoreText}\nتعرف على الجامعة عبر الرابط: ${websiteUrl}`;
-        const encodedMessage = encodeURIComponent(message);
-        
-        const facebookLink = `https://www.facebook.com/sharer/sharer.php?quote=${encodedMessage}&u=${encodeURIComponent(websiteUrl)}`;
-        document.getElementById('share-facebook').href = facebookLink;
-        
-        const twitterLink = `https://twitter.com/intent/tweet?text=${encodedMessage}`;
-        document.getElementById('share-twitter').href = twitterLink;
-
-        const linkedinLink = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(websiteUrl)}&title=${encodeURIComponent(title)}&summary=${encodedMessage}`;
-        document.getElementById('share-linkedin').href = linkedinLink;
-
-        const whatsappLink = `https://wa.me/?text=${encodedMessage}`;
-        document.getElementById('share-whatsapp').href = whatsappLink;
-    }
-
-    function setupButtons() {
-        const shareButton = document.getElementById('shareButton');
-        const telegramButton = document.getElementById('telegramButton');
-        const shareOptions = document.getElementById('shareOptions');
-        const telegramOptions = document.getElementById('telegramOptions');
-        const allDropdowns = [shareOptions, telegramOptions];
-        const allButtons = [shareButton, telegramButton];
-
-        let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-        function toggleDropdown(targetDropdown) {
-            const isVisible = targetDropdown.style.display === 'flex';
-            
-            allDropdowns.forEach(d => d.style.display = 'none');
-            
-            if (!isVisible) {
-                targetDropdown.style.display = 'flex';
+            const audio = document.getElementById("success-audio");
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(err => console.log("Autoplay blocked:", err));
             }
-        }
 
-        allButtons.forEach(button => {
-            const dropdown = button.id === 'shareButton' ? shareOptions : telegramOptions;
-            
-            if (isTouchDevice) {
-                button.addEventListener('touchstart', (event) => {
-                    event.preventDefault(); // This is the key change
-                    event.stopPropagation();
-                    toggleDropdown(dropdown);
-                });
-            } else {
-                button.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    toggleDropdown(dropdown);
+            const qrcodeContainer = document.getElementById("qrcode");
+            if (qrcodeContainer) {
+                qrcodeContainer.innerHTML = '';
+                new QRCode(qrcodeContainer, {
+                    text: `شهادة إتمام رحلة\\nالطالب: ${playerName}\\nالنقاط: ${playerScore}\\nالجامعة الإسلامية بغزة`,
+                    width: 90,
+                    height: 90,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
                 });
             }
-        });
+        }
 
-        // Close dropdowns if the user clicks/touches anywhere else on the window
-        window.addEventListener('click', (event) => {
-            if (!shareButton.contains(event.target) && !telegramButton.contains(event.target)) {
-                allDropdowns.forEach(d => d.style.display = 'none');
-            }
-        });
-        
-        if (isTouchDevice) {
-            window.addEventListener('touchstart', (event) => {
-                if (!shareButton.contains(event.target) && !telegramButton.contains(event.target)) {
-                    allDropdowns.forEach(d => d.style.display = 'none');
-                }
+        function downloadCertificate() {
+            const certificate = document.getElementById('printable-certificate');
+            const options = {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: null
+            };
+
+            html2canvas(certificate, options).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'certificate.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
             });
         }
-    }
-    
-    window.addEventListener('DOMContentLoaded', () => {
-        populateCertificateData();
-        setupButtons();
-        updateShareLinks();
-    });
-</script>
-</script>
+
+        function updateShareLinks() {
+            const playerName = document.getElementById("cert-player-name").textContent;
+            const playerScore = document.getElementById("cert-final-score").textContent;
+            
+            const title = `أنا ${playerName} وقد أنهيت رحلة الجامعة الإسلامية الافتراضية بنجاح!`;
+            const scoreText = `حصلت على ${playerScore} نقطة!`;
+            const websiteUrl = window.location.href;
+            
+            const message = `${title}\n${scoreText}\nتعرف على الجامعة عبر الرابط: ${websiteUrl}`;
+            const encodedMessage = encodeURIComponent(message);
+            
+            const facebookLink = `https://www.facebook.com/sharer/sharer.php?quote=${encodedMessage}&u=${encodeURIComponent(websiteUrl)}`;
+            document.getElementById('share-facebook').href = facebookLink;
+            
+            const twitterLink = `https://twitter.com/intent/tweet?text=${encodedMessage}`;
+            document.getElementById('share-twitter').href = twitterLink;
+
+            const linkedinLink = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(websiteUrl)}&title=${encodeURIComponent(title)}&summary=${encodedMessage}`;
+            document.getElementById('share-linkedin').href = linkedinLink;
+
+            const whatsappLink = `https://wa.me/?text=${encodedMessage}`;
+            document.getElementById('share-whatsapp').href = whatsappLink;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            populateCertificateData();
+            updateShareLinks();
+        });
+    </script>
 </body>
 </html>
