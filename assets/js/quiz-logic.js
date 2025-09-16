@@ -1189,6 +1189,16 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
             }
         }
 
+        function handleQuizAnswers(questionId, selectedAnswer, quizData) {
+    const isCorrect = (questionType === 'mc') ?
+        quizData.mc_questions.find(q => q.id === questionId)?.correctAnswer === selectedAnswer :
+        quizData.tf_questions.find(q => q.id === questionId)?.correctAnswer === selectedAnswer;
+
+    if (isCorrect) {
+        // Increment the score by 1 point for each correct answer
+        window.correctAnswerAction(1);
+    }
+}
         function processAnswer(selectedOption) {
             clearInterval(questionTimer);
             const question = allQuestions[currentQuestionIndex];
@@ -1199,7 +1209,7 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
             });
             if (selectedKey === question.correctAnswer) {
                 playSound(correctSound);
-                /*score++;*/
+                score++;
                 selectedOption.classList.add('correct');
                 showFeedback(true, "إجابة رائعة!");
                 if (typeof window.incrementMainScore === 'function') {
@@ -1493,10 +1503,7 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
         const closeQuiz = () => {
             clearInterval(questionTimer);
             if (quizModal) quizModal.classList.remove('active');
-             if(typeof checkAndAwardBadges === 'function') {
-         if(typeof checkAndAwardBadges === 'function') {
-        checkAndAwardBadges();
-    }
+             if(typeof checkAndAwardBadges === 'function') {     
     }
         };
         if (closeQuizModalBtn) {

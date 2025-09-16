@@ -182,7 +182,15 @@ function shuffleArray(array) {
     }
     return newArray;
 }
-
+window.correctAnswerAction = (points) => {
+    if (window.gameState) {
+        window.gameState.score += points;
+        updatePlayerScoreDisplayAndSave();
+        if (typeof window.updatePlayerScore === 'function') {
+            window.updatePlayerScore(window.gameState.uniqueId, window.gameState.score);
+        }
+    }
+};
 document.addEventListener('DOMContentLoaded', () => {
         function injectStagePointsOnMap() {
             try {
@@ -792,6 +800,16 @@ null
         renderBadges();
     }
     
+    function updatePlayerScoreDisplayAndSave() {
+       const profileScore = document.getElementById('profile-score-display');
+      if (window.gameState && profileScore) {
+        profileScore.textContent = `${window.gameState.score} نقطة`;
+      }
+      if (typeof window.updateStatusBarScore === 'function') {
+        window.updateStatusBarScore(window.gameState.score);
+    }
+    saveGameState();
+}
     document.body.addEventListener('click', unlockAudio, { once: true });
     
     populateGuideSelection();
