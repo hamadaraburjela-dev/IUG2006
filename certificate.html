@@ -491,51 +491,48 @@
         const allDropdowns = [shareOptions, telegramOptions];
         const allButtons = [shareButton, telegramButton];
 
-        // This function will toggle a dropdown and close all others
+        // This flag helps to prevent the dropdown from immediately closing on touch devices
+        let dropdownOpen = false;
+
         function toggleDropdown(targetDropdown) {
             const isVisible = targetDropdown.style.display === 'flex';
             
-            // First, close all dropdowns
+            // Close all other dropdowns
             allDropdowns.forEach(d => {
                 d.style.display = 'none';
             });
             
-            // Then, if the target was not visible, show it
             if (!isVisible) {
                 targetDropdown.style.display = 'flex';
+                // Set the flag after a short delay to ensure it's not immediately closed
+                setTimeout(() => { dropdownOpen = true; }, 100);
+            } else {
+                dropdownOpen = false;
             }
         }
 
-        // Add a single click/touch listener for each button
+        // Use a single event listener for all relevant events
         allButtons.forEach(button => {
+            const dropdown = button.id === 'shareButton' ? shareOptions : telegramOptions;
+            
             button.addEventListener('click', (event) => {
                 event.stopPropagation();
-                if (button.id === 'shareButton') {
-                    toggleDropdown(shareOptions);
-                } else if (button.id === 'telegramButton') {
-                    toggleDropdown(telegramOptions);
-                }
+                toggleDropdown(dropdown);
             });
-            // Add touchstart for better mobile responsiveness
+            
             button.addEventListener('touchstart', (event) => {
                 event.stopPropagation();
-                if (button.id === 'shareButton') {
-                    toggleDropdown(shareOptions);
-                } else if (button.id === 'telegramButton') {
-                    toggleDropdown(telegramOptions);
+                if (!dropdownOpen) {
+                    toggleDropdown(dropdown);
                 }
             });
         });
 
-        // Close dropdowns if the user clicks/touches anywhere else on the window
+        // Event listener on the window to close the dropdowns
         window.addEventListener('click', (event) => {
-            if (!shareButton.contains(event.target) && !telegramButton.contains(event.target)) {
+            if (dropdownOpen && !shareButton.contains(event.target) && !telegramButton.contains(event.target)) {
                 allDropdowns.forEach(d => d.style.display = 'none');
-            }
-        });
-        window.addEventListener('touchstart', (event) => {
-            if (!shareButton.contains(event.target) && !telegramButton.contains(event.target)) {
-                allDropdowns.forEach(d => d.style.display = 'none');
+                dropdownOpen = false;
             }
         });
     }
