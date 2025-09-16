@@ -1624,8 +1624,9 @@ body {
     animation: score-pop 0.6s ease-out;
 }
 
-/* === Quiz Modal Styles V3 (Self-Contained & Fixed) === */
-:root {
+/* === Quiz Modal Styles V3 (Self-Contained & Fixed, scoped) === */
+/* Scoped to #quiz-modal so these variables don't override global :root values. */
+#quiz-modal {
     --quiz-bg: #f0f4f8;
     --quiz-card-bg: #ffffff;
     --quiz-primary: #006633;
