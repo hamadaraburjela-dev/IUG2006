@@ -1,4 +1,5 @@
-let quizRestartAttempts = parseInt(localStorage.getItem("quizRestartAttempts")) || 0;
+// track remaining attempts (stored key kept for compatibility)
+let quizAttemptsRemaining = parseInt(localStorage.getItem("quizRestartAttempts")) || null;
 const MAX_ATTEMPTS = 2;
 
 if (window.quizLogicLoaded) {
@@ -1027,11 +1028,14 @@ if (window.quizLogicLoaded) {
 let attemptsScores = [];
 
 function finishQuiz() {
-    // خزن نتيجة هذه المحاولة (يعتمد على أن quizRestartAttempts يبدأ من 1 كما في أسفل الملف)
-    attemptsScores[quizRestartAttempts - 1] = score;
+    // خزن نتيجة هذه المحاولة استناداً إلى عدد المحاولات المستخدمة
+    const used = MAX_ATTEMPTS - (quizAttemptsRemaining === null ? MAX_ATTEMPTS : quizAttemptsRemaining);
+    const idx = Math.max(0, used - 1);
+    attemptsScores[idx] = score;
 
-    if (quizRestartAttempts === 2) {
-        const averageScore = (attemptsScores[0] + attemptsScores[1]) / 2;
+    if (used >= MAX_ATTEMPTS) {
+        const sum = (attemptsScores[0] || 0) + (attemptsScores[1] || 0);
+        const averageScore = Math.round(sum / MAX_ATTEMPTS);
         alert(`نتيجتك النهائية: ${averageScore}`);
     } else {
         alert(`نتيجتك في هذه المحاولة: ${score}`);
@@ -1039,9 +1043,18 @@ function finishQuiz() {
 }
 
 
-function canRestartQuiz() {
-  return quizRestartAttempts < MAX_ATTEMPTS;
-}
+    function consumeAttempt(){
+        if (quizAttemptsRemaining === null) quizAttemptsRemaining = MAX_ATTEMPTS;
+        if (quizAttemptsRemaining > 0){
+            quizAttemptsRemaining--;
+            localStorage.setItem('quizRestartAttempts', quizAttemptsRemaining);
+        }
+    }
+
+    function canRestartQuiz() {
+        if (quizAttemptsRemaining === null) quizAttemptsRemaining = MAX_ATTEMPTS;
+        return quizAttemptsRemaining > 0;
+    }
 
 
         let helpCounters = {};
@@ -1051,8 +1064,9 @@ function canRestartQuiz() {
         const TIME_ADDITION = 30;
     const FEEDBACK_DURATION = 5000;
     const FEEDBACK_INCORRECT_DURATION = 2500; // 2.5s when incorrect as requested
-        const NUM_QUESTIONS_TO_SHOW = 10;
-        let quizRestartAttempts = 1;
+    const NUM_QUESTIONS_TO_SHOW = 10;
+    // ensure remaining attempts initialized
+    if (quizAttemptsRemaining === null) quizAttemptsRemaining = MAX_ATTEMPTS;
         
                 // Use page filename as stable quizId (e.g., library, grants, ...)
                 currentQuizId = (location.pathname.split('/').pop() || 'index.html').replace(/\.html?$/,'').toLowerCase();
@@ -1100,17 +1114,16 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
   const startQuizBtn = document.getElementById(triggerButtonId);
   if (!startQuizBtn) return;
 
-  startQuizBtn.addEventListener("click", () => {
-    if (!canRestartQuiz()) {
- showAttemptsModal({
-  title: "لقد أكملت جميع المحاولات",
-  message: "لا مزيد من المحاولات المسموح بها."
-});
-
-      return;
-    }
-    quizRestartAttempts++;
-    localStorage.setItem("quizRestartAttempts", quizRestartAttempts);
+    startQuizBtn.addEventListener("click", () => {
+        if (!canRestartQuiz()) {
+            showAttemptsModal({
+                title: "لقد أكملت جميع المحاولات",
+                message: "لا مزيد من المحاولات المسموح بها."
+            });
+            return;
+        }
+        // consume one attempt for this new run
+        consumeAttempt();
   
     // تهيئة البيانات
     currentQuizData = quizDataObject;
@@ -1347,8 +1360,9 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
                 message = 'تحتاج إلى مراجعة معلوماتك أكثر.';
             }
             let restartButtonHTML = '';
-            if (quizRestartAttempts > 0) {
-                restartButtonHTML = `<button id="restart-quiz-btn" class="action-button">أعد التحدي (${quizRestartAttempts} فرصة متبقية)</button>`;
+            const remaining = (quizAttemptsRemaining === null) ? MAX_ATTEMPTS : quizAttemptsRemaining;
+            if (remaining > 0) {
+                restartButtonHTML = `<button id="restart-quiz-btn" class="action-button">أعد التحدي (${remaining} فرصة متبقية)</button>`;
             } else {
                 restartButtonHTML = `<button id="restart-quiz-btn" class="action-button" disabled>أعد التحدي (0 فرصة متبقية)</button>`;
             }
@@ -1368,8 +1382,10 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
             const restartBtn = document.getElementById('restart-quiz-btn');
             if (restartBtn) {
                 restartBtn.addEventListener('click', () => {
-                    if (quizRestartAttempts > 0) {
-                        quizRestartAttempts--;
+                    const rem = (quizAttemptsRemaining === null) ? MAX_ATTEMPTS : quizAttemptsRemaining;
+                    if (rem > 0) {
+                        // consume attempt for this restart-run
+                        consumeAttempt();
                         currentQuestionIndex = 0;
                         score = 0;
                         helpCounters = {
