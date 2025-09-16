@@ -2,7 +2,7 @@
 
 // غيّر للرابط الخاص بك
 // ضع رابط نشر Google Apps Script هنا 👇
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwUn6xqWCqknS7vxAhS6Gbcg1GSCnjJ1uILkjrF8qZOiy3vehexB4lOobesnFj-GpbTow/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxr8FgoeGQAq8FDmvWc4Afb6ruyNEX49pA2Vhp1kr9_eWqAwYMmQrqtquE2FBZgdC0BxQ/exec';
 
 // --- بداية منطق الشارات ---
 const allBadges = {
@@ -20,12 +20,43 @@ function processAnswer(userAnswer) {
         // يتم تحديث النقاط في الواجهة الأمامية
         gameState.score++; 
         // ثم يتم استدعاء دالة المزامنة
-        syncScoreToServer(gameState.uniqueId, gameState.score, gameState.currentScene, gameState.answeredQuestions, gameState.selectedGuide);
-        showFeedback(true);
+       async function syncScoreToServer(uniqueId, score, currentScene = '', answeredQuestions = [], selectedGuide = '') {
+    if (!uniqueId) {
+        console.warn('No uniqueId to sync score with.');
+        return;
+    }
+
+    // هذا السطر مهم جدا للتشخيص!
+    console.log("Debug: Attempting to sync score. Current score value is:", score);
+
+    try {
+        const res = await fetch(SCRIPT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                action: "updatePlayerState",
+                uniqueId,
+                score,
+                currentScene,
+                answeredQuestions,
+                selectedGuide
+            }),
+        });
+        const data = await res.json();
+        if (data.result === 'success') {
+            console.log("✅ Score synced successfully. Returned score:", data.score);
+        } else {
+            console.warn("⚠️ Score sync returned a warning:", data);
+        }
+    } catch (err) {
+        console.error("❌ Score sync failed with an error:", err);
+    }
+}
     } else {
         showFeedback(false);
     }
 }
+
 function checkAndAwardBadges() {
     const state = JSON.parse(localStorage.getItem('iugGameProgress'));
     if (!state) return;
