@@ -659,11 +659,44 @@ body {
     window.scrollTo({top:0,behavior:'smooth'});
   };
   
-
-</script>
 <script defer="True" src="assets/js/statusBar.js"></script>
-<!-- داخل <head> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+/* ====== مؤثرات صوتية بسيطة ====== */
+const ctx = new (window.AudioContext||window.webkitAudioContext)();
+function beep({freq=500,dur=0.1,type='sine'}={}) {
+  if(!ctx) return;
+  const o=ctx.createOscillator(), g=ctx.createGain();
+  o.type=type; o.frequency.value=freq;
+  o.connect(g); g.connect(ctx.destination);
+  g.gain.value=0.05;
+  o.start(); o.stop(ctx.currentTime+dur);
+}
 
+/* أصوات */
+const sfx = {
+  msg: ()=>beep({freq:520,dur:.1,type:'triangle'}),
+  click: ()=>beep({freq:420,dur:.08,type:'square'}),
+  success: ()=>{ beep({freq:500}); setTimeout(()=>beep({freq:760}),80); }
+};
+
+/* دمج الأصوات مع الدوال */
+const origAddBot = addBot;
+addBot = function(txt){
+  origAddBot(txt);
+  sfx.msg();
+};
+
+const origAddUser = addUser;
+addUser = function(txt){
+  origAddUser(txt);
+  sfx.click();
+};
+
+const origShowResults = showResults;
+showResults = function(){
+  origShowResults();
+  sfx.success();
+};
+</script>
 </body>
 </html>

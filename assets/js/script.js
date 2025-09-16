@@ -2,7 +2,7 @@
 
 // غيّر للرابط الخاص بك
 // ضع رابط نشر Google Apps Script هنا 👇
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzGpE_kz99SN7JX8SJeLxQ4qwrP9KXB5h5LFtzgbvfWZP-Oz1kjTkU9ekjeHpdL24gKuw/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxv6qJNACZVdcHFdwBfDto_v3Es1kjsaKwpZXYXcA7Imh2qImlFEpID2uit9M-8QTZ0zA/exec';
 
 // دالة لمزامنة النقاط مع Code.gs
 async function syncScoreToServer(uniqueId, score, currentScene = '', answeredQuestions = [], selectedGuide = '') {
