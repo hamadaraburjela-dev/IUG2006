@@ -2915,9 +2915,31 @@ body {
     grid-template-columns: repeat(2, 1fr); /* 3 أعمدة متساوية */
     gap: 15px; /* المسافة بين الأزرار */
     width: 100%; /* اجعلها تأخذ كامل عرض الأب */
-    max-width: 600px; /* حد أقصى للعرض لتبدو جيدة على الشاشات الكبيرة */
+    max-width: none; /* allow full expansion so grid can show two columns on larger screens */
     margin: 20px auto 0 auto; /* توسيط الحاوية نفسها */
     padding: 0 10px; /* بعض الحشو من الجوانب */
+}
+
+/* Wrap each option-button + optional pill so the grid treats them as single items */
+.option-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.option-wrap .option-btn {
+    flex: 1 1 auto; /* button grows to fill remaining space */
+}
+.option-wrap .stage-points-pill {
+    flex: 0 0 auto; /* pill keeps its size */
+}
+
+/* On narrow screens, stack the contents of the wrapper vertically */
+@media (max-width: 480px) {
+    .option-wrap { flex-direction: column; align-items: stretch; }
+    #map-scene .options-container { grid-template-columns: 1fr; max-width: 420px; }
 }
 
 /* تعديل بسيط للتأكد من أن الأزرار الأخيرة تتوسط بشكل جيد */
