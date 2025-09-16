@@ -376,6 +376,8 @@
      ========================= */
   let idx = 0;                  // فهرس السؤال الحالي
   const responses = {};         // index -> 1..5
+  // جمع معلومات موجزة عن الطالب قبل الأسئلة (تؤثر على التوصيات)
+  const profile = { branch: null, tawjihi: null };
 
   /* =========================
      4) أدوات عرض المحادثة
@@ -498,6 +500,44 @@
     btnBack.style.display = idx>0 ? 'inline-block' : 'none';
   }
 
+  // --- profile collection UI: branch (أدبي/علمي) + تقدير التوجيهي ---
+  function showProfileForm(){
+    choices.innerHTML = '';
+    // branch buttons
+    const branches = [ {id:'sci','label':'علمي'}, {id:'arts','label':'أدبي'} ];
+    const row = document.createElement('div'); row.style.display='flex'; row.style.gap='8px'; row.style.justifyContent='center';
+    branches.forEach(b=>{
+      const btn = document.createElement('button'); btn.className='choice'; btn.textContent = b.label;
+      btn.onclick = ()=>{
+        profile.branch = b.id;
+        addUser(b.label);
+        // then ask for tawjihi grade
+        renderTawjihiInput();
+      };
+      row.appendChild(btn);
+    });
+    choices.appendChild(row);
+    // helper: render numeric input for Tawjihi
+    function renderTawjihiInput(){
+      choices.innerHTML = '';
+      const wrap = document.createElement('div'); wrap.style.display='flex'; wrap.style.flexDirection='column'; wrap.style.alignItems='center'; wrap.style.gap='8px';
+      const label = document.createElement('div'); label.textContent = 'أدخل معدل التوجيهي (مثال: 85)'; label.className='muted';
+      const input = document.createElement('input'); input.type='number'; input.min='0'; input.max='100'; input.style.padding='8px 10px'; input.style.borderRadius='8px'; input.style.border='1px solid #e6f3ed'; input.style.width='160px';
+      const ok = document.createElement('button'); ok.className='choice'; ok.textContent='حفظ ومتابعة';
+      ok.onclick = ()=>{
+        const v = parseFloat(input.value);
+        profile.tawjihi = Number.isFinite(v) ? v : null;
+        addUser(profile.tawjihi ? `${profile.tawjihi}` : 'لم أحدد');
+        choices.innerHTML='';
+        updateProgress();
+        askQuestion();
+      };
+      wrap.appendChild(label); wrap.appendChild(input); wrap.appendChild(ok);
+      choices.appendChild(wrap);
+      input.focus();
+    }
+  }
+
   function askQuestion(){
     const q = ITEMS[idx];
   // bot 'typing' then show question
@@ -528,9 +568,9 @@
       addBot('الاختبار يتكوّن من 60 سؤالًا قصيرة وسريعة. هل تود بدء الاختبار الآن؟');
       // render quick ready buttons
       choices.innerHTML = '';
-      const yes = document.createElement('button'); yes.className='choice'; yes.textContent='نعم، ابدأ الآن';
+  const yes = document.createElement('button'); yes.className='choice'; yes.textContent='نعم، ابدأ الآن';
       const no = document.createElement('button'); no.className='choice'; no.textContent='لا، لاحقًا';
-      yes.onclick = ()=>{ addUser('نعم، ابدأ الآن'); choices.innerHTML=''; updateProgress(); askQuestion(); };
+  yes.onclick = ()=>{ addUser('نعم، ابدأ الآن'); choices.innerHTML=''; showProfileForm(); };
       no.onclick = ()=>{ addUser('لا، لاحقًا'); addBot('حسنًا. عد متى شئت، وسأكون هنا لمساعدتك.'); choices.innerHTML=''; };
       choices.appendChild(yes); choices.appendChild(no);
     }, 700);
@@ -616,10 +656,25 @@
       let s=0;
       for(const k in m.dom){ s += (m.dom[k]||0) * (norm[k]||0); }
       // قواعد واقعية إضافية:
+      // استخدم معلومات الملف الشخصي للتعديل الخفيف على النتيجة
+      if(profile.branch === 'arts'){
+        // إن كان أدبيًا، خفّف من أوزان التخصصات الهندسية والطبية قليلاً
+        if(['med','ee','me_ind','civil','math_phys'].includes(m.id)) s -= 0.06;
+      } else if(profile.branch === 'sci'){
+        // إن كان علميًّا، امنح دفعة طفيفة للتخصصات العلمية والطبية
+        if(['med','ee','me_ind','civil','math_phys','chem_bio_biotech'].includes(m.id)) s += 0.05;
+      }
       if(m.id==='med' && !(norm.health>0.7 && norm.sci_chem_bio>0.7)) s -= 0.15;
       if(['ee','me_ind','civil'].includes(m.id) && norm.sci_math<0.45) s -= 0.08;
       if(m.id==='arch' && norm.arch<0.5) s -= 0.08;
       if(m.id==='ai_cs' && norm.ai_cs<0.5) s -= 0.08;
+      // تعديل بسيط حسب تقدير التوجيهي: درجات أعلى تزيد من فرص القبول في بعض البرامج
+      if(profile.tawjihi){
+        const g = profile.tawjihi;
+        if(g >= 90) s += 0.04;
+        else if(g >= 80) s += 0.02;
+        else if(g < 60) s -= 0.03;
+      }
       return {...m, score: Math.max(0, s)};
     }).sort((a,b)=>b.score-a.score);
     return ranked;
