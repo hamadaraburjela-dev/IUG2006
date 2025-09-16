@@ -566,37 +566,16 @@ img[src*="first_faculties_q"] {
     font-size: 36px;
     margin-bottom: 5px;
 }
-html, body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden; /* يمنع الفراغ على اليمين */
-}
 
 #faculties-scene .options-container,
 #exchange-scene .options-container,
 #admission-scene .options-container,
 #studentaffairs-scene .options-container {
-    /* تم حذف grid-template-columns: 1fr; من هنا */
+    grid-template-columns: 1fr;
     max-width: 400px;
     margin: 25px auto 0;
 }
-#map-scene .options-container {
-    grid-template-columns: 1fr 1fr; /* هذا سيجعلها عمودين على الشاشات الكبيرة */
-}
-@media (max-width: 480px) {
-    #map-scene .options-container {
-        grid-template-columns: 1fr; /* هذا يضمن عمودًا واحدًا على الجوال */
-    }
-}
-/* قم بإضافة هذه القاعدة الجديدة في مكان مناسب داخل Media Query للجوال */
-@media (max-width: 768px) {
-    #faculties-scene .options-container,
-    #exchange-scene .options-container,
-    #admission-scene .options-container,
-    #studentaffairs-scene .options-container {
-        grid-template-columns: 1fr; /* تفعيل عمود واحد فقط على الشاشات الصغيرة */
-    }
-}
+
 #faculties-scene .option-btn,
 #exchange-scene .option-btn,
 #admission-scene .option-btn,
@@ -3937,45 +3916,5 @@ button:active, .btn:active, .nav-item:active, .answer-option:active {
 @media (max-width: 600px) {
   .destinations-container {
     grid-template-columns: 1fr; /* عمود واحد على الجوال */
-  }
-}
-
-
-
-/* === إصلاح مشكلة الفراغ على يمين الموقع === */
-html, body {
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow-x: hidden !important;
-}
-
-img {
-  max-width: 100% !important;
-  height: auto !important;
-  display: block !important;
-}
-
-.container, .row, .quiz-card, .status-bar {
-  max-width: 100% !important;
-  overflow-x: hidden !important;
-}
-/* توسيط محتوى صفحة البداية */
-#landing-screen {
-  max-width: 1200px;     /* عرض أقصى للحاوية */
-  margin: 0 auto;        /* يوسّط المحتوى بالنص */
-  padding: 20px;         /* يبعد المحتوى عن الأطراف */
-  text-align: center;    /* يوسّط النصوص والعناوين */
-}
-
-/* لو في grid للعناصر (مثل الكروت) */
-.features-grid {
-  display: grid;
-  grid-template-columns: 1fr;  /* عمود واحد على الموبايل */
-  gap: 20px;
-}
-
-@media (min-width: 768px) {
-  .features-grid {
-    grid-template-columns: repeat(3, 1fr); /* 3 أعمدة على اللاب */
   }
 }
