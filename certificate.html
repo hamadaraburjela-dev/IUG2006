@@ -491,13 +491,20 @@
         const telegramButton = document.getElementById('telegramButton');
         const shareOptions = document.getElementById('shareOptions');
         const telegramOptions = document.getElementById('telegramOptions');
+        const allDropdowns = [shareOptions, telegramOptions];
 
         function toggleDropdown(dropdown) {
-            if (dropdown.style.display === 'flex') {
-                dropdown.style.display = 'none';
-            } else {
-                dropdown.style.display = 'flex';
-            }
+            const isVisible = dropdown.style.display === 'flex';
+            
+            // Close all other dropdowns
+            allDropdowns.forEach(d => {
+                if (d !== dropdown) {
+                    d.style.display = 'none';
+                }
+            });
+            
+            // Toggle the clicked dropdown
+            dropdown.style.display = isVisible ? 'none' : 'flex';
         }
 
         const handleButtonClick = (dropdown) => (event) => {
@@ -513,8 +520,7 @@
 
         const closeDropdowns = (event) => {
             if (!shareButton.contains(event.target) && !telegramButton.contains(event.target)) {
-                shareOptions.style.display = 'none';
-                telegramOptions.style.display = 'none';
+                allDropdowns.forEach(d => d.style.display = 'none');
             }
         };
 
@@ -527,6 +533,7 @@
         setupButtons();
         updateShareLinks();
     });
+</script>
 </script>
 </body>
 </html>
