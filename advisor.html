@@ -565,15 +565,30 @@
     showTypingRow(true);
     setTimeout(()=>{ showTypingRow(false); addBot('مرحبًا — يسعدني مساعدتك في استكشاف التخصصات المتاحة.'); }, 260);
     setTimeout(()=>{
-      addBot('الاختبار يتكوّن من 60 سؤالًا قصيرة وسريعة. هل تود بدء الاختبار الآن؟');
-      // render quick ready buttons
-      choices.innerHTML = '';
-  const yes = document.createElement('button'); yes.className='choice'; yes.textContent='نعم، ابدأ الآن';
-      const no = document.createElement('button'); no.className='choice'; no.textContent='لا، لاحقًا';
-  yes.onclick = ()=>{ addUser('نعم، ابدأ الآن'); choices.innerHTML=''; showProfileForm(); };
-      no.onclick = ()=>{ addUser('لا، لاحقًا'); addBot('حسنًا. عد متى شئت، وسأكون هنا لمساعدتك.'); choices.innerHTML=''; };
-      choices.appendChild(yes); choices.appendChild(no);
+      // show the readiness prompt (separated function so it can be 'retracted')
+      showReadyPrompt();
     }, 700);
+  }
+
+  // show the ready / not now prompt; can be called again by a 'تراجع' button
+  function showReadyPrompt(){
+    addBot('الاختبار يتكوّن من 60 سؤالًا قصيرة وسريعة. هل تود بدء الاختبار الآن؟');
+    choices.innerHTML = '';
+    const yes = document.createElement('button'); yes.className='choice'; yes.textContent='نعم، ابدأ الآن';
+    const no = document.createElement('button'); no.className='choice'; no.textContent='لا، لاحقًا';
+    yes.onclick = ()=>{ addUser('نعم، ابدأ الآن'); choices.innerHTML=''; showProfileForm(); };
+    no.onclick = ()=>{
+      addUser('لا، لاحقًا');
+      addBot('حسنًا. عد متى شئت، وسأكون هنا لمساعدتك.');
+      // offer a retract button so user can go back to the readiness prompt
+      choices.innerHTML = '';
+      const back = document.createElement('button'); back.className='choice'; back.textContent='تراجع';
+      const keep = document.createElement('button'); keep.className='choice'; keep.textContent='لا أريد الآن';
+      back.onclick = ()=>{ choices.innerHTML=''; showReadyPrompt(); };
+      keep.onclick = ()=>{ choices.innerHTML=''; };
+      choices.appendChild(back); choices.appendChild(keep);
+    };
+    choices.appendChild(yes); choices.appendChild(no);
   }
 
   btnReady.onclick = startChat;
