@@ -1199,7 +1199,7 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
             });
             if (selectedKey === question.correctAnswer) {
                 playSound(correctSound);
-                score++;
+                /*score++;*/
                 selectedOption.classList.add('correct');
                 showFeedback(true, "إجابة رائعة!");
                 if (typeof window.incrementMainScore === 'function') {
