@@ -18,7 +18,7 @@ function processAnswer(userAnswer) {
     const isCorrect = (userAnswer === currentQuestion.correctAnswer);
     if (isCorrect) {
         // يتم تحديث النقاط في الواجهة الأمامية
-        gameState.score++; 
+        /*gameState.score++;*/ 
         // ثم يتم استدعاء دالة المزامنة
        async function syncScoreToServer(uniqueId, score, currentScene = '', answeredQuestions = [], selectedGuide = '') {
     if (!uniqueId) {
