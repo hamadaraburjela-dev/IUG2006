@@ -1420,46 +1420,53 @@ img[src*="first_faculties_q"] {
 /* 🎨 شريط الحالة - تصميم احترافي ومحسن بصريًا (الإصدار 2) */
 /* ======================================================= */
 
-/* NOTE: This :root block is repeated in the file. It overrides variables defined earlier.
-    Recommendation: consolidate all CSS variables into the single :root at the top of the file
-    to avoid accidental overrides. Keeping this comment for easier refactoring. */
-:root {
-  /* ألوان جديدة مع لمسات عصرية */
-  --primary-color: #1a5e20;        /* أخضر داكن عميق */
-  --secondary-color: #2e7d32;      /* أخضر متوسط */
-  --tertiary-color: #4caf50;       /* أخضر زاهي */
-  --accent-color: #a5d6a7;         /* أخضر فاتح للمسات */
-  --text-color: #ffffff;           /* نص أبيض نقي */
-  --shadow-color: rgba(0, 0, 0, 0.25); /* ظل أعمق قليلًا */
-  --highlight-color: rgba(255, 255, 255, 0.15); /* لمعان أكثر وضوحًا */
-  --light-glow: rgba(165, 214, 167, 0.4); /* توهج خفيف للأيقونات */
-  --glass-bg: rgba(255, 255, 255, 0.08); /* خلفية زجاجية شفافة */
-  --font-family: "Cairo", "Segoe UI", sans-serif;
+/* NOTE: This :root block was originally global and overrode variables defined earlier.
+    To avoid accidental global overrides we add a scoped version for the status bar below.
+    The original :root values remain earlier in the file; this scoped block defines
+    component-specific variables for #status-bar only (non-destructive).
+*/
+
+#status-bar {
+  /* Scoped CSS variables for the status bar only. Use var(--status-*) inside #status-bar rules. */
+  --status-primary-color: #1a5e20;        /* أخضر داكن عميق */
+  --status-secondary-color: #2e7d32;      /* أخضر متوسط */
+  --status-tertiary-color: #4caf50;       /* أخضر زاهي */
+  --status-accent-color: #a5d6a7;         /* أخضر فاتح للمسات */
+  --status-text-color: #ffffff;           /* نص أبيض نقي */
+  --status-shadow-color: rgba(0, 0, 0, 0.25); /* ظل أعمق قليلًا */
+  --status-highlight-color: rgba(255, 255, 255, 0.15); /* لمعان أكثر وضوحًا */
+  --status-light-glow: rgba(165, 214, 167, 0.4); /* توهج خفيف للأيقونات */
+  --status-glass-bg: rgba(255, 255, 255, 0.08); /* خلفية زجاجية شفافة */
+  /* Keep font-family global; scoped variables only for colors/shadows */
 }
 
-/* ---------------- الشريط الرئيسي ---------------- */
+/* To migrate styles: replace usages like var(--primary-color) within #status-bar rules
+    to var(--status-primary-color) where appropriate. This patch doesn't replace usages
+    automatically; it provides a safe scoped variables block and explanatory note. */
+
+/* ---------------- الشريط الرئيسي (scoped variables) ---------------- */
 #status-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 70px; /* زيادة الارتفاع قليلًا */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 30px; /* زيادة التباعد الأفقي */
-  box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px; /* زيادة الارتفاع قليلًا */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px; /* زيادة التباعد الأفقي */
+    box-sizing: border-box;
 
-  /* تدرج لوني متعدد النقاط مع لمسة عصرية */
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 60%, var(--tertiary-color) 100%);
-  color: var(--text-color);
-  font-family: var(--font-family);
+    /* تدرج لوني باستخدام المتغيرات المخصصة للشريط (scoped) */
+    background: linear-gradient(135deg, var(--status-primary-color) 0%, var(--status-secondary-color) 60%, var(--status-tertiary-color) 100%);
+    color: var(--status-text-color);
+    font-family: var(--font-family);
 
-  box-shadow: 0 6px 16px var(--shadow-color); /* ظل أكثر بروزًا */
-  z-index: 1000;
-  transition: all 0.4s ease-in-out; /* انتقال أبطأ قليلًا */
-  backdrop-filter: blur(5px); /* تأثير ضبابية خفيف لخلفية زجاجية */
-  -webkit-backdrop-filter: blur(5px); /* دعم سفاري */
+    box-shadow: 0 6px 16px var(--status-shadow-color); /* ظل أكثر بروزًا */
+    z-index: 1000;
+    transition: all 0.4s ease-in-out; /* انتقال أبطأ قليلًا */
+    backdrop-filter: blur(5px); /* تأثير ضبابية خفيف لخلفية زجاجية */
+    -webkit-backdrop-filter: blur(5px); /* دعم سفاري */
 }
 
 /* ---------------- أقسام الشريط ---------------- */
@@ -1477,8 +1484,8 @@ img[src*="first_faculties_q"] {
   font-size: 17px; /* حجم خط أكبر قليلًا */
   font-weight: 700; /* خط أثقل */
   
-  /* خلفية زجاجية خفيفة */
-  background-color: var(--glass-bg);
+    /* خلفية زجاجية خفيفة (scoped variable) */
+    background-color: var(--status-glass-bg);
   border: 1px solid rgba(255, 255, 255, 0.2); /* حدود شفافة */
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -1491,9 +1498,9 @@ img[src*="first_faculties_q"] {
 }
 
 #player-name-display .icon, #player-score-display .icon {
-  color: var(--accent-color);
-  font-size: 20px; /* أيقونات أكبر قليلًا */
-  text-shadow: 0 0 8px var(--light-glow); /* توهج خفيف للأيقونات */
+    color: var(--status-accent-color);
+    font-size: 20px; /* أيقونات أكبر قليلًا */
+    text-shadow: 0 0 8px var(--status-light-glow); /* توهج خفيف للأيقونات */
 }
 
 /* ---------------- أزرار التحكم (أكثر بروزًا وتفاعلية) ---------------- */
@@ -1503,7 +1510,7 @@ img[src*="first_faculties_q"] {
   gap: 12px;
   padding: 12px 18px; /* زيادة Padding */
   text-decoration: none;
-  color: var(--text-color);
+    color: var(--status-text-color);
   font-size: 16px;
   font-weight: 600;
   border-radius: 10px; /* حواف مستديرة أكثر */
@@ -1521,7 +1528,7 @@ img[src*="first_faculties_q"] {
   font-size: 20px; /* أيقونات أكبر */
   width: 22px;
   text-align: center;
-  text-shadow: 0 0 6px var(--light-glow);
+    text-shadow: 0 0 6px var(--status-light-glow);
 }
 
 /* تأثيرات التفاعل */
@@ -1542,7 +1549,7 @@ img[src*="first_faculties_q"] {
 }
 
 .status-bar-btn:hover {
-  background-color: var(--glass-bg); /* خلفية زجاجية عند التحويم */
+    background-color: var(--status-glass-bg); /* خلفية زجاجية عند التحويم (scoped) */
   transform: translateY(-3px) scale(1.02);
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   border-color: rgba(255, 255, 255, 0.3);
