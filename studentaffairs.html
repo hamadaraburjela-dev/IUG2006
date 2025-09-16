@@ -180,20 +180,15 @@
             document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeModal(); });
         });
     </script>
+<script src="assets/js/common-fixes.js"></script>
 <script src="assets/js/statusBar.js"></script>
-<script src="assets/js/quiz-logic.js"></script> <script>
+<script src="assets/js/quiz-logic.js"></script>
+<script src="assets/js/faculty-page.js"></script>
+<script src="assets/js/script.js"></script>
+
+<script>
     document.addEventListener('DOMContentLoaded', function() {
-        // This button's logic is now handled by quiz-logic.js
-        // const startBtn = document.getElementById('start-studentaffairs-quiz-btn');
         const backBtn = document.getElementById('back-to-home-btn');
-
-        // if (startBtn) {
-        //     startBtn.addEventListener('click', () => {
-        //         localStorage.setItem('startChallenge', 'studentaffairs');
-        //         window.location.href = 'index.html';
-        //     });
-        // }
-
         if (backBtn) {
             backBtn.addEventListener('click', () => {
                 window.location.href = 'index.html';
@@ -201,10 +196,5 @@
         }
     });
 </script>
-<script src="assets/js/faculty-page.js"></script>
-<script src="assets/js/statusBar.js"></script>
-<script src="assets/js/script.js"></script>
-<script src="assets/js/quiz-logic.js"></script>
-<script src="assets/js/common-fixes.js"></script>
 </body>
 </html>
