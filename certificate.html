@@ -1,480 +1,444 @@
 <!DOCTYPE html>
-
 <html dir="rtl" lang="ar">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>شهادة إتمام الرحلة</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&amp;family=Marhey:wght@500&amp;display=swap" rel="stylesheet"/>
-<audio id="success-audio" preload="auto" src="assets/sounds/nashed.mp3"></audio>
-<style>
-/* هذا هو ملف الـ CSS المعدل والجاهز */
-:root {
-  --primary-color: #004d40; /* Deep Teal */
-  --secondary-color: #bcaaa4; /* Light Brown/Gold Accent */
-  --text-color: #333;
-  --bg-color: #f9f9f7;
-}
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>شهادة إتمام الرحلة</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&amp;family=Marhey:wght@500&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <audio id="success-audio" preload="auto" src="assets/sounds/nashed.mp3"></audio>
+    <style>
+        /* هذا هو ملف الـ CSS المعدل والجاهز */
+        :root {
+            --primary-color: #004d40; /* Deep Teal */
+            --secondary-color: #bcaaa4; /* Light Brown/Gold Accent */
+            --text-color: #333;
+            --bg-color: #f9f9f7;
+            --social-facebook: #1877f2;
+            --social-twitter: #1da1f2;
+            --social-linkedin: #0a66c2;
+            --social-whatsapp: #25d366;
+            --social-telegram: #0088cc;
+        }
 
-body {
-  font-family: "Cairo", sans-serif;
-  background: var(--bg-color);
-  text-align: center;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+        body {
+            font-family: "Cairo", sans-serif;
+            background: var(--bg-color);
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
 
-#printable-certificate {
-  width: 800px;
-  background: white;
-  border: 10px solid var(--primary-color);
-  padding: 25px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  position: relative;
-  background-image: url('assets/images/logo-watermark.webp');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 400px;
-}
+        #printable-certificate {
+            width: 800px;
+            background: white;
+            border: 10px solid var(--primary-color);
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            background-image: url('assets/images/logo-watermark.webp');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 400px;
+        }
 
-.cert-border {
-  border: 2px solid var(--secondary-color);
-  padding: 20px;
-}
+        .cert-border {
+            border: 2px solid var(--secondary-color);
+            padding: 20px;
+        }
 
-.cert-header {
-  margin-bottom: 25px;
-}
+        .cert-header {
+            margin-bottom: 25px;
+        }
 
-.cert-header img {
-  width: 120px;
-  margin-bottom: 10px;
-}
+        .cert-header img {
+            width: 120px;
+            margin-bottom: 10px;
+        }
 
-.cert-header h1 {
-  font-family: 'Marhey', cursive;
-  font-size: 2.5rem;
-  color: var(--primary-color);
-  margin: 0;
-}
+        .cert-header h1 {
+            font-family: 'Marhey', cursive;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin: 0;
+        }
 
-.cert-header h2 {
-  font-size: 1.5rem;
-  color: var(--text-color);
-  margin: 5px 0;
-}
+        .cert-header h2 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin: 5px 0;
+        }
 
-.cert-body .intro-text {
-  font-size: 1.2rem;
-  margin: 20px 0 5px 0;
-}
+        .cert-body .intro-text {
+            font-size: 1.2rem;
+            margin: 20px 0 5px 0;
+        }
 
-.cert-body .student-name {
-  font-family: 'Marhey', cursive;
-  font-size: 2.2rem;
-  color: var(--primary-color);
-  margin: 0 0 15px 0;
-}
+        .cert-body .student-name {
+            font-family: 'Marhey', cursive;
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin: 0 0 15px 0;
+        }
 
-.cert-body .main-text {
-  font-size: 1.1rem;
-  line-height: 1.8;
-  margin: 0 auto 30px auto;
-  max-width: 90%;
-}
+        .cert-body .main-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin: 0 auto 30px auto;
+            max-width: 90%;
+        }
 
-.results-section {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-bottom: 30px;
-  padding: 15px;
-  background-color: rgba(240, 240, 240, 0.5);
-  border-radius: 10px;
-}
+        .results-section {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: rgba(240, 240, 240, 0.5);
+            border-radius: 10px;
+        }
 
-.score-container, .scholarship-container {
-  text-align: center;
-}
+        .score-container, .scholarship-container {
+            text-align: center;
+        }
 
-.results-section p {
-  margin: 0;
-  font-size: 1rem;
-  color: #555;
-}
+        .results-section p {
+            margin: 0;
+            font-size: 1rem;
+            color: #555;
+        }
 
-.results-section strong {
-  font-size: 1.8rem;
-  color: var(--primary-color);
-  display: block;
-  margin-top: 5px;
-}
+        .results-section strong {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            display: block;
+            margin-top: 5px;
+        }
 
-.cert-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-top: 40px;
-}
+        .cert-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 40px;
+        }
 
-.signature-area, .qr-code-area {
-  text-align: center;
-}
+        .signature-area, .qr-code-area {
+            text-align: center;
+        }
 
-.signature-area p {
-  margin: 0;
-  font-size: 0.9rem;
-}
+        .signature-area p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
 
-#qrcode {
-  width: 90px;
-  height: 90px;
-  margin: 0 auto 5px auto;
-  border: 1px solid #eee;
-  padding: 5px;
-}
+        #qrcode {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 5px auto;
+            border: 1px solid #eee;
+            padding: 5px;
+        }
 
-.certificate-actions {
-  margin-top: 2rem;
-}
+        /* New professional button layout */
+        .certificate-actions {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
 
-.certificate-actions button {
-  font-family: 'Cairo', sans-serif;
-  padding: 10px 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  border: none;
-  background-color: var(--primary-color);
-  color: white;
-  border-radius: 5px;
-  margin: 0 5px;
-  transition: background-color 0.3s;
-}
+        .actions-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
 
-.certificate-actions button:hover {
-  background-color: #00251a;
-}
+        .certificate-actions button, .certificate-actions a {
+            font-family: 'Cairo', sans-serif;
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            margin: 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-/* New styles for dropdown containers */
-.dropdown-container {
-  position: relative;
-  display: inline-block;
-  margin: 0 5px;
-}
+        .certificate-actions button:hover, .certificate-actions a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
 
-.dropdown-options {
-  position: absolute;
-  bottom: 100%; /* Position above the button */
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: white;
-  border: 1px solid var(--primary-color);
-  border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  min-width: 150px;
-  z-index: 10;
-  margin-bottom: 5px;
-  padding: 5px;
-  display: flex;
-  flex-direction: column;
-}
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
 
-.dropdown-options a {
-  padding: 8px 12px;
-  text-decoration: none;
-  color: var(--primary-color);
-  font-size: 0.9rem;
-  transition: background-color 0.3s;
-  text-align: center;
-}
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .btn-social {
+            color: white;
+        }
 
-.dropdown-options a:hover {
-  background-color: #f0f0f0;
-}
+        .btn-facebook { background-color: var(--social-facebook); }
+        .btn-twitter { background-color: var(--social-twitter); }
+        .btn-linkedin { background-color: var(--social-linkedin); }
+        .btn-whatsapp { background-color: var(--social-whatsapp); }
+        .btn-telegram { background-color: var(--social-telegram); }
+        
+        /* Media query for mobile devices */
+        @media (max-width: 600px) {
+            #printable-certificate {
+                width: 95%;
+                padding: 10px;
+            }
 
-/* New styles for a professional button layout */
-.certificate-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px; /* Adds space between button groups */
-}
+            .cert-border {
+                padding: 10px;
+            }
 
-.actions-group {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px; /* Adds space between buttons within each group */
-  flex-wrap: wrap; /* Allows buttons to wrap to the next line on small screens */
-}
+            .cert-header img {
+                width: 70px;
+            }
+            
+            .cert-header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .cert-header h2 {
+                font-size: 0.9rem;
+            }
 
-/* Media query for mobile devices */
-@media (max-width: 600px) {
-  #printable-certificate {
-    width: 95%; /* Make the certificate take up most of the screen width */
-    padding: 10px; /* Reduce padding to save space */
-  }
+            .cert-body .intro-text,
+            .cert-body .main-text,
+            .signature-area p,
+            .qr-code-area p {
+                font-size: 0.8rem;
+            }
+            
+            .cert-body .student-name {
+                font-size: 1.5rem;
+            }
 
-  .cert-border {
-    padding: 10px; /* Reduce border padding */
-  }
+            .results-section {
+                flex-direction: column;
+                gap: 10px;
+                padding: 8px;
+            }
+            
+            .results-section strong {
+                font-size: 1.1rem;
+            }
 
-  .cert-header img {
-    width: 70px; /* Smaller logo */
-  }
-  
-  .cert-header h1 {
-    font-size: 1.2rem; /* Smaller main heading */
-  }
-  
-  .cert-header h2 {
-    font-size: 0.9rem; /* Smaller sub-heading */
-  }
+            .cert-footer {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            #qrcode {
+                width: 60px;
+                height: 60px;
+            }
 
-  .cert-body .intro-text,
-  .cert-body .main-text,
-  .signature-area p,
-  .qr-code-area p {
-    font-size: 0.8rem; /* Smaller body text */
-  }
-  
-  .cert-body .student-name {
-    font-size: 1.5rem; /* Smaller name font */
-  }
+            .certificate-actions {
+                flex-direction: column;
+                gap: 15px;
+                width: 100%;
+            }
 
-  .results-section {
-    flex-direction: column; /* Stack results vertically */
-    gap: 10px; /* Smaller gap */
-    padding: 8px;
-  }
-  
-  .results-section strong {
-    font-size: 1.1rem; /* Smaller score/scholarship font */
-  }
+            .certificate-actions button, .certificate-actions a {
+                font-size: 0.9rem;
+                padding: 10px 20px;
+            }
+            
+            .actions-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
 
-  .cert-footer {
-    flex-direction: column; /* Stack footer elements vertically */
-    align-items: center; /* Center footer items */
-    gap: 15px; /* Add some space between them */
-  }
-  
-  #qrcode {
-    width: 60px; /* Smaller QR code for mobile */
-    height: 60px;
-  }
-
-  .certificate-actions {
-    flex-direction: column; /* Stack buttons vertically */
-    gap: 10px;
-    width: 100%;
-  }
-
-  .certificate-actions button {
-    font-size: 0.9rem; /* Smaller button font */
-    padding: 8px 15px; /* Smaller button padding */
-  }
-
-  /* تعديل موضع القائمة المنسدلة على الجوال */
-  .dropdown-options {
-    position: absolute; /* احتفاظ بالموضع النسبي */
-    bottom: auto; /* إزالة خاصية bottom التي قد تسبب مشاكل */
-    top: 100%; /* وضع القائمة أسفل الزر مباشرةً */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 150px; /* تحديد عرض ثابت لضمان عدم الخروج من الشاشة */
-    padding: 5px;
-  }
-
-  /* جعل حاوية الأزرار الرئيسية مرنة لترتيب الأزرار بشكل عمودي */
-  .certificate-actions {
-    flex-direction: column;
-    gap: 10px;
-  }
-}
-
-@media print {
-  body * { visibility: hidden; }
-  #printable-certificate, #printable-certificate * {
-    visibility: visible;
-  }
-  #printable-certificate {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-    box-shadow: none;
-    margin: 0;
-    padding: 20px;
-  }
-  .certificate-actions { display: none; }
-}
-</style>
-<link href="favicon.png" rel="icon" type="image/png"/><link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/></head>
+        @media print {
+            body * { visibility: hidden; }
+            #printable-certificate, #printable-certificate * {
+                visibility: visible;
+            }
+            #printable-certificate {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                border: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 20px;
+            }
+            .certificate-actions { display: none; }
+        }
+    </style>
+    <link href="favicon.png" rel="icon" type="image/png"/><link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/></head>
 <body>
 <div id="printable-certificate">
-<div class="cert-border">
-<div class="cert-header">
-<img alt="شعار الجامعة الإسلامية" src="assets/images/logo.webp"/>
-<h1>الجامعة الإسلامية - غزة</h1>
-<h2>شهادة إتمام رحلة تعريفية</h2>
+    <div class="cert-border">
+        <div class="cert-header">
+            <img alt="شعار الجامعة الإسلامية" src="assets/images/logo.webp"/>
+            <h1>الجامعة الإسلامية - غزة</h1>
+            <h2>شهادة إتمام رحلة تعريفية</h2>
+        </div>
+        <div class="cert-body">
+            <p class="intro-text">تشهد عمادة شؤون الطلبة بأن الطالب/ة</p>
+            <h2 class="student-name" id="cert-player-name">[اسم الطالب]</h2>
+            <p class="main-text">قد أتم بنجاح رحلة "رحلتي في الإسلامية" التعريفية الافتراضية، وأظهر معرفة ممتازة بمرافق الجامعة وكلياتها المتنوعة.</p>
+            <div class="results-section">
+                <div class="score-container">
+                    <p>النقاط المكتسبة</p>
+                    <strong id="cert-final-score">0</strong>
+                </div>
+                <div class="scholarship-container">
+                    <p>المنحة المستحقة</p>
+                    <strong id="cert-scholarship-details">---</strong>
+                </div>
+            </div>
+        </div>
+        <div class="cert-footer">
+            <div class="signature-area">
+                <p>___________________</p>
+                <p><strong>عميد شؤون الطلبة</strong></p>
+            </div>
+            <div class="qr-code-area">
+                <div id="qrcode"></div>
+                <p>رمز التحقق</p>
+            </div>
+            <div class="signature-area">
+                <p>___________________</p>
+                <p><strong>رئيس الجامعة</strong></p>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="cert-body">
-<p class="intro-text">تشهد عمادة شؤون الطلبة بأن الطالب/ة</p>
-<h2 class="student-name" id="cert-player-name">[اسم الطالب]</h2>
-<p class="main-text">قد أتم بنجاح رحلة "رحلتي في الإسلامية" التعريفية الافتراضية، وأظهر معرفة ممتازة بمرافق الجامعة وكلياتها المتنوعة.</p>
-<div class="results-section">
-<div class="score-container">
-<p>النقاط المكتسبة</p>
-<strong id="cert-final-score">0</strong>
-</div>
-<div class="scholarship-container">
-<p>المنحة المستحقة</p>
-<strong id="cert-scholarship-details">---</strong>
-</div>
-</div>
-</div>
-<div class="cert-footer">
-<div class="signature-area">
-<p>___________________</p>
-<p><strong>عميد شؤون الطلبة</strong></p>
-</div>
-<div class="qr-code-area">
-<div id="qrcode"></div>
-<p>رمز التحقق</p>
-</div>
-<div class="signature-area">
-<p>___________________</p>
-<p><strong>رئيس الجامعة</strong></p>
-</div>
-</div>
-</div>
-</div>
+
 <div class="certificate-actions">
-  <div class="actions-group">
-    <button onclick="window.print()">🖨️ طباعة الشهادة</button>
-    <button onclick="downloadCertificate()">📷 تحميل كصورة</button>
-  </div>
-
-  <div class="actions-group">
-    <div class="dropdown-container">
-      <button id="shareButton">🌐 مشاركة الشهادة</button>
-      <div class="dropdown-options" id="shareOptions" style="display:none;">
-        <a href="#" id="share-facebook" target="_blank" class="share-btn facebook">فيسبوك</a>
-        <a href="#" id="share-twitter" target="_blank" class="share-btn twitter">تويتر (X)</a>
-        <a href="#" id="share-linkedin" target="_blank" class="share-btn linkedin">لينكدإن</a>
-        <a href="#" id="share-whatsapp" target="_blank" class="share-btn whatsapp">واتساب</a>
-      </div>
+    <div class="actions-group">
+        <button class="btn-primary" onclick="window.print()">
+            <i class="fa-solid fa-print"></i> طباعة الشهادة
+        </button>
+        <button class="btn-primary" onclick="downloadCertificate()">
+            <i class="fa-solid fa-download"></i> تحميل كصورة
+        </button>
     </div>
 
-    <div class="dropdown-container">
-      <button id="telegramButton">👥 انضم لمجتمع الطلاب</button>
-      <div class="dropdown-options" id="telegramOptions" style="display:none;">
-        <a href="https://t.me/iug2006" target="_blank" class="telegram-btn">طلاب 2006</a>
-        <a href="https://t.me/Iug2007" target="_blank" class="telegram-btn">طلاب 2007</a>
-      </div>
+    <div class="actions-group">
+        <a id="share-facebook" href="#" target="_blank" class="btn-social btn-facebook">
+            <i class="fa-brands fa-square-facebook"></i> فيسبوك
+        </a>
+        <a id="share-twitter" href="#" target="_blank" class="btn-social btn-twitter">
+            <i class="fa-brands fa-square-x-twitter"></i> تويتر (X)
+        </a>
+        <a id="share-linkedin" href="#" target="_blank" class="btn-social btn-linkedin">
+            <i class="fa-brands fa-linkedin"></i> لينكدإن
+        </a>
+        <a id="share-whatsapp" href="#" target="_blank" class="btn-social btn-whatsapp">
+            <i class="fa-brands fa-square-whatsapp"></i> واتساب
+        </a>
     </div>
-  </div>
-  
-  <div class="actions-group">
-    <button onclick="window.location.href='index.html'">🏠 العودة للعبة</button>
-  </div>
+
+    <div class="actions-group">
+        <a href="https://t.me/iug2006" target="_blank" class="btn-social btn-telegram">
+            <i class="fa-brands fa-telegram"></i> مجتمع طلاب 2006
+        </a>
+        <a href="https://t.me/Iug2007" target="_blank" class="btn-social btn-telegram">
+            <i class="fa-brands fa-telegram"></i> مجتمع طلاب 2007
+        </a>
+    </div>
+    
+    <div class="actions-group">
+        <a href="index.html" class="btn-secondary">
+            <i class="fa-solid fa-house-chimney-user"></i> العودة للعبة
+        </a>
+    </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
-function populateCertificateData() {
-  const params = new URLSearchParams(window.location.search);
-  let playerName = params.get("name");
-  let playerScore = parseInt(params.get("score"));
+    function populateCertificateData() {
+        const params = new URLSearchParams(window.location.search);
+        let playerName = params.get("name");
+        let playerScore = parseInt(params.get("score"));
 
-  try {
-    const saved = localStorage.getItem('iugGameProgress');
-    if (saved) {
-      const state = JSON.parse(saved);
-      if (!playerName || playerName.trim() === "") {
-        if (state.playerName) playerName = state.playerName;
-        else if (state.name) playerName = state.name;
-        else if (state.player) playerName = state.player;
-      }
-      if (!Number.isFinite(playerScore)) {
-        if (typeof state.score === "number") playerScore = state.score;
-        else if (typeof state.totalScore === "number") playerScore = state.totalScore;
-        else if (typeof state.points === "number") playerScore = state.points;
-      }
-    }
-  } catch (e) {
-    console.warn("Failed to read game state:", e);
-  }
-
-  if (!playerName || playerName.trim() === "") playerName = "[اسم الطالب]";
-  if (!Number.isFinite(playerScore)) playerScore = 0;
-
-  document.getElementById("cert-player-name").textContent = playerName;
-  document.getElementById("cert-final-score").textContent = playerScore;
-
-  const scholarshipEl = document.getElementById("cert-scholarship-details");
-  let scholarshipPercentage = 0;
-  if (playerScore >= 50) scholarshipPercentage = 50;
-  else if (playerScore > 0) scholarshipPercentage = playerScore;
-  scholarshipEl.textContent =
-    scholarshipPercentage > 0
-      ? `منحة ${scholarshipPercentage}% للفصل الدراسي الأول`
-      : "لم يتم الحصول على منحة";
-
-  // تشغيل الصوت
-  const audio = document.getElementById("success-audio");
-  if (audio) {
-    audio.currentTime = 0;
-    audio.play().catch(err => console.log("Autoplay blocked:", err));
-  }
-
-  // تحديث QR
-  const qrcodeContainer = document.getElementById("qrcode");
-  if (qrcodeContainer) {
-    qrcodeContainer.innerHTML = '';
-    new QRCode(qrcodeContainer, {
-      text: `شهادة إتمام رحلة\nالطالب: ${playerName}\nالنقاط: ${playerScore}\nالجامعة الإسلامية بغزة`,
-      width: 90,
-      height: 90,
-      colorDark: "#000000",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.H
-    });
-  }
-}
-
-window.addEventListener('DOMContentLoaded', populateCertificateData);
-
-    function setupButtons() {
-        const shareButton = document.getElementById('shareButton');
-        const telegramButton = document.getElementById('telegramButton');
-        const shareOptions = document.getElementById('shareOptions');
-        const telegramOptions = document.getElementById('telegramOptions');
-
-        shareButton.onclick = function() {
-            shareOptions.style.display = shareOptions.style.display === 'none' ? 'flex' : 'none';
-        };
-
-        telegramButton.onclick = function() {
-            telegramOptions.style.display = telegramOptions.style.display === 'none' ? 'flex' : 'none';
-        };
-
-        // Close dropdowns if the user clicks anywhere else
-        window.onclick = function(event) {
-            if (!event.target.matches('#shareButton') && !event.target.matches('#telegramButton')) {
-                shareOptions.style.display = 'none';
-                telegramOptions.style.display = 'none';
+        try {
+            const saved = localStorage.getItem('iugGameProgress');
+            if (saved) {
+                const state = JSON.parse(saved);
+                if (!playerName || playerName.trim() === "") {
+                    if (state.playerName) playerName = state.playerName;
+                    else if (state.name) playerName = state.name;
+                    else if (state.player) playerName = state.player;
+                }
+                if (!Number.isFinite(playerScore)) {
+                    if (typeof state.score === "number") playerScore = state.score;
+                    else if (typeof state.totalScore === "number") playerScore = state.totalScore;
+                    else if (typeof state.points === "number") playerScore = state.points;
+                }
             }
-        };
+        } catch (e) {
+            console.warn("Failed to read game state:", e);
+        }
+
+        if (!playerName || playerName.trim() === "") playerName = "[اسم الطالب]";
+        if (!Number.isFinite(playerScore)) playerScore = 0;
+
+        document.getElementById("cert-player-name").textContent = playerName;
+        document.getElementById("cert-final-score").textContent = playerScore;
+
+        const scholarshipEl = document.getElementById("cert-scholarship-details");
+        let scholarshipPercentage = 0;
+        if (playerScore >= 50) scholarshipPercentage = 50;
+        else if (playerScore > 0) scholarshipPercentage = playerScore;
+        scholarshipEl.textContent =
+            scholarshipPercentage > 0
+                ? `منحة ${scholarshipPercentage}% للفصل الدراسي الأول`
+                : "لم يتم الحصول على منحة";
+
+        const audio = document.getElementById("success-audio");
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(err => console.log("Autoplay blocked:", err));
+        }
+
+        const qrcodeContainer = document.getElementById("qrcode");
+        if (qrcodeContainer) {
+            qrcodeContainer.innerHTML = '';
+            new QRCode(qrcodeContainer, {
+                text: `شهادة إتمام رحلة\nالطالب: ${playerName}\nالنقاط: ${playerScore}\nالجامعة الإسلامية بغزة`,
+                width: 90,
+                height: 90,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
     }
-    
+
     function updateShareLinks() {
         const playerName = document.getElementById("cert-player-name").textContent;
         const playerScore = document.getElementById("cert-final-score").textContent;
@@ -486,26 +450,31 @@ window.addEventListener('DOMContentLoaded', populateCertificateData);
         const message = `${title}\n${scoreText}\nتعرف على الجامعة عبر الرابط: ${websiteUrl}`;
         const encodedMessage = encodeURIComponent(message);
         
-        // Facebook Share
         const facebookLink = "https://www.facebook.com/sharer/sharer.php?quote=" + encodedMessage + "&u=" + encodeURIComponent(websiteUrl);
         document.getElementById('share-facebook').href = facebookLink;
         
-        // Twitter (X) Share
         const twitterLink = "https://twitter.com/intent/tweet?text=" + encodedMessage;
         document.getElementById('share-twitter').href = twitterLink;
 
-        // LinkedIn Share
         const linkedinLink = "https://www.linkedin.com/shareArticle?mini=true&url=" + encodeURIComponent(websiteUrl) + "&title=" + encodeURIComponent(title) + "&summary=" + encodedMessage;
         document.getElementById('share-linkedin').href = linkedinLink;
 
-        // WhatsApp Share
         const whatsappLink = "https://wa.me/?text=" + encodedMessage;
         document.getElementById('share-whatsapp').href = whatsappLink;
     }
 
+    function downloadCertificate() {
+        const certificate = document.getElementById('printable-certificate');
+        html2canvas(certificate, { scale: 2, useCORS: true, logging: true }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'شهادة-إتمام-الرحلة.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
         populateCertificateData();
-        setupButtons();
         updateShareLinks();
     });
 </script>
