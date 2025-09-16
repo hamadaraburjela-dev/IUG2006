@@ -446,34 +446,38 @@
 
     async function shareCertificate(platform) {
         const certificate = document.getElementById('printable-certificate');
-        const canvas = await html2canvas(certificate, { scale: 2, useCORS: true, logging: true });
-        const imageBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-        const file = new File([imageBlob], "شهادة-إتمام-الرحلة.png", { type: "image/png" });
-
+        
         const title = "أنا أنهيت رحلة الجامعة الإسلامية الافتراضية بنجاح!";
         const text = `أنا "${document.getElementById("cert-player-name").textContent}" وقد أنهيت رحلة الجامعة الإسلامية الافتراضية بنجاح! حصلت على ${document.getElementById("cert-final-score").textContent} نقطة!`;
         const url = window.location.href;
 
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        // Use the native Web Share API which works best on mobile devices
+        if (navigator.canShare) {
             try {
-                await navigator.share({
-                    files: [file],
-                    title: title,
-                    text: text,
-                    url: url,
-                });
-                console.log("Certificate shared successfully!");
-                return;
+                const canvas = await html2canvas(certificate, { scale: 2, useCORS: true, logging: true });
+                const imageBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                const file = new File([imageBlob], "شهادة-إتمام-الرحلة.png", { type: "image/png" });
+
+                if (navigator.canShare({ files: [file], title: title, text: text, url: url })) {
+                    await navigator.share({
+                        files: [file],
+                        title: title,
+                        text: text,
+                        url: url,
+                    });
+                    console.log("Certificate shared successfully!");
+                    return; // Exit after successful share
+                }
             } catch (error) {
-                console.error("Error sharing:", error);
+                console.error("Error sharing via Web Share API:", error);
+                // Fallback will be triggered below if Web Share API fails
             }
         }
 
-        // Fallback for desktop or unsupported browsers
+        // Fallback for browsers/devices that don't support the Web Share API or for specific platforms.
+        // This fallback only shares the text and URL, as image sharing from the web is not universally supported.
         switch (platform) {
             case 'facebook':
-                // Facebook doesn't support sharing an image blob directly via URL.
-                // We'll revert to sharing the URL as a fallback.
                 window.open(`https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(text)}&u=${encodeURIComponent(url)}`, '_blank');
                 break;
             case 'twitter':
@@ -486,9 +490,10 @@
                 window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(text)}`, '_blank');
                 break;
             case 'instagram':
-                // Instagram sharing via web is very limited. This might not work on all browsers.
-                alert('مشاركة قصص إنستغرام متاحة فقط من خلال تطبيق الهاتف المحمول. يرجى حفظ الصورة ومشاركتها يدويًا.');
-                downloadCertificate();
+                // For Instagram, the Web Share API is the only effective method.
+                // We've already tried it above. If it fails, we simply do nothing
+                // to avoid showing an error message, as a direct share is not possible.
+                console.log("Direct sharing to Instagram is not supported on this device.");
                 break;
         }
     }
