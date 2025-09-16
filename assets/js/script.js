@@ -14,49 +14,6 @@ const allBadges = {
     engineer: { id: 'engineer', name: 'المهندس الواعد', icon: '🏗️', description: 'أكملت تحدي الكليات بنجاح', earned: false }
 };
 
-function processAnswer(userAnswer) {
-    const isCorrect = (userAnswer === currentQuestion.correctAnswer);
-    if (isCorrect) {
-        // يتم تحديث النقاط في الواجهة الأمامية
-        /*gameState.score++;*/ 
-        // ثم يتم استدعاء دالة المزامنة
-       async function syncScoreToServer(uniqueId, score, currentScene = '', answeredQuestions = [], selectedGuide = '') {
-    if (!uniqueId) {
-        console.warn('No uniqueId to sync score with.');
-        return;
-    }
-
-    // هذا السطر مهم جدا للتشخيص!
-    console.log("Debug: Attempting to sync score. Current score value is:", score);
-
-    try {
-        const res = await fetch(SCRIPT_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                action: "updatePlayerState",
-                uniqueId,
-                score,
-                currentScene,
-                answeredQuestions,
-                selectedGuide
-            }),
-        });
-        const data = await res.json();
-        if (data.result === 'success') {
-            console.log("✅ Score synced successfully. Returned score:", data.score);
-        } else {
-            console.warn("⚠️ Score sync returned a warning:", data);
-        }
-    } catch (err) {
-        console.error("❌ Score sync failed with an error:", err);
-    }
-}
-    } else {
-        showFeedback(false);
-    }
-}
-
 function checkAndAwardBadges() {
     const state = JSON.parse(localStorage.getItem('iugGameProgress'));
     if (!state) return;
