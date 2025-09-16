@@ -50,10 +50,6 @@ function processAnswer(selectedKey, question, selectedOption) {
     selectedOption.classList.add('correct');
     showFeedback(true, "إجابة رائعة!");
 
-    if (typeof window.incrementMainScore === 'function') {
-      window.incrementMainScore(1);
-    }
-
     // حفظ التقدم
     const savedState = JSON.parse(localStorage.getItem('iugGameProgress') || '{}');
     if (savedState && savedState.uniquePlayerId) {
