@@ -138,13 +138,14 @@
             font-size: 0.9rem;
         }
 
+        /* Responsive QR container: scale with viewport but cap at 140px */
         #qrcode {
-            width: 140px;
-            height: 140px;
+            width: min(140px, 45vw);
+            height: auto;
             display: block;
             margin: 0 auto 8px auto;
             border: 2px solid #e6e6e6;
-            padding: 8px;
+            padding: 6px;
             background: #fff;
             box-shadow: 0 4px 10px rgba(0,0,0,0.06);
             box-sizing: border-box;
@@ -278,10 +279,10 @@
                 gap: 15px;
             }
             
-            #qrcode {
-                width: 60px;
-                height: 60px;
-            }
+            /* Allow responsive QR sizing (handled by base rule) */
+            #qrcode { max-width: 120px; }
+
+            .qr-code-area { display: flex; justify-content: center; align-items: center; }
 
             .certificate-actions {
                 flex-direction: column;
@@ -445,13 +446,16 @@
 
         const qrcodeContainer = document.getElementById("qrcode");
         if (qrcodeContainer) {
-            qrcodeContainer.innerHTML = '';
+            function renderQR() {
+                qrcodeContainer.innerHTML = '';
+                const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+                // choose 40vw but cap between 90 and 140 px for readability
+                const size = Math.min(140, Math.max(90, Math.floor(vw * 0.4)));
                 try {
-                    // prefer a slightly larger QR for better scanning
                     new QRCode(qrcodeContainer, {
                         text: `https://iug.example/certificate?name=${encodeURIComponent(playerName)}&score=${encodeURIComponent(playerScore)}`,
-                        width: 140,
-                        height: 140,
+                        width: size,
+                        height: size,
                         colorDark: "#000000",
                         colorLight: "#ffffff",
                         correctLevel: QRCode.CorrectLevel.H
@@ -460,6 +464,14 @@
                     console.warn('QR generation failed, falling back to text.', qrErr);
                     qrcodeContainer.textContent = `رمز: ${playerName} | نقاط: ${playerScore}`;
                 }
+            }
+            renderQR();
+            // regenerate on orientation change / resize for mobile
+            let qrResizeTimer = null;
+            window.addEventListener('resize', () => {
+                clearTimeout(qrResizeTimer);
+                qrResizeTimer = setTimeout(renderQR, 260);
+            });
         }
     }
 
