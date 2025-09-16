@@ -350,20 +350,9 @@
     </div>
 
     <div class="actions-group">
-        <button class="btn-social btn-facebook" onclick="shareCertificate('facebook')">
-            <i class="fa-brands fa-square-facebook"></i> فيسبوك
-        </button>
-        <button class="btn-social btn-twitter" onclick="shareCertificate('twitter')">
-            <i class="fa-brands fa-square-x-twitter"></i> تويتر (X)
-        </button>
-        <button class="btn-social btn-linkedin" onclick="shareCertificate('linkedin')">
-            <i class="fa-brands fa-linkedin"></i> لينكدإن
-        </button>
-        <button class="btn-social btn-whatsapp" onclick="shareCertificate('whatsapp')">
-            <i class="fa-brands fa-square-whatsapp"></i> واتساب
-        </button>
-        <button class="btn-social btn-instagram" onclick="shareCertificate('instagram')">
-            <i class="fa-brands fa-square-instagram"></i> انستغرام
+        <!-- Unified share button: uses Web Share API when available, otherwise falls back to copy+WhatsApp share -->
+        <button class="btn-primary" onclick="shareUnified()">
+            <i class="fa-solid fa-share-nodes"></i> مشاركة الشهادة
         </button>
     </div>
 
@@ -434,16 +423,60 @@
         const qrcodeContainer = document.getElementById("qrcode");
         if (qrcodeContainer) {
             qrcodeContainer.innerHTML = '';
-            new QRCode(qrcodeContainer, {
-                text: `شهادة إتمام رحلة\nالطالب: ${playerName}\nالنقاط: ${playerScore}\nالجامعة الإسلامية بغزة`,
-                width: 90,
-                height: 90,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
+                try {
+                    // prefer a slightly larger QR for better scanning
+                    new QRCode(qrcodeContainer, {
+                        text: `https://iug.example/certificate?name=${encodeURIComponent(playerName)}&score=${encodeURIComponent(playerScore)}`,
+                        width: 140,
+                        height: 140,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                } catch (qrErr) {
+                    console.warn('QR generation failed, falling back to text.', qrErr);
+                    qrcodeContainer.textContent = `رمز: ${playerName} | نقاط: ${playerScore}`;
+                }
         }
     }
+
+        async function shareUnified() {
+            const certificate = document.getElementById('printable-certificate');
+            const title = "أنا أنهيت رحلة الجامعة الإسلامية الافتراضية بنجاح!";
+            const text = `أنا "${document.getElementById("cert-player-name").textContent}" وقد أنهيت رحلة الجامعة الإسلامية الافتراضية بنجاح! حصلت على ${document.getElementById("cert-final-score").textContent} نقطة!`;
+            const url = window.location.href;
+
+            // Try Web Share API with image file if available
+            if (navigator.canShare) {
+                try {
+                    const canvas = await html2canvas(certificate, { scale: 2, useCORS: true, logging: false });
+                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                    const file = new File([blob], 'شهادة-إتمام-الرحلة.png', { type: 'image/png' });
+
+                    if (navigator.canShare({ files: [file] })) {
+                        await navigator.share({ files: [file], title, text, url });
+                        return;
+                    }
+                } catch (e) {
+                    // fall through to text/url fallback
+                    console.warn('Web Share with file failed:', e);
+                }
+            }
+
+            // Fallback: copy URL to clipboard and open WhatsApp share with text
+            try {
+                await navigator.clipboard.writeText(url);
+                // open WhatsApp share as convenient fallback for mobile/desktop
+                const waText = `${text} ${url}`;
+                const waUrl = `https://wa.me/?text=${encodeURIComponent(waText)}`;
+                window.open(waUrl, '_blank');
+                alert('تم نسخ رابط الشهادة إلى الحافظة. يمكنك لصقه ومشاركته.');
+            } catch (copyErr) {
+                // final fallback: open an email compose window
+                console.warn('Clipboard write failed:', copyErr);
+                window.open(`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(text + '\n' + url)}`);
+            }
+        }
 
     async function shareCertificate(platform) {
         const certificate = document.getElementById('printable-certificate');
