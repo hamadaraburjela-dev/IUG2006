@@ -145,6 +145,11 @@ body::before {
     align-items: center;
     direction: rtl;
 }
+/* progress bar inside feedback popup */
+.feedback-progress-bar { height: 8px; width: 92%; background: rgba(0,0,0,0.06); border-radius: 999px; margin: 6px auto 16px; overflow: hidden; }
+.feedback-progress-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #0bb96b, #07824f); border-radius: 999px; transition: width 5000ms linear; }
+.feedback-popup-content.incorrect .feedback-progress-fill { background: linear-gradient(90deg, #f28b7a, #e04a3a); }
+.feedback-popup-container.visible .feedback-progress-bar { opacity: 1; transform: none; }
 
 .modal-content {
     background-color: var(--white-color);

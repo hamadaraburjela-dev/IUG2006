@@ -1049,7 +1049,8 @@ function canRestartQuiz() {
         let timeLeft = 0;
         const TIME_PER_QUESTION = 25;
         const TIME_ADDITION = 30;
-        const FEEDBACK_DURATION = 5000;
+    const FEEDBACK_DURATION = 5000;
+    const FEEDBACK_INCORRECT_DURATION = 2500; // 2.5s when incorrect as requested
         const NUM_QUESTIONS_TO_SHOW = 10;
         let quizRestartAttempts = 1;
         
@@ -1058,6 +1059,41 @@ function canRestartQuiz() {
 let currentQuizData = null;
         let currentQuizTitle = '';
         const mapScene = document.getElementById('map-scene');
+
+        // Feedback progress bar control
+        function showFeedback({ correct = true, emoji = '✅', message = 'إجابة رائعة!', hint = '' } = {}){
+            try{
+                const popup = document.getElementById('feedback-popup');
+                const content = popup ? popup.querySelector('.feedback-popup-content') : null;
+                const fill = popup ? popup.querySelector('.feedback-progress-fill') : null;
+                const duration = correct ? FEEDBACK_DURATION : FEEDBACK_INCORRECT_DURATION;
+                if (!popup || !content) return;
+                // set classes
+                content.classList.remove('correct','incorrect');
+                content.classList.add(correct ? 'correct' : 'incorrect');
+                // set texts
+                const emojiEl = document.getElementById('feedback-emoji'); if (emojiEl) emojiEl.textContent = emoji;
+                const msgEl = document.getElementById('feedback-message'); if (msgEl) msgEl.textContent = message;
+                const hintEl = document.getElementById('feedback-hint'); if (hintEl) { hintEl.textContent = hint || ''; }
+
+                // ensure fill resets
+                if (fill){ fill.style.transition = 'none'; fill.style.width = '100%'; }
+
+                // show popup
+                popup.classList.add('visible');
+
+                // force layout then animate
+                requestAnimationFrame(()=>{
+                    if (fill){ fill.style.transition = `width ${duration}ms linear`; fill.style.width = '0%'; }
+                });
+
+                // hide after duration
+                setTimeout(()=>{ try{ popup.classList.remove('visible'); if (fill){ fill.style.transition = 'none'; fill.style.width = '100%'; } }catch(e){} }, duration + 80);
+            }catch(e){ console.warn('showFeedback error', e); }
+        }
+
+        // expose a helper for other quiz logic to call
+        window.showFeedbackWithProgress = showFeedback;
 
 
 function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
