@@ -1,6 +1,6 @@
 // track remaining attempts (stored key kept for compatibility)
 let quizAttemptsRemaining = parseInt(localStorage.getItem("quizRestartAttempts")) || null;
-const MAX_ATTEMPTS = 2;
+const MAX_ATTEMPTS = 3;
 
 if (window.quizLogicLoaded) {
     // This is a guard to prevent the script from running multiple times.
@@ -1115,43 +1115,61 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
   if (!startQuizBtn) return;
 
     startQuizBtn.addEventListener("click", () => {
-        if (!canRestartQuiz()) {
-            showAttemptsModal({
-                title: "لقد أكملت جميع المحاولات",
-                message: "لا مزيد من المحاولات المسموح بها."
-            });
-            return;
-        }
-        // consume one attempt for this new run
-        consumeAttempt();
-  
-    // تهيئة البيانات
-    currentQuizData = quizDataObject;
-    currentQuizTitle = quizTitle;
-    unlockAudio();
-    if (quizTitleEl) quizTitleEl.textContent = quizTitle;
-    currentQuestionIndex = 0;
-    score = 0;
+            if (!canRestartQuiz()) {
+                showAttemptsModal({
+                    title: "لقد أكملت جميع المحاولات",
+                    message: "لا مزيد من المحاولات المسموح بها."
+                });
+                return;
+            }
 
-    currentQuizId = (location.pathname.split('/').pop() || 'index.html')
-      .replace(/\\.html?$/, '')
-      .toLowerCase();
+            // determine if user already used two attempts (about to start the 3rd)
+            const rem = (quizAttemptsRemaining === null) ? MAX_ATTEMPTS : quizAttemptsRemaining;
+            const usedSoFar = MAX_ATTEMPTS - rem;
 
-    helpCounters = {
-      fiftyFifty: 3,
-      skip: 3,
-      poll: 3,
-      addTime: 3
-    };
+            function proceedStart(){
+                // consume one attempt for this new run
+                consumeAttempt();
 
-    const numToShow = quizTitle === 'تحدي بوابة الجامعة' ? 1 : NUM_QUESTIONS_TO_SHOW;
-    const shuffledTf = [...currentQuizData.tf_questions].sort(() => Math.random() - 0.5);
-    const shuffledMc = [...currentQuizData.mc_questions].sort(() => Math.random() - 0.5);
-    const allAvailableQuestions = shuffledMc.concat(shuffledTf);
-    allQuestions = allAvailableQuestions.slice(0, numToShow);
+                // تهيئة البيانات
+                currentQuizData = quizDataObject;
+                currentQuizTitle = quizTitle;
+                unlockAudio();
+                if (quizTitleEl) quizTitleEl.textContent = quizTitle;
+                currentQuestionIndex = 0;
+                score = 0;
 
-    displayQuestion();
-    if (quizModal) quizModal.classList.add("active");
+                currentQuizId = (location.pathname.split('/').pop() || 'index.html')
+                    .replace(/\\.html?$/, '')
+                    .toLowerCase();
+
+                helpCounters = {
+                    fiftyFifty: 3,
+                    skip: 3,
+                    poll: 3,
+                    addTime: 3
+                };
+
+                const numToShow = quizTitle === 'تحدي بوابة الجامعة' ? 1 : NUM_QUESTIONS_TO_SHOW;
+                const shuffledTf = [...currentQuizData.tf_questions].sort(() => Math.random() - 0.5);
+                const shuffledMc = [...currentQuizData.mc_questions].sort(() => Math.random() - 0.5);
+                const allAvailableQuestions = shuffledMc.concat(shuffledTf);
+                allQuestions = allAvailableQuestions.slice(0, numToShow);
+
+                displayQuestion();
+                if (quizModal) quizModal.classList.add("active");
+            }
+
+                // If user already used two attempts (third click), show final summary and DO NOT start a new run
+                if (usedSoFar >= (MAX_ATTEMPTS - 1) && attemptsScores && attemptsScores.length >= (MAX_ATTEMPTS - 1)){
+                    const s1 = attemptsScores[0] != null ? attemptsScores[0] : 'غير متوفر';
+                    const s2 = attemptsScores[1] != null ? attemptsScores[1] : 'غير متوفر';
+                    const msg = `لقد أكمَلت جميع محاولات التحدي.\nنتائجك السابقة:\nالمحاولة الأولى: ${s1}\nالمحاولة الثانية: ${s2}`;
+                    showAttemptsModal({ title: 'انتهت المحاولات', message: msg });
+                    return;
+                }
+                // otherwise proceed to start normally
+                proceedStart();
   });
     console.log("بدء التحدي:", quizTitle);
 
