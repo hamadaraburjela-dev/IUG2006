@@ -1,79 +1,82 @@
 /* --- script.js (Final Updated Version with Badges Fix) --- */
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxtSIj2ntj1o7GU_i9ttg7d4flk8hnq_JndiCQtuKjkyU2JYVuQD4FnTiX09KfswjLErA/exec';
 // غيّر للرابط الخاص بك
+// ضع رابط نشر Google Apps Script هنا 👇
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzGpE_kz99SN7JX8SJeLxQ4qwrP9KXB5h5LFtzgbvfWZP-Oz1kjTkU9ekjeHpdL24gKuw/exec';
 
-// 🟢 حفظ الحالة محليًا
-function saveLocalState(uid, score) {
-  localStorage.setItem("playerUid", uid);
-  localStorage.setItem("playerScore", score);
-}
-
-// 🟢 قراءة الحالة من التخزين المحلي
-function loadLocalState() {
-  return {
-    uid: localStorage.getItem("playerUid"),
-    score: parseInt(localStorage.getItem("playerScore") || "0", 10)
-  };
-}
-
-// 🟢 تسجيل لاعب جديد
-async function registerPlayer(name, phone, year) {
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "register", name, phone, year })
-  });
-  const data = await res.json();
-
-  if (data.result === "success") {
-    saveLocalState(data.uniqueId, data.score);
+// دالة لمزامنة النقاط مع Code.gs
+async function syncScoreToServer(uniqueId, score, currentScene = '', answeredQuestions = [], selectedGuide = '') {
+  if (!uniqueId) {
+    console.warn('No uniqueId to sync score with.');
+    return;
   }
-  return data;
-}
-
-// 🟢 تحديث حالة اللاعب
-async function updatePlayerState(score, scene, answeredQuestions, guide) {
-  const state = loadLocalState();
-  if (!state.uid) throw new Error("لا يوجد UID مخزن محليًا");
-
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      action: "updatePlayerState",
-      uniqueId: state.uid,
-      score, // ← تحديث النقاط
-      currentScene: scene,
-      answeredQuestions,
-      selectedGuide: guide
-    })
-  });
-  const data = await res.json();
-
-  if (data.result === "success") {
-    saveLocalState(state.uid, score); // ← تحديث التخزين المحلي
+  try {
+    const res = await fetch(SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "updatePlayerState",
+        uniqueId,
+        score,
+        currentScene,
+        answeredQuestions,
+        selectedGuide
+      }),
+    });
+    const data = await res.json();
+    if (data.result === 'success') {
+      console.log("✅ Score synced:", score);
+    } else {
+      console.warn("⚠️ Score sync returned:", data);
+    }
+  } catch (err) {
+    console.error("❌ Score sync failed:", err);
   }
-  return data;
 }
 
-// 🟢 جلب حالة اللاعب
-async function fetchPlayerState() {
-  const state = loadLocalState();
-  if (!state.uid) throw new Error("لا يوجد UID مخزن محليًا");
+// تحديث النقاط (تستخدمها الدوال الأخرى مثل incrementMainScore)
+function updatePlayerScore(uniqueId, score, currentScene = '', answeredQuestions = [], selectedGuide = '') {
+  syncScoreToServer(uniqueId, score, currentScene, answeredQuestions, selectedGuide);
+}
 
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "fetchPlayerState", uniqueId: state.uid })
-  });
-  const data = await res.json();
+// دالة معالجة الإجابة
+function processAnswer(selectedKey, question, selectedOption) {
+  if (!selectedKey) return;
 
-  if (data.result === "success") {
-    saveLocalState(state.uid, data.playerState.score); // ← مزامنة التخزين المحلي مع السيرفر
+  if (selectedKey === question.correctAnswer) {
+    // ✅ إجابة صحيحة
+    playSound(correctSound);
+    score++;
+    selectedOption.classList.add('correct');
+    showFeedback(true, "إجابة رائعة!");
+
+    if (typeof window.incrementMainScore === 'function') {
+      window.incrementMainScore(1);
+    }
+
+    // حفظ التقدم
+    const savedState = JSON.parse(localStorage.getItem('iugGameProgress') || '{}');
+    if (savedState && savedState.uniquePlayerId) {
+      const answeredQ = savedState.answeredQuestions || [];
+      syncScoreToServer(
+        savedState.uniquePlayerId,
+        score,
+        savedState.currentScene || '',
+        answeredQ,
+        savedState.selectedGuide || ''
+      );
+    }
+  } else {
+    // ❌ إجابة خاطئة
+    playSound(wrongSound);
+    selectedOption.classList.add('wrong');
+    showFeedback(false, "إجابة خاطئة");
   }
-  return data;
+
+  // تعطيل الأزرار بعد الإجابة
+  disableOptions();
 }
+
 
 // --- بداية منطق الشارات ---
 const allBadges = {
