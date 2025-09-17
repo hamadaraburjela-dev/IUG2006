@@ -3,6 +3,10 @@
 // غيّر للرابط الخاص بك
 // ضع رابط نشر Google Apps Script هنا 👇
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwoYovJi3e_P2w8ND-FYuUweWVTj0_sAJVngVSHn44U1OkCfdxDvospswKBZuB-_wcG2w/exec';
+// اختياري: لو وضعت window.CLOUD_API_URL على الصفحة (مثلاً بعد النشر)
+// سيستخدم الكود Cloud Functions endpoints بدل Apps Script.
+// مثال: <script>window.CLOUD_API_URL = 'https://REGION-PROJECT.cloudfunctions.net/api'</script>
+const CLOUD_API_URL = (window && window.CLOUD_API_URL) ? window.CLOUD_API_URL : '';
 
 // --- بداية منطق الشارات ---
 const allBadges = {
@@ -139,6 +143,17 @@ if (form) {
 }
 
 function registerPlayer(name, phone, year) {
+    // If CLOUD_API_URL is set, call Cloud Function JSON endpoint
+    if (CLOUD_API_URL) {
+        const url = `${CLOUD_API_URL.replace(/\/$/, '')}/register`;
+        return fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, phone, year })
+        }).then(res => res.json());
+    }
+
+    // Fallback to original Apps Script behavior (FormData)
     const formData = new FormData();
     formData.append('action', 'register');
     formData.append('name', name);
@@ -152,6 +167,28 @@ function updatePlayerScore(uniqueId, score) {
         console.error("Attempted to update score without a uniqueId.");
         return;
     }
+
+    // If CLOUD_API_URL is set, call Cloud Function JSON endpoint
+    if (CLOUD_API_URL) {
+        const url = `${CLOUD_API_URL.replace(/\/$/, '')}/updateScore`;
+        // prefer sending delta when possible; here we send absolute score
+        return fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: uniqueId, score: score })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.ok) {
+                console.log(`Score updated to: ${data.score}`);
+            } else {
+                console.error('Error updating score (cloud):', data);
+            }
+        })
+        .catch(error => console.error('Error in cloud update fetch:', error));
+    }
+
+    // Fallback to original Apps Script behavior (FormData)
     const formData = new FormData();
     formData.append('action', 'updateScore');
     formData.append('uniqueId', uniqueId);
