@@ -5,13 +5,23 @@ const MAX_ATTEMPTS = 2;
 
 function _readAttemptsMap() {
     try {
-        const raw = localStorage.getItem('quizRestartAttemptsByQuiz');
-        return raw ? JSON.parse(raw) : {};
+        // stored shape: { <userId>: { <quizId>: remaining, ... }, ... }
+        const raw = localStorage.getItem('quizRestartAttemptsByUser');
+        const all = raw ? JSON.parse(raw) : {};
+        const uid = (window.gameState && window.gameState.uniqueId) ? window.gameState.uniqueId : 'anon';
+        return all[uid] ? all[uid] : {};
     } catch (e) { return {}; }
 }
 
 function _writeAttemptsMap(map) {
-    try { localStorage.setItem('quizRestartAttemptsByQuiz', JSON.stringify(map)); } catch(e){}
+    try {
+        // read full storage, update only current user's map
+        const raw = localStorage.getItem('quizRestartAttemptsByUser');
+        const all = raw ? JSON.parse(raw) : {};
+        const uid = (window.gameState && window.gameState.uniqueId) ? window.gameState.uniqueId : 'anon';
+        all[uid] = map || {};
+        localStorage.setItem('quizRestartAttemptsByUser', JSON.stringify(all));
+    } catch(e){}
 }
 
 function getAttemptsRemainingForQuiz(quizId) {
@@ -31,14 +41,42 @@ function setAttemptsRemainingForQuiz(quizId, value) {
 // helper for per-quiz attempts-scores storage
 function _readAttemptsScoresMap() {
     try {
-        const raw = localStorage.getItem('quizAttemptsScoresByQuiz');
-        return raw ? JSON.parse(raw) : {};
+        // stored shape: { <userId>: { <quizId>: [scores], ... }, ... }
+        const raw = localStorage.getItem('quizAttemptsScoresByUser');
+        const all = raw ? JSON.parse(raw) : {};
+        const uid = (window.gameState && window.gameState.uniqueId) ? window.gameState.uniqueId : 'anon';
+        return all[uid] ? all[uid] : {};
     } catch (e) { return {}; }
 }
 
 function _writeAttemptsScoresMap(map) {
-    try { localStorage.setItem('quizAttemptsScoresByQuiz', JSON.stringify(map)); } catch(e){}
+    try {
+        const raw = localStorage.getItem('quizAttemptsScoresByUser');
+        const all = raw ? JSON.parse(raw) : {};
+        const uid = (window.gameState && window.gameState.uniqueId) ? window.gameState.uniqueId : 'anon';
+        all[uid] = map || {};
+        localStorage.setItem('quizAttemptsScoresByUser', JSON.stringify(all));
+    } catch(e){}
 }
+
+// One-time lightweight migration from legacy keys to per-user keys (non-destructive)
+try {
+    if (!localStorage.getItem('quizRestartAttemptsByUser')) {
+        const legacy = localStorage.getItem('quizRestartAttempts');
+        if (legacy !== null) {
+            // store as anon user's legacy map
+            const all = { 'anon': { '__legacy_count': Number.parseInt(legacy,10) } };
+            localStorage.setItem('quizRestartAttemptsByUser', JSON.stringify(all));
+        }
+    }
+    if (!localStorage.getItem('quizAttemptsScoresByUser')) {
+        const legacyScores = localStorage.getItem('quizAttemptsScores');
+        if (legacyScores !== null) {
+            const all = { 'anon': { '__legacy_scores': JSON.parse(legacyScores) } };
+            localStorage.setItem('quizAttemptsScoresByUser', JSON.stringify(all));
+        }
+    }
+} catch(e) {}
 
 if (window.quizLogicLoaded) {
     // This is a guard to prevent the script from running multiple times.
