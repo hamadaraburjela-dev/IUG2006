@@ -45,6 +45,9 @@ function doPost(e) {
       return registerUser(e, sheet);
     } else if (action == "updateScore") {
       return updateScore(e, sheet);
+    } else if (action === 'visitorIncrement' || action === 'visitorGet') {
+      // Route visitor counter actions to a dedicated handler
+      return handleVisitorAction(e);
     } else {
       throw new Error("Action not specified or invalid.");
     }
@@ -148,8 +151,8 @@ function updateScore(e, sheet) {
     return createErrorOutput("User with the specified Unique ID was not found.", 404);
   }
 }
-// Google Apps Script - simple visitor counter using ScriptProperties
-function doPost(e) {
+// Handle visitor counter actions (increment / get)
+function handleVisitorAction(e) {
   const action = (e.parameter && e.parameter.action) || (e.postData && tryParse(e.postData.contents).action) || '';
   const props = PropertiesService.getScriptProperties();
   let count = Number(props.getProperty('visitor_count') || 0);
@@ -164,7 +167,7 @@ function doPost(e) {
     return jsonResponse({ result: 'success', count: count });
   }
 
-  return jsonResponse({ result: 'error', message: 'unknown action' }, 400);
+  return jsonResponse({ result: 'error', message: 'unknown visitor action' }, 400);
 }
 
 function jsonResponse(obj, statusCode) {
