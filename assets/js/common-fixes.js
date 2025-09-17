@@ -130,12 +130,32 @@ window.showAttemptsModal = function({ title, message }){
     el.textContent = `زوار الموقع: ${n}`;
   }
 
+  // ensure a persistent visitor token per browser to allow server-side unique counting
+  function ensureVisitorToken(){
+    try{
+      let t = localStorage.getItem('siteVisitorToken');
+      if (t) return t;
+      // simple UUIDv4
+      t = 'v-' + ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c => (
+        c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4
+      ).toString(16));
+      localStorage.setItem('siteVisitorToken', t);
+      return t;
+    }catch(e){
+      // fallback simple token
+      try{ const fallback = 'anon-'+Date.now(); localStorage.setItem('siteVisitorToken', fallback); return fallback; }catch(e2){ return 'anon'; }
+    }
+  }
+
   async function fetchServerCount(action){
     try{
       const url = (window.SCRIPT_URL) ? window.SCRIPT_URL : null;
       if (!url) return null;
       const fd = new FormData();
       fd.append('action', action);
+      // attach persistent token so server can count unique visitors only once
+      const token = ensureVisitorToken();
+      if (token) fd.append('token', token);
       const res = await fetch(url, { method: 'POST', body: fd });
       if (!res.ok) return null;
       const j = await res.json();
