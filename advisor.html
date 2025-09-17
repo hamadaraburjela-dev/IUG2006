@@ -45,6 +45,11 @@
   .choices{
     display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:12px 8px;margin-top:14px;justify-items:center;align-items:center
   }
+  /* layout variations for choices */
+  .choices--scale{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;padding:10px 18px}
+  .choices--scale .choice{flex:0 1 auto;min-width:110px;max-width:180px}
+  .choices--stack{display:flex;flex-direction:column;gap:12px;align-items:center;padding:8px 18px}
+  .choices--grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   /* when inside the chat panel make choices a centered, wrapping pill-list */
   /* center the choices but leave horizontal padding so they don't collide with the bot avatar */
   .chat-wrap.chat-panel .choices{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;padding:8px 56px;margin-top:6px;z-index:1000;max-width:calc(100% - 24px);margin-inline:auto}
@@ -496,6 +501,8 @@
   function renderChoices(){
   choices.innerHTML = '';
   try{ chatUI.classList.add('has-choices'); }catch(e){}
+  // set layout for numeric scale (1..5) as a horizontal scale
+  try{ setChoicesLayout('scale'); }catch(e){}
     const labels = ['1 لا ينطبق','2 ينطبق قليلاً','3 محايد','4 ينطبق','5 ينطبق جدّاً'];
     labels.forEach((lbl, i)=>{
       const b = document.createElement('button');
@@ -536,10 +543,19 @@
     btnBack.style.display = idx>0 ? 'inline-block' : 'none';
   }
 
+  // helper: set choices layout (scale | stack | grid)
+  function setChoicesLayout(name){
+    choices.classList.remove('choices--scale','choices--stack','choices--grid');
+    if(name === 'scale') choices.classList.add('choices--scale');
+    else if(name === 'stack') choices.classList.add('choices--stack');
+    else choices.classList.add('choices--grid');
+  }
+
   // --- profile collection UI: branch (أدبي/علمي) + تقدير التوجيهي ---
   function showProfileForm(){
   choices.innerHTML = '';
   try{ chatUI.classList.add('has-choices'); }catch(e){}
+  try{ setChoicesLayout('stack'); }catch(e){}
     // extended branch list per user request
     const branches = [
       {id:'sci', label:'الفرع العلمي'},
@@ -600,6 +616,7 @@
 
   function nextQuestion(){
   choices.innerHTML = ''; try{ chatUI.classList.remove('has-choices'); }catch(e){}
+  try{ setChoicesLayout('grid'); }catch(e){}
   showTyping(true); setChoicesEnabled(false);
   setTimeout(()=>{ showTypingRow(false); askQuestion(); }, 420);
   }
@@ -623,6 +640,7 @@
   addBot('الاختبار يتكوّن من 60 سؤالًا قصيرة وسريعة. هل تود بدء الاختبار الآن؟');
   choices.innerHTML = '';
   try{ chatUI.classList.add('has-choices'); }catch(e){}
+  try{ setChoicesLayout('scale'); }catch(e){}
     const yes = document.createElement('button'); yes.className='choice'; yes.textContent='نعم، ابدأ الآن';
     const no = document.createElement('button'); no.className='choice'; no.textContent='لا، لاحقًا';
     yes.onclick = ()=>{ addUser('نعم، ابدأ الآن'); choices.innerHTML=''; try{ chatUI.classList.remove('has-choices'); }catch(e){}; showProfileForm(); };
