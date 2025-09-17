@@ -32,21 +32,21 @@ function checkAndAwardBadges() {
     if (completedChallenges.size >= 3 && !state.badges.explorer) {
         state.badges.explorer = true;
         newBadgeEarned = true;
-        showToastNotification('🏆 لقد حصلت على شارة المستكشف!');
+        showBadgeOverlay('explorer');
     }
     
     // شارة المثقف: أكمل تحدي المكتبة
     if (completedChallenges.has('lib') && !state.badges.librarian) {
         state.badges.librarian = true;
         newBadgeEarned = true;
-        showToastNotification('📚 لقد حصلت على شارة المثقف!');
+        showBadgeOverlay('librarian');
     }
 
     // شارة الخبير المالي: أكمل تحدي المنح
     if (completedChallenges.has('grants') && !state.badges.financier) {
         state.badges.financier = true;
         newBadgeEarned = true;
-        showToastNotification('💰 لقد حصلت على شارة الخبير المالي!');
+        showBadgeOverlay('financier');
     }
     
     // --- بداية الكود المصحح ---
@@ -56,13 +56,13 @@ function checkAndAwardBadges() {
         if (!state.badges.medic) {
             state.badges.medic = true;
             newBadgeEarned = true;
-            showToastNotification('⚕️ لقد حصلت على شارة الطبيب الناشئ!');
+            showBadgeOverlay('medic');
         }
         // شارة المهندس الواعد
         if (!state.badges.engineer) {
             state.badges.engineer = true;
             newBadgeEarned = true;
-            showToastNotification('🏗️ لقد حصلت على شارة المهندس الواعد!');
+            showBadgeOverlay('engineer');
         }
     }
     // --- نهاية الكود المصحح ---
@@ -126,6 +126,61 @@ function showToastNotification(message) {
     setTimeout(() => {
         toast.classList.remove('show');
     }, 4000);
+}
+
+// Centered badge overlay with sound
+function ensureBadgeAudio() {
+    let audio = document.getElementById('badge-sound');
+    if (!audio) {
+        audio = document.createElement('audio');
+        audio.id = 'badge-sound';
+        audio.src = 'assets/sounds/correct.mp3';
+        audio.preload = 'auto';
+        document.body.appendChild(audio);
+    }
+    return audio;
+}
+
+function showBadgeOverlay(badgeKey) {
+    try {
+        const badge = allBadges[badgeKey];
+        if (!badge) return;
+
+        // Create overlay if missing
+        let overlay = document.getElementById('badge-overlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'badge-overlay';
+            overlay.innerHTML = `
+                <div class="badge-card-overlay">
+                    <div class="badge-overlay-icon"></div>
+                    <div class="badge-overlay-title"></div>
+                    <div class="badge-overlay-desc"></div>
+                </div>`;
+            document.body.appendChild(overlay);
+        }
+
+        // Fill content
+        const iconEl = overlay.querySelector('.badge-overlay-icon');
+        const titleEl = overlay.querySelector('.badge-overlay-title');
+        const descEl = overlay.querySelector('.badge-overlay-desc');
+        iconEl.textContent = badge.icon || '🏅';
+        titleEl.textContent = badge.name || 'شهادة جديدة';
+        descEl.textContent = badge.description || '';
+
+        // play sound
+        const audio = ensureBadgeAudio();
+        try { audio.currentTime = 0; audio.play().catch(()=>{}); } catch(e){}
+
+        // show with animation
+        overlay.classList.remove('show');
+        // force reflow
+        void overlay.offsetWidth;
+        overlay.classList.add('show');
+
+        // auto-hide after delay
+        setTimeout(() => { overlay.classList.remove('show'); }, 3800);
+    } catch(e) { console.error('showBadgeOverlay failed', e); }
 }
 // --- نهاية منطق الشارات ---
 
