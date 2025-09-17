@@ -678,53 +678,59 @@
 
   function rankMajors(norm){
     const ranked = MAJORS.map(m=>{
-      let s=0;
-      for(const k in m.dom){ s += (m.dom[k]||0) * (norm[k]||0); }
-      // قواعد واقعية إضافية:
-      // استخدم معلومات الملف الشخصي للتعديل على النتيجة (تأثير واضح لأن المستخدم طلب ذلك)
+      // compute weighted average (0..1) per major using domain norms
+      let weighted = 0; let weightSum = 0;
+      for(const k in m.dom){ const w = (m.dom[k]||0); weighted += w * (norm[k] || 0); weightSum += w; }
+      let base = weightSum ? (weighted / weightSum) : 0; // normalized 0..1
+
+      // apply reasonable profile-based adjustments (additive, small)
       const branch = profile.branch;
       if(branch){
-        // معاملة عامة: دفعات/تخفيضات معقولة حسب الفرع
         if(branch === 'arts'){
-          if(['med','ee','me_ind','civil','math_phys','ai_cs'].includes(m.id)) s -= 0.09;
-          if(['lang','media','edu','hist_geo_arc','social'].includes(m.id)) s += 0.06;
+          if(['med','ee','me_ind','civil','math_phys','ai_cs'].includes(m.id)) base -= 0.08;
+          if(['lang','media','edu','hist_geo_arc','social'].includes(m.id)) base += 0.06;
         }
         if(branch === 'sci'){
-          if(['med','ee','me_ind','civil','math_phys','chem_bio_biotech','ai_cs'].includes(m.id)) s += 0.08;
+          if(['med','ee','me_ind','civil','math_phys','chem_bio_biotech','ai_cs'].includes(m.id)) base += 0.07;
         }
         if(branch === 'sharia'){
-          if(['law_sharia','islamic'].includes(m.id)) s += 0.10;
+          if(['law_sharia','islamic'].includes(m.id)) base += 0.09;
         }
         if(branch === 'biz'){
-          if(['biz','media','lang'].includes(m.id)) s += 0.08;
+          if(['biz','media','lang'].includes(m.id)) base += 0.07;
         }
         if(branch === 'industrial'){
-          if(['me_ind','ee','civil'].includes(m.id)) s += 0.09;
+          if(['me_ind','ee','civil'].includes(m.id)) base += 0.08;
         }
         if(branch === 'it'){
-          if(['ai_cs','soft_web','it'].includes(m.id) || ['it'].includes(m.id)) s += 0.12;
-          if(['it','sw','ai_cs'].includes(m.id)) s += 0.02; // small extra for related
+          if(['ai_cs','soft_web','it'].includes(m.id)) base += 0.10;
         }
         if(branch === 'agri'){
-          if(['earth_marine','chem_bio_biotech','health'].includes(m.id)) s += 0.07;
+          if(['earth_marine','chem_bio_biotech','health'].includes(m.id)) base += 0.06;
         }
         if(branch === 'hotel'){
-          if(['biz','social','media'].includes(m.id)) s += 0.06;
+          if(['biz','social','media'].includes(m.id)) base += 0.05;
         }
       }
-      if(m.id==='med' && !(norm.health>0.7 && norm.sci_chem_bio>0.7)) s -= 0.15;
-      if(['ee','me_ind','civil'].includes(m.id) && norm.sci_math<0.45) s -= 0.08;
-      if(m.id==='arch' && norm.arch<0.5) s -= 0.08;
-      if(m.id==='ai_cs' && norm.ai_cs<0.5) s -= 0.08;
-      // تعديل أكبر حسب تقدير التوجيهي لأن المستخدم أكد أهميته
+
+      // hard constraints / penalties
+      if(m.id==='med' && !(norm.health>0.7 && norm.sci_chem_bio>0.7)) base -= 0.12;
+      if(['ee','me_ind','civil'].includes(m.id) && norm.sci_math<0.45) base -= 0.08;
+      if(m.id==='arch' && norm.arch<0.5) base -= 0.08;
+      if(m.id==='ai_cs' && norm.ai_cs<0.5) base -= 0.07;
+
+      // tawjihi (score) influence
       if(profile.tawjihi){
         const g = profile.tawjihi;
-        if(g >= 95) s += 0.08;
-        else if(g >= 90) s += 0.06;
-        else if(g >= 80) s += 0.03;
-        else if(g < 60) s -= 0.06;
+        if(g >= 95) base += 0.06;
+        else if(g >= 90) base += 0.045;
+        else if(g >= 80) base += 0.02;
+        else if(g < 60) base -= 0.06;
       }
-      return {...m, score: Math.max(0, s)};
+
+      // ensure 0..1
+      base = Math.max(0, Math.min(1, base));
+      return {...m, score: base};
     }).sort((a,b)=>b.score-a.score);
     return ranked;
   }
@@ -740,25 +746,27 @@
   if(answered < TOTAL){ alert('الرجاء إكمال جميع الأسئلة قبل عرض التوصيات.'); return; }
     const norm = computeNormScores();
     const ranked = rankMajors(norm);
-    // ملخص
-  summary.textContent = `أبرز مجالات ملاءتك: ${topDomainStr(norm)}. فيما يلي ترشيحات مبدئية لبرامج الجامعة الإسلامية بغزة:`;
-    // بطاقات
+    // only show top 3 recommendations (most realistic)
+    const top3 = ranked.slice(0,3);
+    summary.textContent = `أبرز مجالات ملاءتك: ${topDomainStr(norm)}. فيما يلي أفضل 3 ترشيحات (مرتبة حسب الأرجحية):`;
     cards.innerHTML='';
-    ranked.slice(0,8).forEach(m=>{
+    top3.forEach((m,i)=>{
       const topTags = Object.keys(m.dom).map(k=>DOMAINS.find(d=>d.key===k)?.title || k).slice(0,3).join('، ');
+      const pct = Math.round(m.score*100);
       const div = document.createElement('div');
       div.className='card';
-        div.innerHTML = `
-        <div style="font-weight:700">${m.name}</div>
+      div.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:700">${i+1}. ${m.name}</div>
+          <div style="font-weight:700;color:var(--iug-green-700)">${pct}%</div>
+        </div>
         <div class="muted">محاور بارزة: ${topTags}</div>
-        <div class="tag">مدى الملاءمة: ${Math.round(m.score*100)}%</div>
-        <div style="margin-top:6px">${m.note}</div>
+        <div style="margin-top:8px">${m.note}</div>
         ${m.id==='med' ? '<div class="muted" style="margin-top:6px">ملاحظة: هذا التخصص يتطلب تحصيلًا أكاديميًا قويًا ومدة دراسة طويلة.</div>' : ''}
       `;
       cards.appendChild(div);
     });
     chatUI.style.display='none';
-    // ensure results visible and not covered by the fixed status bar
     results.style.display='block';
     // compute offset caused by the status bar (if present)
     (function ensureVisible(){
