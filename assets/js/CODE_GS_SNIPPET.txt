@@ -1,15 +1,9 @@
 /*
 Paste this file into your Google Apps Script project (Code.gs).
-It expects a Google Sheet with two sheets named: "registrations" and "visitors".
-registrations columns: timestamp, name, phone, year, uniqueId, token
-visitors columns: token, timestamp, userAgent, referrer, path
-
-Endpoints:
-- action=register (POST): accepts name, phone, year, token -> writes to registrations and returns uniqueId
-- action=visitorIncrement (GET/POST): accepts token -> writes to visitors if not seen in dedupe window
-- action=visitorGet (GET): returns total unique count = number of distinct registration uniqueIds + distinct visitor tokens that are not linked to a registration
-
-Adjust SPREADSHEET_ID in script properties or set manually below.
+It expects a Google Sheet with a sheet for registrations. The previous visitor
+endpoints and the separate "visitors" sheet have been removed from the project
+per product decision. Only registration-related endpoints remain in the deployed
+Apps Script.
 */
 
 const DEFAULT_DEDUPE_DAYS = 30;
@@ -20,96 +14,15 @@ function doPost(e) { return handleRequest(e); }
 function handleRequest(e) {
   const action = (e.parameter && e.parameter.action) || (e.postData && JSON.parse(e.postData.contents).action) || '';
   try {
-    if (action === 'visitorIncrement') return visitorIncrement(e);
-    if (action === 'visitorGet') return visitorGet(e);
-    if (action === 'visitorUnique') return visitorGet(e);
-    // other GETs can be added
+    // visitor endpoints removed; handleRequest should route registration and other
+    // remaining actions in your deployed Code.gs implementation.
     return ContentService.createTextOutput(JSON.stringify({ result: 'error', message: 'unknown action' })).setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
     return ContentService.createTextOutput(JSON.stringify({ result: 'error', message: err.message })).setMimeType(ContentService.MimeType.JSON);
   }
 }
 
-function visitorIncrement(e) {
-  const token = (e.parameter && e.parameter.token) || (e.postData && JSON.parse(e.postData.contents).token) || '';
-  const ss = getSpreadsheet();
-  const visitorsSheet = getOrCreateSheet_(ss, 'visitors', ['token','timestamp','userAgent','referrer','path']);
-
-  const now = new Date();
-  const dedupeDays = Number(PropertiesService.getScriptProperties().getProperty('DEDUPE_DAYS') || DEFAULT_DEDUPE_DAYS);
-  const cutoff = new Date(now.getTime() - dedupeDays * 24 * 60 * 60 * 1000);
-
-  // read existing rows to dedupe (small sites ok). For large sites, use cache or DB.
-  const data = visitorsSheet.getDataRange().getValues();
-  const headers = data.shift();
-  const tokenIdx = headers.indexOf('token');
-  const tsIdx = headers.indexOf('timestamp');
-
-  let seen = false;
-  for (let i = 0; i < data.length; i++) {
-    const row = data[i];
-    const rowToken = row[tokenIdx];
-    const rowTs = new Date(row[tsIdx]);
-    if (rowToken === token && rowTs >= cutoff) { seen = true; break; }
-  }
-
-  if (!seen) {
-    const userAgent = (e.parameter && e.parameter.ua) || (e.parameter && e.parameter.userAgent) || '';
-    const ref = (e.parameter && e.parameter.ref) || '';
-    const path = (e.parameter && e.parameter.path) || '';
-    visitorsSheet.appendRow([token, now.toISOString(), userAgent, ref, path]);
-  }
-
-  // return counts: registrations count + unlinked tokens
-  const counts = computeCombinedCounts_(ss);
-  return ContentService.createTextOutput(JSON.stringify({ result: 'success', count: counts.total, counts })).setMimeType(ContentService.MimeType.JSON);
-}
-
-function visitorGet(e) {
-  const ss = getSpreadsheet();
-  const counts = computeCombinedCounts_(ss);
-  return ContentService.createTextOutput(JSON.stringify({ result: 'success', count: counts.total, counts })).setMimeType(ContentService.MimeType.JSON);
-}
-
-function computeCombinedCounts_(ss) {
-  const regSheet = getOrCreateSheet_(ss, 'registrations', ['timestamp','name','phone','year','uniqueId','token']);
-  const visitorsSheet = getOrCreateSheet_(ss, 'visitors', ['token','timestamp','userAgent','referrer','path']);
-
-  const regs = regSheet.getDataRange().getValues();
-  const regHeaders = regs.shift();
-  const regTokenIdx = regHeaders.indexOf('token');
-  const regUniqueIdx = regHeaders.indexOf('uniqueId');
-
-  const visitors = visitorsSheet.getDataRange().getValues();
-  const visitorHeaders = visitors.shift();
-  const visitorTokenIdx = visitorHeaders.indexOf('token');
-
-  // collect unique registered uniqueIds and tokens
-  const registeredUniqueIds = new Set();
-  const registeredTokens = new Set();
-  for (let i = 0; i < regs.length; i++) {
-    const r = regs[i];
-    const uid = r[regUniqueIdx];
-    const t = r[regTokenIdx];
-    if (uid) registeredUniqueIds.add(String(uid));
-    if (t) registeredTokens.add(String(t));
-  }
-
-  // collect unique visitor tokens
-  const visitorTokens = new Set();
-  for (let i = 0; i < visitors.length; i++) {
-    const v = visitors[i];
-    const t = v[visitorTokenIdx];
-    if (t) visitorTokens.add(String(t));
-  }
-
-  // tokens that visited but didn't register (to avoid double count)
-  let unlinkedTokens = 0;
-  visitorTokens.forEach(t => { if (!registeredTokens.has(t)) unlinkedTokens++; });
-
-  const total = registeredUniqueIds.size + unlinkedTokens;
-  return { total, registered: registeredUniqueIds.size, visitorTokens: visitorTokens.size, unlinkedTokens };
-}
+// Visitor-related helpers removed. Keep registration-focused helpers below.
 
 function getSpreadsheet() {
   const sid = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');

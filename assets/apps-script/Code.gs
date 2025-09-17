@@ -39,10 +39,7 @@ function doPost(e) {
 
     var action = e.parameter && e.parameter.action;
 
-    // Route visitor actions without opening the sheet here (they open and inspect sheet themselves)
-    if (action === 'visitorIncrement' || action === 'visitorGet') {
-      return handleVisitorAction(e);
-    }
+  // no visitor endpoints here anymore
 
     // For register/updateScore we need the sheet
     var sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
@@ -95,20 +92,7 @@ function registerUser(e, sheet) {
     // عدم القدرة على الكاش ليس مشكلة حرجة، نستمر بدون فشل
   }
 
-  // مزامنة عدّ "المسجلين" في Script Properties كنسخة احتياطية
-  try {
-    var lr = sheet.getLastRow();
-    var registered = 0;
-    if (lr >= 2) {
-      var ids = sheet.getRange(2, COLS.UNIQUE_ID, lr - 1, 1).getValues();
-      for (var i = 0; i < ids.length; i++) {
-        if (ids[i][0] && String(ids[i][0]).trim() !== '') registered++;
-      }
-    }
-    PropertiesService.getScriptProperties().setProperty('visitor_count', String(registered));
-  } catch (pe) {
-    // ignore property sync errors
-  }
+  // no visitor_count sync required
 
   return createJson({ result: 'success', uniqueId: uniqueId, row: lastRow });
 }
