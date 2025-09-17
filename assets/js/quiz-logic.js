@@ -1,14 +1,44 @@
-// track remaining attempts (stored key kept for compatibility)
-// NOTE: don't treat a stored 0 as 'missing' — preserve zero attempts left across reloads
-let quizAttemptsRemaining = null;
-{
-    const stored = localStorage.getItem('quizRestartAttempts');
-    if (stored !== null) {
-        const n = parseInt(stored, 10);
-        quizAttemptsRemaining = Number.isNaN(n) ? null : n;
-    }
+// Track remaining attempts per-quiz (keyed by quizId) and per-quiz attempt scores.
+// NOTE: storing a null/undefined remaining means the quiz is at full MAX_ATTEMPTS.
+// Per user request, each challenge gets two attempts.
+const MAX_ATTEMPTS = 2;
+
+function _readAttemptsMap() {
+    try {
+        const raw = localStorage.getItem('quizRestartAttemptsByQuiz');
+        return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
 }
-const MAX_ATTEMPTS = 3;
+
+function _writeAttemptsMap(map) {
+    try { localStorage.setItem('quizRestartAttemptsByQuiz', JSON.stringify(map)); } catch(e){}
+}
+
+function getAttemptsRemainingForQuiz(quizId) {
+    if (!quizId) return null;
+    const map = _readAttemptsMap();
+    if (typeof map[quizId] === 'number') return map[quizId];
+    return null; // treat null as full attempts available
+}
+
+function setAttemptsRemainingForQuiz(quizId, value) {
+    if (!quizId) return;
+    const map = _readAttemptsMap();
+    map[quizId] = value;
+    _writeAttemptsMap(map);
+}
+
+// helper for per-quiz attempts-scores storage
+function _readAttemptsScoresMap() {
+    try {
+        const raw = localStorage.getItem('quizAttemptsScoresByQuiz');
+        return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+}
+
+function _writeAttemptsScoresMap(map) {
+    try { localStorage.setItem('quizAttemptsScoresByQuiz', JSON.stringify(map)); } catch(e){}
+}
 
 if (window.quizLogicLoaded) {
     // This is a guard to prevent the script from running multiple times.
@@ -1034,16 +1064,21 @@ if (window.quizLogicLoaded) {
         let currentQuestionIndex = 0;
         let score = 0;
 // load attempts scores (persistent) and attempts remaining
-let attemptsScores = JSON.parse(localStorage.getItem('quizAttemptsScores') || '[]');
-if (!Array.isArray(attemptsScores)) attemptsScores = [];
+// attemptsScoresByQuiz: { [quizId]: [scoreAttempt1, scoreAttempt2, ...] }
+let attemptsScoresByQuiz = _readAttemptsScoresMap();
 
 function finishQuiz() {
-    // خزن نتيجة هذه المحاولة استناداً إلى عدد المحاولات المستخدمة
-    const used = MAX_ATTEMPTS - (quizAttemptsRemaining === null ? MAX_ATTEMPTS : quizAttemptsRemaining);
+    // خزن نتيجة هذه المحاولة استناداً إلى عدد المحاولات المستخدمة (per-quiz)
+    const quizId = currentQuizId || 'unknown';
+    let attemptsScores = attemptsScoresByQuiz[quizId] || [];
+
+    const rem = getAttemptsRemainingForQuiz(quizId);
+    const used = MAX_ATTEMPTS - (rem === null ? MAX_ATTEMPTS : rem);
     const idx = Math.max(0, used - 1);
     attemptsScores[idx] = score;
-    // persist scores
-    try{ localStorage.setItem('quizAttemptsScores', JSON.stringify(attemptsScores)); }catch(e){console.warn('Could not save attemptsScores', e);} 
+    attemptsScoresByQuiz[quizId] = attemptsScores;
+    // persist per-quiz scores
+    try{ _writeAttemptsScoresMap(attemptsScoresByQuiz); }catch(e){console.warn('Could not save attemptsScoresByQuiz', e);} 
 
     if (used >= MAX_ATTEMPTS) {
         const sum = (attemptsScores[0] || 0) + (attemptsScores[1] || 0);
@@ -1055,17 +1090,19 @@ function finishQuiz() {
 }
 
 
-    function consumeAttempt(){
-            if (quizAttemptsRemaining === null) quizAttemptsRemaining = MAX_ATTEMPTS;
-            if (quizAttemptsRemaining > 0){
-                quizAttemptsRemaining--;
-                localStorage.setItem('quizRestartAttempts', quizAttemptsRemaining);
+    function consumeAttemptForQuiz(quizId){
+            let rem = getAttemptsRemainingForQuiz(quizId);
+            if (rem === null) rem = MAX_ATTEMPTS;
+            if (rem > 0){
+                rem--;
+                setAttemptsRemainingForQuiz(quizId, rem);
             }
     }
 
-    function canRestartQuiz() {
-        if (quizAttemptsRemaining === null) quizAttemptsRemaining = MAX_ATTEMPTS;
-        return quizAttemptsRemaining > 0;
+    function canRestartQuizFor(quizId) {
+        let rem = getAttemptsRemainingForQuiz(quizId);
+        if (rem === null) rem = MAX_ATTEMPTS;
+        return rem > 0;
     }
 
 
@@ -1077,8 +1114,7 @@ function finishQuiz() {
     const FEEDBACK_DURATION = 5000;
     const FEEDBACK_INCORRECT_DURATION = 2500; // 2.5s when incorrect as requested
     const NUM_QUESTIONS_TO_SHOW = 10;
-    // ensure remaining attempts initialized
-    if (quizAttemptsRemaining === null) quizAttemptsRemaining = MAX_ATTEMPTS;
+    // nothing global to init; per-quiz attempts will be initialized on demand
         
                 // Use page filename as stable quizId (e.g., library, grants, ...)
                 currentQuizId = (location.pathname.split('/').pop() || 'index.html').replace(/\.html?$/,'').toLowerCase();
@@ -1122,13 +1158,16 @@ let currentQuizData = null;
         window.showFeedbackWithProgress = showFeedback;
 
 
-function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
+    function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
   const startQuizBtn = document.getElementById(triggerButtonId);
   if (!startQuizBtn) return;
 
     startQuizBtn.addEventListener("click", () => {
-            console.log('Start click: attemptsRemaining=', quizAttemptsRemaining, 'attemptsScores=', attemptsScores);
-            if (!canRestartQuiz()) {
+            const quizId = (location.pathname.split('/').pop() || 'index.html').replace(/\.html?$/,'').toLowerCase();
+            const remBefore = getAttemptsRemainingForQuiz(quizId);
+            const attemptsScores = attemptsScoresByQuiz[quizId] || [];
+            console.log('Start click for', quizId, 'attemptsRemaining=', remBefore, 'attemptsScores=', attemptsScores);
+            if (!canRestartQuizFor(quizId)) {
                 showAttemptsModal({
                     title: "لقد أكملت جميع المحاولات",
                     message: "لا مزيد من المحاولات المسموح بها."
@@ -1137,13 +1176,13 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
             }
 
             // determine if user already used two attempts (about to start the 3rd)
-            const rem = (quizAttemptsRemaining === null) ? MAX_ATTEMPTS : quizAttemptsRemaining;
+            const rem = (remBefore === null) ? MAX_ATTEMPTS : remBefore;
             const usedSoFar = MAX_ATTEMPTS - rem;
 
             function proceedStart(){
                 // consume one attempt for this new run
-                consumeAttempt();
-                        console.log('Proceeding to start quiz: attemptsRemaining after consume=', quizAttemptsRemaining);
+                consumeAttemptForQuiz(quizId);
+                        console.log('Proceeding to start quiz for', quizId, 'attemptsRemaining after consume=', getAttemptsRemainingForQuiz(quizId));
 
                 // تهيئة البيانات
                 currentQuizData = quizDataObject;
@@ -1176,12 +1215,12 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
 
                 // If user already used two attempts (third click), show final summary and DO NOT start a new run
                     if (usedSoFar >= (MAX_ATTEMPTS - 1) && attemptsScores && attemptsScores.length >= (MAX_ATTEMPTS - 1)){
-                    const s1 = attemptsScores[0] != null ? attemptsScores[0] : 'غير متوفر';
-                    const s2 = attemptsScores[1] != null ? attemptsScores[1] : 'غير متوفر';
+                        const s1 = attemptsScores[0] != null ? attemptsScores[0] : 'غير متوفر';
+                        const s2 = attemptsScores[1] != null ? attemptsScores[1] : 'غير متوفر';
                         const msg = `لقد أكمَلت جميع محاولات التحدي.\nنتائجك السابقة:\nالمحاولة الأولى: ${s1}\nالمحاولة الثانية: ${s2}`;
-                    showAttemptsModal({ title: 'انتهت المحاولات', message: msg });
-                    return;
-                }
+                        showAttemptsModal({ title: 'انتهت المحاولات', message: msg });
+                        return;
+                    }
                 // otherwise proceed to start normally
                 proceedStart();
   });
@@ -1392,7 +1431,7 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
                 message = 'تحتاج إلى مراجعة معلوماتك أكثر.';
             }
             let restartButtonHTML = '';
-            const remaining = (quizAttemptsRemaining === null) ? MAX_ATTEMPTS : quizAttemptsRemaining;
+            const remaining = (currentQuizId) ? ((getAttemptsRemainingForQuiz(currentQuizId) === null) ? MAX_ATTEMPTS : getAttemptsRemainingForQuiz(currentQuizId)) : MAX_ATTEMPTS;
             if (remaining > 0) {
                 restartButtonHTML = `<button id="restart-quiz-btn" class="action-button">أعد التحدي (${remaining} فرصة متبقية)</button>`;
             } else {
@@ -1414,10 +1453,10 @@ function initializeQuiz(triggerButtonId, quizDataObject, quizTitle) {
             const restartBtn = document.getElementById('restart-quiz-btn');
             if (restartBtn) {
                 restartBtn.addEventListener('click', () => {
-                    const rem = (quizAttemptsRemaining === null) ? MAX_ATTEMPTS : quizAttemptsRemaining;
+                    const rem = (currentQuizId) ? ((getAttemptsRemainingForQuiz(currentQuizId) === null) ? MAX_ATTEMPTS : getAttemptsRemainingForQuiz(currentQuizId)) : MAX_ATTEMPTS;
                     if (rem > 0) {
                         // consume attempt for this restart-run
-                        consumeAttempt();
+                        consumeAttemptForQuiz(currentQuizId);
                         currentQuestionIndex = 0;
                         score = 0;
                         helpCounters = {
