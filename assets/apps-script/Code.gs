@@ -87,6 +87,12 @@ function registerUser(e, sheet) {
   var lastRow = sheet.getLastRow();
   try {
     CacheService.getScriptCache().put(CACHE_PREFIX + uniqueId, String(lastRow), CACHE_TTL);
+    // مزامنة عدّ "المسجلين" في Script Properties كنسخة احتياطية
+    try {
+      PropertiesService.getScriptProperties().setProperty('visitor_count', String(Math.max(0, lastRow - 1)));
+    } catch (pe) {
+      // لا نفشل التسجيل إن لم تنجح الخاصية
+    }
   } catch (e) {
     // عدم القدرة على الكاش ليس مشكلة حرجة، نستمر بدون فشل
   }
@@ -154,20 +160,23 @@ function updateScore(e, sheet) {
 // Handle visitor counter actions (increment / get)
 function handleVisitorAction(e) {
   const action = (e.parameter && e.parameter.action) || (e.postData && tryParse(e.postData.contents).action) || '';
-  const props = PropertiesService.getScriptProperties();
-  let count = Number(props.getProperty('visitor_count') || 0);
 
-  if (action === 'visitorIncrement') {
-    count = count + 1;
-    props.setProperty('visitor_count', String(count));
+  // The visitor counter is based on the number of registered users in the sheet.
+  try {
+    var sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
+    if (!sheet) throw new Error('Sheet not found');
+    var lastRow = sheet.getLastRow();
+    // assume first row is header; registered users = lastRow - 1
+    var registeredCount = Math.max(0, lastRow - 1);
+    // keep Script Properties in sync (best-effort)
+    try { PropertiesService.getScriptProperties().setProperty('visitor_count', String(registeredCount)); } catch(e) {}
+    return jsonResponse({ result: 'success', count: registeredCount });
+  } catch (err) {
+    // Fallback: return property-stored value if sheet access fails
+    const props = PropertiesService.getScriptProperties();
+    let count = Number(props.getProperty('visitor_count') || 0);
     return jsonResponse({ result: 'success', count: count });
   }
-
-  if (action === 'visitorGet') {
-    return jsonResponse({ result: 'success', count: count });
-  }
-
-  return jsonResponse({ result: 'error', message: 'unknown visitor action' }, 400);
 }
 
 function jsonResponse(obj, statusCode) {
