@@ -399,6 +399,80 @@ h1 {
     display: block;
 }
 
+/* ================== Touch & Mobile Enhancements ================== */
+/* Improve tap targets, touch feedback and spacing for mobile/touch devices */
+html, body {
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+/* Prefer direct manipulation for interactive controls */
+button, a, [role="button"], .option-btn, .guide-card {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Slight active feedback on tap */
+.action-button, .option-btn, .guide-card, .feature-card {
+    transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+    will-change: transform;
+}
+.action-button:active, .option-btn:active, .guide-card:active, .feature-card:active {
+    transform: scale(0.985) translateY(0.5px);
+    filter: brightness(0.985);
+}
+
+/* ripple element styling - kept minimal and non-intrusive */
+.touch-ripple { position: absolute; pointer-events: none; opacity: 0.9; mix-blend-mode: screen; }
+.action-button .touch-ripple { background: rgba(255,255,255,0.18); }
+.guide-card .touch-ripple { background: rgba(0,0,0,0.06); }
+
+/* Make interactive blocks easier to press */
+.guide-card, .feature-card, .option-wrap, .option-btn {
+    min-height: 56px;
+    padding: 14px 16px;
+    border-radius: var(--border-radius-medium);
+}
+
+/* Focus-visible for keyboard and accessibility */
+.action-button:focus-visible, .option-btn:focus-visible, .guide-card:focus-visible, [role="button"]:focus-visible {
+    outline: 3px solid rgba(0,102,51,0.14);
+    outline-offset: 3px;
+}
+
+/* Larger touch UI on small screens */
+@media (max-width: 600px) {
+    .action-button {
+        padding: 18px 22px;
+        font-size: 20px;
+        border-radius: 28px;
+    }
+    .feature-card {
+        width: 100%;
+        padding: 18px;
+    }
+    .guide-card {
+        padding: 18px 16px;
+        border-radius: 18px;
+    }
+    .badge-card {
+        min-width: 72px;
+        min-height: 72px;
+        padding: 10px;
+    }
+    .modal-content {
+        max-width: 95%;
+        padding: 20px;
+    }
+    .feedback-progress-bar { height: 10px; }
+}
+
+/* Reduce hover-only effects on touch devices */
+@media (hover: none) {
+    .feature-card:hover, .guide-card:hover { transform: none; box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
+}
+
 .scene-content {
     padding: 25px;
 }
