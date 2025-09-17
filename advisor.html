@@ -96,8 +96,11 @@
   /* Phone-like centered chat panel */
   .chat-wrap.chat-panel{max-width:420px;margin:28px auto;background:linear-gradient(180deg,#f9fffb,#ffffff);border-radius:18px;padding:8px;box-shadow:0 20px 50px rgba(10,80,40,0.06)}
   .chat-wrap.chat-panel .progress{padding:6px 6px 0}
-  .chat-wrap.chat-panel .chat{height:64vh;min-height:420px;max-height:72vh;padding:18px;overflow:auto;border-radius:12px}
-  .chat-wrap.chat-panel .controls{position:relative;padding-top:8px}
+  /* make the chat panel position relative so we can place the controls inside it */
+  .chat-wrap.chat-panel{position:relative}
+  .chat-wrap.chat-panel .chat{height:64vh;min-height:420px;max-height:72vh;padding:18px;padding-bottom:110px;overflow:auto;border-radius:12px}
+  /* place controls visually inside the panel at its bottom */
+  .chat-wrap.chat-panel .controls{position:absolute;left:12px;right:12px;bottom:12px;padding-top:6px}
 
   /* sticky input / quick replies bar */
   .input-bar{position:sticky;bottom:0;background:transparent;padding:12px 4px 8px;margin-top:6px;display:flex;justify-content:center;align-items:center}
@@ -130,6 +133,7 @@
   .dot:nth-child(3){animation-delay:.24s}
   @keyframes blink{0%{transform:translateY(0);opacity:.35}50%{transform:translateY(-4px);opacity:1}100%{transform:translateY(0);opacity:.35}}
 
+  /* fallback for non-chat-panel layout */
   .controls{position:sticky;bottom:0;background:transparent;padding-top:6px}
   /* Actions bar: visually embedded into the chat panel as a rounded footer */
   .actions{display:flex;justify-content:center;gap:12px;margin-top:12px}
