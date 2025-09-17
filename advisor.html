@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>المستشار الأكاديمي الذكي – الجامعة الإسلامية بغزة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" referrerpolicy="no-referrer" rel="stylesheet"/>
+<link href="assets/css/main.css" rel="stylesheet"/>
+
+<style>
+  :root{
+    --iug-green:#0a6b3a; --iug-green-700:#075836; --bg:#f4fbf7; --card:#ffffff;
+    --muted:#5c6d63; --radius:14px; --shadow-soft:0 10px 30px rgba(6,60,40,0.06);
+    --accent:linear-gradient(90deg,var(--iug-green),var(--iug-green-700));
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%} 
+  /* Use flex centering similar to the site's global layout, but keep a top offset for the fixed status bar */
+  /* center content visually while keeping top offset for the fixed status bar */
+  body{display:flex;justify-content:center;align-items:center;min-height:100vh;padding-top:70px;padding-left:0;padding-right:0; font-family:'Cairo',sans-serif;background:var(--bg);margin:0;color:#153;line-height:1.4}
+  #status-bar-placeholder{height:12px}
+
+  /* shell is centered by the body; make it an explicit flex container to guarantee centering */
+  .shell{width:100%;max-width:980px;margin:36px auto;padding:12px;display:flex;justify-content:center}
+  .container{width:100%;max-width:980px;background:var(--card);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-soft);border:1px solid rgba(10,107,58,0.04);margin-inline:auto}
+
+  /* Intro */
+  .intro{padding:22px 20px;border-bottom:1px solid #edf6ef}
+  .intro h1{color:var(--iug-green);text-align:center;font-size:1.45rem;margin:0 0 8px}
+  .intro p{color:var(--muted);text-align:center;margin:0 0 12px}
+  .hero{display:flex;align-items:center;justify-content:center;margin:12px auto;width:min(620px,92%);height:110px;border-radius:12px;background:linear-gradient(180deg,rgba(10,107,58,0.06),rgba(7,130,79,0.04));font-size:40px}
+
+  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+  .feature{background:#fbfffb;border-radius:10px;padding:12px;border:1px solid rgba(10,107,58,0.04);text-align:center}
+  .feature h3{color:var(--iug-green);font-size:0.98rem;margin-bottom:6px}
+
+  .center{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:14px}
+  .btn{border:none;border-radius:999px;padding:12px 18px;font-size:1rem;color:#fff;cursor:pointer}
+  .btn.primary{background:var(--accent);box-shadow:0 8px 24px rgba(10,107,58,0.12)}
+  .btn.ghost{background:transparent;color:var(--iug-green);border:1px solid rgba(10,107,58,0.08)}
+
+  /* Choices (mobile-first) */
+  .choices{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:12px 8px;margin-top:14px;justify-items:center;align-items:center
+  }
+  .choice{
+    padding:12px 18px;border-radius:14px;background:linear-gradient(180deg,#ffffff,#f7fff8);border:1px solid #e6f3ed;cursor:pointer;text-align:center;transition:transform .16s cubic-bezier(.2,.9,.2,1),box-shadow .16s,color .12s,background .12s;
+    min-width:120px;max-width:260px;box-shadow:0 6px 18px rgba(6,60,40,0.04);font-weight:600;color:var(--iug-green);
+  }
+  .choice:hover{transform:translateY(-6px);box-shadow:0 18px 36px rgba(6,60,40,0.06)}
+  .choice:active{transform:translateY(-2px);box-shadow:0 8px 20px rgba(6,60,40,0.05)}
+  .choice[aria-pressed='true']{background:var(--iug-green);color:#fff;border-color:var(--iug-green);box-shadow:0 14px 34px rgba(10,107,58,0.12)}
+  .choice:disabled{opacity:0.6;cursor:not-allowed}
+  .choice small{display:block;color:var(--muted);font-weight:400;margin-top:6px}
+
+  /* Chat area */
+  .chat-wrap{display:grid;grid-template-rows:auto 1fr auto;gap:10px;padding:14px}
+  .progress{display:flex;align-items:center;gap:10px}
+  .bar{height:8px;background:#eef6f0;border-radius:999px;overflow:hidden;flex:1}
+  .fill{height:100%;background:var(--accent);width:0%;transition:width .2s linear}
+  .progress .txt{color:var(--muted);font-size:.92rem}
+
+  .chat{overflow:auto;padding:14px;display:flex;flex-direction:column;gap:12px;background:#fbfffb;border-radius:12px;border:1px solid #f0f5f2}
+  .row{display:flex;gap:10px;align-items:flex-end}
+  .row.bot{justify-content:flex-start}
+  .row.user{justify-content:flex-end}
+
+  .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#f6fff6);border:1px solid rgba(10,107,58,0.06);font-size:18px}
+
+  .bubble{padding:10px 12px;border-radius:12px;max-width:78%;box-shadow:0 6px 18px rgba(6,60,40,0.04);animation:pop .16s ease;position:relative}
+  .bot .bubble{background:linear-gradient(180deg,#f7fff8,#ffffff);border:1px solid rgba(8,120,60,0.04);color:#0b3b24}
+  .user .bubble{background:linear-gradient(180deg,#e8f8ff,#ffffff);border:1px solid rgba(0,140,210,0.06);color:#053047}
+
+  /* grouped messages support */
+  .messages{display:flex;flex-direction:column;gap:8px}
+
+  /* message tails */
+  .bot .bubble::after, .user .bubble::after{content:'';position:absolute;width:12px;height:12px;transform:rotate(45deg)}
+  .bot .bubble::after{right:-6px;bottom:6px;background:linear-gradient(180deg,#f7fff8,#ffffff);border-right:1px solid rgba(8,120,60,0.04);border-bottom:1px solid rgba(8,120,60,0.04)}
+  .user .bubble::after{left:-6px;bottom:6px;background:linear-gradient(180deg,#e8f8ff,#ffffff);border-left:1px solid rgba(0,140,210,0.06);border-bottom:1px solid rgba(0,140,210,0.06)}
+
+  /* typing row (inserted into chat) */
+  .typing-row{display:flex;gap:10px;align-items:flex-end;opacity:0.92}
+  .typing-row .bubble{padding:8px 12px;border-radius:12px;background:linear-gradient(180deg,#fff,#f6fff6);border:1px solid rgba(10,107,58,0.06);color:var(--muted);display:flex;align-items:center;gap:8px}
+  .typing-dots{display:flex;gap:6px}
+  .typing-dots span{width:8px;height:8px;border-radius:50%;background:rgba(10,107,58,0.16);animation:blink 1s infinite}
+
+  /* subtle avatar pulse when typing */
+  .avatar.pulse{animation:avatar-pulse 1.6s infinite}
+  @keyframes avatar-pulse{0%{box-shadow:0 0 0 0 rgba(10,107,58,0.12)}50%{box-shadow:0 8px 24px 6px rgba(10,107,58,0.06)}100%{box-shadow:0 0 0 0 rgba(10,107,58,0.0)}}
+
+  .choice:focus{outline:3px solid rgba(7,120,64,0.12);outline-offset:3px}
+
+  /* Phone-like centered chat panel */
+  .chat-wrap.chat-panel{max-width:420px;margin:28px auto;background:linear-gradient(180deg,#f9fffb,#ffffff);border-radius:18px;padding:8px;box-shadow:0 20px 50px rgba(10,80,40,0.06)}
+  .chat-wrap.chat-panel .progress{padding:6px 6px 0}
+  .chat-wrap.chat-panel .chat{height:64vh;min-height:420px;max-height:72vh;padding:18px;overflow:auto;border-radius:12px}
+  .chat-wrap.chat-panel .controls{position:relative;padding-top:8px}
+
+  /* sticky input / quick replies bar */
+  .input-bar{position:sticky;bottom:0;background:transparent;padding:12px 4px 8px;margin-top:6px;display:flex;justify-content:center;align-items:center}
+  .quick-replies{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+  .quick-replies .choice{padding:10px 18px;border-radius:22px;background:linear-gradient(180deg,#fff,#f6fff6);border:1px solid #eef7ee;box-shadow:0 8px 20px rgba(6,60,40,0.03);min-width:120px;text-align:center;color:var(--iug-green);font-weight:600}
+
+  /* show bubble tail only for last bubble in a row (grouping effect) */
+  .row.bot .bubble::after, .row.user .bubble::after{display:block}
+  .row.bot .bubble:not(:last-child)::after, .row.user .bubble:not(:last-child)::after{display:none}
+
+  /* user bubble alignment tweak for chat-panel */
+  .chat-wrap.chat-panel .row.user{justify-content:flex-end}
+  .chat-wrap.chat-panel .row.bot{justify-content:flex-start}
+
+  /* responsive adjustments for choices */
+  @media (max-width:720px){
+    .choices{grid-template-columns:repeat(2,1fr);gap:10px}
+    .choice{min-width:110px}
+    .quick-replies .choice{min-width:100px;padding:10px 12px}
+  }
+
+  .bubble .meta{display:block;font-size:0.78rem;color:var(--muted);margin-top:6px}
+  .timestamp{font-size:0.72rem;color:rgba(20,40,30,0.45);margin-inline-start:8px}
+
+  @keyframes pop{from{transform:translateY(6px) scale(.995);opacity:0}to{transform:none;opacity:1}}
+
+  .typing{display:flex;align-items:center;gap:10px;color:var(--muted);padding:8px;border-radius:12px}
+  .dot{width:8px;height:8px;border-radius:50%;background:rgba(10,107,58,0.12);animation:blink 1s infinite}
+  .dot:nth-child(2){animation-delay:.12s}
+  .dot:nth-child(3){animation-delay:.24s}
+  @keyframes blink{0%{transform:translateY(0);opacity:.35}50%{transform:translateY(-4px);opacity:1}100%{transform:translateY(0);opacity:.35}}
+
+  .controls{position:sticky;bottom:0;background:transparent;padding-top:6px}
+  .actions{display:flex;justify-content:center;gap:8px;margin-top:10px}
+
+  /* Results */
+  .results{padding:18px;background:transparent}
+  .results h2{text-align:center;color:var(--iug-green);margin-bottom:8px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px}
+  .card{background:#fff;border-radius:12px;padding:12px;border:1px solid #f0f5f2}
+
+  /* Responsive tweaks */
+  @media (max-width:900px){.features{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:600px){
+    .features{grid-template-columns:1fr}
+    .hero{height:100px;font-size:32px}
+    .container{margin:8px}
+    .intro{padding:16px}
+    .choices{grid-template-columns:repeat(2,1fr)}
+    .avatar{width:32px;height:32px}
+  }
+
+  .muted{color:var(--muted)}
+</style>
+<script>
+  // small UI helpers for header status and minimize
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const botStatus = document.getElementById('botStatus');
+    const minBtn = document.getElementById('minimizeChat');
+    const chatUI = document.getElementById('chatUI');
+    minBtn?.addEventListener('click', ()=>{
+      if(chatUI.style.display === 'none'){
+        chatUI.style.display='grid'; minBtn.textContent='−';
+      } else {
+        chatUI.style.display='none'; minBtn.textContent='+';
+      }
+    });
+    // expose function to update status from typing toggles
+    window.__setBotStatus = (s)=>{ if(botStatus) botStatus.textContent = s; };
+  });
+</script>
+</head>
+<body>
+  <div id="status-bar-placeholder"></div>
+<div class="shell">
+  <div class="container">
+    <!-- INTRO -->
+    <section id="intro" class="intro">
+  <h1>المستشار الأكاديمي الذكي 🤖</h1>
+  <p>أداة مبتكرة تساعدك على اختيار التخصص الجامعي الأنسب ضمن برامج <strong>الجامعة الإسلامية بغزة</strong>، من خلال إجابة تفاعلية على <strong>60 سؤالاً</strong> قصيراً ودقيقاً.</p>
+      <div class="hero">🎓</div>
+      <div class="features">
+  <div class="feature"><h3>🎯 منهجية دقيقة</h3><p>الأسئلة مبنية على متطلبات واقعية ومهارات أساسية لكل مسار أكاديمي.</p></div>
+  <div class="feature"><h3>💬 تجربة تفاعلية طبيعية</h3><p>واجهة محادثة مبسطة تحاكي تطبيقات الدردشة، سهلة الاستخدام على الهاتف والكمبيوتر.</p></div>
+  <div class="feature"><h3>📊 توصيات مخصصة</h3><p>نظام ذكي لترتيب البرامج الأكاديمية حسب توافقها مع اهتماماتك وإجاباتك.</p></div>
+      </div>
+      <div class="center">
+  <button id="btnReady" class="btn primary">ابدأ التقييم الأكاديمي الآن</button>
+      </div>
+    </section>
+
+    <!-- CHAT -->
+    <section id="chatUI" class="chat-wrap" style="display:none">
+      <div class="chat-header" role="region" aria-label="معلومات المستشار">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="avatar" aria-hidden>🤖</div>
+          <div>
+            <div style="font-weight:700;color:var(--iug-green)">مستشارك الأكاديمي</div>
+              <div id="botStatus" style="font-size:0.86rem;color:var(--muted)">متصل</div>
+          </div>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+          <button id="minimizeChat" class="btn ghost" title="تصغير">−</button>
+        </div>
+      </div>
+      <div class="progress">
+        <div class="bar"><div id="fill" class="fill"></div></div>
+        <div id="progTxt" class="txt"></div>
+      </div>
+
+      <div id="chat" class="chat"></div>
+
+      <div class="controls">
+      <div id="typing" class="typing" style="display:none">
+        <span>المستشار يكتب...</span>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <div id="choices" class="choices"></div>
+        <div class="actions">
+        <button id="btnBack" class="btn ghost" style="display:none">⬅️ رجوع</button>
+          <button id="btnFinish" class="btn primary" style="display:none">عرض التوصيات</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section id="results" class="results" style="display:none">
+      <h2>ترشيحات المستشار الذكي</h2>
+      <p id="summary" class="muted" style="text-align:center"></p>
+      <div id="cards" class="cards"></div>
+      <div class="center" style="margin-top:10px">
+        <button id="btnRestart" class="btn primary">🔄 ابدأ من جديد</button>
+      </div>
+      <p class="muted" style="text-align:center;margin-top:6px">تنبيه: هذه أداة إرشادية، ناقش خياراتك مع المرشد الأكاديمي.</p>
+    </section>
+  
+  <!-- Mute toggle (floating) -->
+  <button id="ui-sound-toggle" aria-pressed="false" title="كتم / تفعيل الأصوات" style="position:fixed;left:18px;bottom:18px;z-index:1200;background:linear-gradient(180deg,#fff,#f6fff6);border-radius:999px;padding:8px 12px;border:1px solid rgba(10,107,58,0.08);box-shadow:0 6px 20px rgba(6,60,40,0.06);cursor:pointer">🔊 تشغيل الأصوات</button>
+  </div>
+</div>
+
+<script>
+  /* =========================
+     1) بنية الأسئلة (60 سؤال)
+     ========================= */
+  // 20 محور × 3 بنود = 60 سؤال. محاور مرتبطة مباشرة بتخصصات IUG.
+  const DOMAINS = [
+    {key:'ai_cs', title:'ذكاء اصطناعي/علوم الحاسوب', items:[
+      'أستمتع بكتابة الشيفرة وحلّ الأخطاء.',
+      'أحب تحليل البيانات واكتشاف الأنماط.',
+      'ألتزم بتعلّم خوارزميات جديدة بانتظام.'
+    ]},
+    {key:'soft_web', title:'تطوير برمجيات/ويب/موبايل', items:[
+      'أحب بناء تطبيقات واجهاتها سهلة الاستخدام.',
+      'أجيد تقسيم المشروع إلى مهام واضحة.',
+      'العمل ضمن فريق برمجي يناسبني.'
+    ]},
+    {key:'it_media', title:'تكنولوجيا معلومات/وسائط متعددة', items:[
+      'أستمتع بإدارة أنظمة/شبكات ودعم المستخدمين.',
+      'أحب إنتاج المحتوى الرقمي والتصميم.',
+      'أتعامل مع الأعطال التقنية بهدوء وحلول عملية.'
+    ]},
+    {key:'civil', title:'هندسة مدنية', items:[
+      'أفضل مواقع العمل الميدانية ومتابعة التنفيذ.',
+      'أستمتع بالحسابات الإنشائية ومعايير السلامة.',
+      'التخطيط الزمني والجودة يناسبان طريقتي.'
+    ]},
+    {key:'arch', title:'هندسة معمارية/تصميم عمراني', items:[
+      'لدي حس بصري وتصميمي قوي.',
+      'أوازن بين الجماليات والمتطلبات الفنية.',
+      'أستمتع بنمذجة المباني والعرض المعماري.'
+    ]},
+    {key:'me_ind', title:'هندسة ميكانيكية/صناعية', items:[
+      'أفهم الأنظمة الميكانيكية وحركتها.',
+      'أميل لتحسين العمليات والكفاءة.',
+      'التجارب العملية والمختبر ممتعة بالنسبة لي.'
+    ]},
+    {key:'ee_comm', title:'هندسة كهربائية/اتصالات', items:[
+      'أهتم بالإلكترونيات والدوائر.',
+      'أجد متعة في أنظمة الاتصالات والتحكم.',
+      'القياسات الدقيقة والمعملية تناسبني.'
+    ]},
+    {key:'sci_math', title:'علوم أساسية: رياضيات/فيزياء', items:[
+      'أستمتع بالرياضيات النظرية والمسائل المعقّدة.',
+      'أحب فهم قوانين الفيزياء والتجريب.',
+      'التجريد والمنطق لا يزعجاني.'
+    ]},
+    {key:'sci_chem_bio', title:'علوم: كيمياء/أحياء/تقنية حيوية', items:[
+      'أحب التجارب المخبرية والتحليل الكيميائي/البيولوجي.',
+      'أهتم بالتقنية الحيوية وتطبيقاتها.',
+      'ألتزم بإجراءات السلامة والدقة.'
+    ]},
+    {key:'earth_marine', title:'علوم: أرض/بحار/بيئة', items:[
+      'أهتم بعلوم الأرض والبحار والبيئة.',
+      'أفضل العمل الميداني وجمع العينات.',
+      'أحب قراءة الخرائط والبيانات الجغرافية.'
+    ]},
+    {key:'health', title:'علوم صحية (علاج/تصوير/تغذية)', items:[
+      'أحب مساعدة الناس صحياً بشكل مباشر.',
+      'ألتزم بالبروتوكولات الصحية بدقة.',
+      'أتواصل مهنياً مع المرضى والفِرق'
+    ]},
+    {key:'nursing', title:'تمريض/قابلة', items:[
+      'أستطيع تقديم رعاية مباشرة لساعات طويلة.',
+      'أتحمل ضغط العمل والدقة العالية.',
+      'أشعر بالرضا عند العناية بالآخرين.'
+    ]},
+    {key:'biz', title:'إدارة/اقتصاد/تسويق/محاسبة/تمويل', items:[
+      'أحب تحليل الأسواق واتخاذ قرارات أعمال.',
+      'أميل للقيادة وريادة المشاريع.',
+      'أتعامل براحة مع البيانات المالية.'
+    ]},
+    {key:'law_sharia', title:'شريعة وقانون', items:[
+      'أحب دراسة القوانين/الأحكام وتحليل النصوص.',
+      'أبني حججاً منطقية وأقنع بها.',
+      'الالتزام بالنظام والعدالة مهم لي.'
+    ]},
+    {key:'islamic', title:'أصول دين/دعوة وإعلام', items:[
+      'أهتم بالعلوم الشرعية والتفسير والحديث.',
+      'أحب توصيل رسالة هادفة للمجتمع.',
+      'ألتزم بالقيم وأريد أثراً إيجابياً.'
+    ]},
+    {key:'media', title:'إعلام/صحافة/علاقات عامة/رقمي', items:[
+      'أحب صناعة المحتوى والسرد القصصي.',
+      'أجيد التواصل وبناء الرسائل للجمهور.',
+      'أميل للأدوات الرقمية والإعلام الجديد.'
+    ]},
+    {key:'lang', title:'لغات/ترجمة (عربي/إنجليزي)', items:[
+      'أستمتع باللغات وصياغة النصوص.',
+      'أحب الترجمة بدقة وسلاسة.',
+      'التدقيق اللغوي والأسلوب يهمني.'
+    ]},
+    {key:'edu', title:'تربية وتعليم', items:[
+      'أحب الشرح وتبسيط المفاهيم.',
+      'أدير صفاً وأنمّي دافعية المتعلمين.',
+      'أصمم أنشطة تعليمية متنوعة.'
+    ]},
+    {key:'social', title:'خدمة اجتماعية/مجتمع', items:[
+      'أساند الفئات المحتاجة وأرشدهم.',
+      'أجيد الاستماع والتعاطف.',
+      'الأثر المجتمعي المباشر مهم لي.'
+    ]},
+    {key:'hist_geo_arc', title:'تاريخ/جغرافيا/آثار', items:[
+      'أحب دراسة التاريخ وتحليل الأحداث.',
+      'أهتم بالجغرافيا ونظم المعلومات الجغرافية.',
+      'يناسبني البحث الميداني.'
+    ]},
+  ];
+  // مسطّح: 60 بند
+  const ITEMS = DOMAINS.flatMap(d=>d.items.map(t=>({t,key:d.key})));
+  const TOTAL = ITEMS.length;
+
+  /* =========================
+     2) عناصر الواجهة
+     ========================= */
+     
+  const intro   = document.getElementById('intro');
+  const btnReady= document.getElementById('btnReady');
+
+  const chatUI  = document.getElementById('chatUI');
+  const chat    = document.getElementById('chat');
+  const choices = document.getElementById('choices');
+  const typing  = document.getElementById('typing');
+  const btnBack = document.getElementById('btnBack');
+  const btnFinish=document.getElementById('btnFinish');
+  const fill    = document.getElementById('fill');
+  const progTxt = document.getElementById('progTxt');
+
+  const results = document.getElementById('results');
+  const summary = document.getElementById('summary');
+  const cards   = document.getElementById('cards');
+  const btnRestart = document.getElementById('btnRestart');
+
+  /* =========================
+     3) حالة الجلسة
+     ========================= */
+  let idx = 0;                  // فهرس السؤال الحالي
+  const responses = {};         // index -> 1..5
+  // جمع معلومات موجزة عن الطالب قبل الأسئلة (تؤثر على التوصيات)
+  const profile = { branch: null, tawjihi: null };
+
+  /* =========================
+     4) أدوات عرض المحادثة
+     ========================= */
+  function scrollChat(){ chat.scrollTop = chat.scrollHeight; }
+  function addBot(text){
+    // try to group with previous bot message when recent
+    const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    const last = chat.lastElementChild;
+    if(last && last.classList.contains('row') && last.classList.contains('bot')){
+      // append as a following bubble for grouped look
+      const bubble = document.createElement('div'); bubble.className='bubble';
+      bubble.innerHTML = `${text}<span class="meta"><span class="timestamp">${time}</span></span>`;
+      last.appendChild(bubble);
+      animateIn(bubble);
+      scrollChat();
+      return;
+    }
+    const row = document.createElement('div'); row.className='row bot';
+    row.innerHTML = `<div class="avatar" aria-hidden>🤖</div><div class="bubble">${text}<span class="meta"><span class="timestamp">${time}</span></span></div>`;
+    chat.appendChild(row);
+    animateIn(row);
+    scrollChat();
+  }
+  function addUser(text){
+    const row = document.createElement('div'); row.className='row user';
+    const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    row.innerHTML = `<div class="bubble">${text}<span class="meta"><span class="timestamp">${time}</span></span></div>`;
+    chat.appendChild(row);
+    animateIn(row);
+    scrollChat();
+  }
+
+  function showTypingRow(show){
+    // insert a typing-row element into chat for realism
+    let tr = chat.querySelector('.typing-row');
+    if(show){
+      if(!tr){
+        tr = document.createElement('div'); tr.className='row bot typing-row';
+        tr.innerHTML = `<div class="avatar">🤖</div><div class="bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+        chat.appendChild(tr);
+        scrollChat();
+      }
+      // add pulse to the last avatar (the bot avatar)
+      const avs = chat.querySelectorAll('.row.bot .avatar'); if(avs.length) avs[avs.length-1].classList.add('pulse');
+      try{ if(window.__setBotStatus) window.__setBotStatus('يكتب...'); }catch(e){}
+    } else {
+      if(tr) tr.remove();
+      // remove pulse from any bot avatars
+      const avs2 = chat.querySelectorAll('.row.bot .avatar.pulse'); avs2.forEach(x=>x.classList.remove('pulse'));
+      try{ if(window.__setBotStatus) window.__setBotStatus('متصل'); }catch(e){}
+    }
+  }
+
+  function animateIn(el){
+    try{
+      if(window.gsap && typeof window.gsap.from === 'function'){
+        window.gsap.from(el, {y:8,opacity:0,duration:0.36,ease:'power2.out'});
+      } else {
+        // fallback: add slight opacity transition
+        el.style.transition = 'opacity .28s, transform .28s';
+        el.style.opacity = '0'; el.style.transform = 'translateY(8px)';
+        requestAnimationFrame(()=>{ el.style.opacity='1'; el.style.transform='none'; });
+      }
+    }catch(e){/* ignore animation errors */}
+  }
+  function showTyping(show){ typing.style.display = show ? 'flex' : 'none'; }
+
+  function updateProgress(){
+    const answered = Object.keys(responses).length;
+    const pct = Math.round(answered / TOTAL * 100);
+    fill.style.width = pct + '%';
+    progTxt.textContent = `تمت الإجابة على ${answered}/${TOTAL} (${pct}٪)`;
+  }
+
+  function setChoicesEnabled(enabled){
+    const btns = Array.from(choices.querySelectorAll('.choice'));
+    btns.forEach(b=>{ b.disabled = !enabled; });
+  }
+
+  function renderChoices(){
+    choices.innerHTML = '';
+    const labels = ['1 لا ينطبق','2 ينطبق قليلاً','3 محايد','4 ينطبق','5 ينطبق جدّاً'];
+    labels.forEach((lbl, i)=>{
+      const b = document.createElement('button');
+      b.className='choice'; b.textContent=lbl; b.setAttribute('role','button');
+      b.setAttribute('aria-pressed','false');
+      b.onclick = ()=>{ choose(i); };
+      choices.appendChild(b);
+    });
+    // keyboard support: 1..5 to choose
+    function onKey(e){
+      if(document.activeElement && document.activeElement.tagName==='INPUT') return;
+      const k = e.key;
+      if(/[1-5]/.test(k)){
+        const n = parseInt(k,10)-1;
+        choose(n);
+      }
+    }
+    function choose(i){
+      // disable while typing
+      if(typing.style.display !== 'none') return;
+      const btns = Array.from(choices.querySelectorAll('.choice'));
+      const b = btns[i]; if(!b) return;
+      btns.forEach(x=>x.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true');
+      const val = i+1;
+      responses[idx] = val;
+      addUser(labels[i]);
+      idx++;
+      updateProgress();
+      window.removeEventListener('keydown', onKey);
+      if(idx < TOTAL) {
+        nextQuestion();
+      } else {
+        endQuestions();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    btnBack.style.display = idx>0 ? 'inline-block' : 'none';
+  }
+
+  // --- profile collection UI: branch (أدبي/علمي) + تقدير التوجيهي ---
+  function showProfileForm(){
+    choices.innerHTML = '';
+    // extended branch list per user request
+    const branches = [
+      {id:'sci', label:'الفرع العلمي'},
+      {id:'arts', label:'الفرع الأدبي'},
+      {id:'sharia', label:'الفرع الشرعي'},
+      {id:'biz', label:'الفرع التجاري (الإدارة والاقتصاد)'},
+      {id:'industrial', label:'الفرع الصناعي'},
+      {id:'it', label:'فرع تكنولوجيا المعلومات (IT)'},
+      {id:'agri', label:'الفرع الزراعي'},
+      {id:'hotel', label:'الفرع الفندقي والاقتصاد المنزلي'}
+    ];
+    const grid = document.createElement('div');
+    grid.style.display = 'flex'; grid.style.flexWrap = 'wrap'; grid.style.gap = '10px'; grid.style.justifyContent = 'center';
+    branches.forEach(b=>{
+      const btn = document.createElement('button'); btn.className='choice'; btn.textContent = b.label; btn.style.minWidth='160px';
+      btn.onclick = ()=>{
+        profile.branch = b.id;
+        addUser(b.label);
+        // then ask for tawjihi grade
+        renderTawjihiInput();
+      };
+      grid.appendChild(btn);
+    });
+    choices.appendChild(grid);
+    // helper: render numeric input for Tawjihi
+    function renderTawjihiInput(){
+      choices.innerHTML = '';
+      const wrap = document.createElement('div'); wrap.style.display='flex'; wrap.style.flexDirection='column'; wrap.style.alignItems='center'; wrap.style.gap='8px';
+      const label = document.createElement('div'); label.textContent = 'أدخل معدل التوجيهي (مثال: 85)'; label.className='muted';
+      const input = document.createElement('input'); input.type='number'; input.min='0'; input.max='100'; input.style.padding='8px 10px'; input.style.borderRadius='8px'; input.style.border='1px solid #e6f3ed'; input.style.width='160px';
+      const ok = document.createElement('button'); ok.className='choice'; ok.textContent='حفظ ومتابعة';
+      ok.onclick = ()=>{
+        const v = parseFloat(input.value);
+        profile.tawjihi = Number.isFinite(v) ? v : null;
+        addUser(profile.tawjihi ? `${profile.tawjihi}` : 'لم أحدد');
+        choices.innerHTML='';
+        updateProgress();
+        askQuestion();
+      };
+      wrap.appendChild(label); wrap.appendChild(input); wrap.appendChild(ok);
+      choices.appendChild(wrap);
+      input.focus();
+    }
+  }
+
+  function askQuestion(){
+    const q = ITEMS[idx];
+  // bot 'typing' then show question
+  showTypingRow(true); setChoicesEnabled(false);
+  setTimeout(()=>{
+      showTyping(false);
+    showTypingRow(false);
+    addBot(`سؤال ${idx+1} من ${TOTAL}: ${q.t}`);
+      renderChoices();
+      setChoicesEnabled(true);
+    }, 420 + Math.min(900, ITEMS[idx].t.length*8));
+  }
+
+  function nextQuestion(){
+  choices.innerHTML = ''; showTyping(true); setChoicesEnabled(false);
+  setTimeout(()=>{ showTypingRow(false); askQuestion(); }, 420);
+  }
+
+  function startChat(){
+    intro.style.display='none';
+  chatUI.style.display='grid';
+  chatUI.classList.add('chat-panel');
+    chat.innerHTML=''; choices.innerHTML='';
+    // Start greeting and ask for readiness before first question
+    showTypingRow(true);
+    setTimeout(()=>{ showTypingRow(false); addBot('مرحبًا — يسعدني مساعدتك في استكشاف التخصصات المتاحة.'); }, 260);
+    setTimeout(()=>{
+      // show the readiness prompt (separated function so it can be 'retracted')
+      showReadyPrompt();
+    }, 700);
+  }
+
+  // show the ready / not now prompt; can be called again by a 'تراجع' button
+  function showReadyPrompt(){
+    addBot('الاختبار يتكوّن من 60 سؤالًا قصيرة وسريعة. هل تود بدء الاختبار الآن؟');
+    choices.innerHTML = '';
+    const yes = document.createElement('button'); yes.className='choice'; yes.textContent='نعم، ابدأ الآن';
+    const no = document.createElement('button'); no.className='choice'; no.textContent='لا، لاحقًا';
+    yes.onclick = ()=>{ addUser('نعم، ابدأ الآن'); choices.innerHTML=''; showProfileForm(); };
+    no.onclick = ()=>{
+      addUser('لا، لاحقًا');
+      addBot('حسنًا. عد متى شئت، وسأكون هنا لمساعدتك.');
+      // offer a retract button so user can go back to the readiness prompt
+      choices.innerHTML = '';
+      const back = document.createElement('button'); back.className='choice'; back.textContent='تراجع';
+      const keep = document.createElement('button'); keep.className='choice'; keep.textContent='لا أريد الآن';
+      back.onclick = ()=>{ choices.innerHTML=''; showReadyPrompt(); };
+      keep.onclick = ()=>{ choices.innerHTML=''; };
+      choices.appendChild(back); choices.appendChild(keep);
+    };
+    choices.appendChild(yes); choices.appendChild(no);
+  }
+
+  btnReady.onclick = startChat;
+
+  btnBack.onclick = ()=>{
+    if(idx>0){
+      delete responses[idx-1];
+      idx = idx-1;
+      chat.innerHTML='';
+      addBot('حسناً، رجعناك خطوة لتعديل الإجابة السابقة.');
+      updateProgress();
+      askQuestion();
+    }
+  };
+
+  function endQuestions(){
+    showTypingRow(true); setChoicesEnabled(false);
+    setTimeout(()=>{
+      showTypingRow(false);
+      addBot('أحسنت! أنهيت جميع الأسئلة. جاهز تشوف توصياتي؟');
+      btnFinish.style.display='inline-block';
+      choices.innerHTML='';
+    }, 500);
+  }
+
+  /* =========================
+     5) حساب الدرجات والنتائج
+     ========================= */
+  // برامج IUG وربطها بالمحاور (أوزان تقريبية واقعية)
+  const MAJORS = [
+    // IT & CS
+    {id:'ai_cs',    name:'علوم الحاسوب/ذكاء اصطناعي وعلوم البيانات', dom:{ai_cs:1.0,soft_web:0.8,sci_math:0.6}, note:'أساس رياضيات/منطق قوي وتعلم ذاتي مستمر.'},
+    {id:'sw',       name:'تطوير البرمجيات/الويب والموبايل',         dom:{soft_web:1.0,ai_cs:0.6,it_media:0.5}, note:'مشاريع طويلة وتعاون فريق برمجي.'},
+    {id:'it',       name:'تكنولوجيا المعلومات/وسائط متعددة',        dom:{it_media:1.0,soft_web:0.5,media:0.4}, note:'تعامل عملي مع الأنظمة والمستخدمين والمحتوى.'},
+
+    // هندسة
+    {id:'civil',    name:'الهندسة المدنية',                           dom:{civil:1.0,sci_math:0.5}, note:'ميداني + حسابات ومعايير سلامة.'},
+    {id:'arch',     name:'الهندسة المعمارية/تصميم عمراني',           dom:{arch:1.0,civil:0.6,media:0.4}, note:'ذائقة بصرية وفهم تقني.'},
+    {id:'me_ind',   name:'الهندسة الميكانيكية/الصناعية',             dom:{me_ind:1.0,sci_math:0.5}, note:'تفكير نظامي وتطبيق عملي وتحسين كفاءة.'},
+    {id:'ee',       name:'الهندسة الكهربائية/الاتصالات',             dom:{ee_comm:1.0,sci_math:0.6}, note:'رياضيات/فيزياء وإلكترونيات وقياسات.'},
+
+    // علوم
+    {id:'math_phys',name:'رياضيات/فيزياء',                           dom:{sci_math:1.0,ai_cs:0.5}, note:'تجريد وتحليل عاليان.'},
+    {id:'chem_bio_biotech',name:'كيمياء/أحياء/تقنية حيوية',          dom:{sci_chem_bio:1.0,health:0.4}, note:'دقة مخبرية واهتمام بالبحث.'},
+    {id:'earth_marine',name:'علوم الأرض والبحار والبيئة',             dom:{earth_marine:1.0}, note:'عمل ميداني وتحليل بيئي.'},
+
+    // صحية وتمريض
+    {id:'health',   name:'علوم صحية (علاج/تصوير/تغذية)',            dom:{health:1.0,sci_chem_bio:0.5}, note:'تواصل إنساني وبروتوكولات واضحة.'},
+    {id:'nursing',  name:'التمريض/القابلة',                           dom:{nursing:1.0,health:0.6}, note:'رعاية مباشرة وتحمل ضغط.'},
+    {id:'med',      name:'الطب البشري',                                dom:{health:0.8,sci_chem_bio:0.8}, note:'أساس علمي قوي والتزام طويل.'},
+
+    // اقتصاد وإدارة
+    {id:'biz',      name:'إدارة/اقتصاد/تسويق/محاسبة/تمويل',         dom:{biz:1.0,soft_web:0.3,ai_cs:0.3}, note:'أسواق وقيادة وتحليل مالي.'},
+
+    // شريعة وقانون وأصول دين
+    {id:'law_sharia',name:'الشريعة والقانون',                          dom:{law_sharia:1.0}, note:'التزام أنظمة وبناء حجج.'},
+    {id:'islamic',  name:'أصول دين/دعوة وإعلام',                      dom:{islamic:1.0,media:0.4}, note:'علوم شرعية وتأثير مجتمعي.'},
+
+    // آداب/إعلام/لغات
+    {id:'media',    name:'إعلام/صحافة/علاقات عامة/رقمي',             dom:{media:1.0,it_media:0.4}, note:'سرد قصصي وتواصل رقمي.'},
+    {id:'lang',     name:'لغة عربية/إنجليزية/ترجمة/تدقيق لغوي',      dom:{lang:1.0}, note:'شغف باللغة ودقة الأسلوب.'},
+
+    // تربية وخدمة اجتماعية وتاريخ/جغرافيا/آثار
+    {id:'edu',      name:'تربية/تعليم (أساسي/مواد)',                dom:{edu:1.0,lang:0.3}, note:'تبسيط مفاهيم وإدارة صف.'},
+    {id:'social',   name:'الخدمة الاجتماعية',                         dom:{social:1.0}, note:'تعاطف وإرشاد مجتمعي.'},
+    {id:'hist_geo_arc',name:'تاريخ/جغرافيا/آثار',                     dom:{hist_geo_arc:1.0}, note:'بحث وتحليل وأعمال ميدانية.'},
+  ];
+
+  function computeNormScores(){
+    const sums = {}; const counts = {};
+    DOMAINS.forEach(d=>{ sums[d.key]=0; counts[d.key]=d.items.length; });
+    ITEMS.forEach((item,i)=>{ const v = responses[i]||0; sums[item.key]+=v; });
+    const norm = {};
+    for(const k in sums){ norm[k] = sums[k] / (counts[k]*5); } // 0..1
+    return norm;
+  }
+
+  function rankMajors(norm){
+    const ranked = MAJORS.map(m=>{
+      let s=0;
+      for(const k in m.dom){ s += (m.dom[k]||0) * (norm[k]||0); }
+      // قواعد واقعية إضافية:
+      // استخدم معلومات الملف الشخصي للتعديل على النتيجة (تأثير واضح لأن المستخدم طلب ذلك)
+      const branch = profile.branch;
+      if(branch){
+        // معاملة عامة: دفعات/تخفيضات معقولة حسب الفرع
+        if(branch === 'arts'){
+          if(['med','ee','me_ind','civil','math_phys','ai_cs'].includes(m.id)) s -= 0.09;
+          if(['lang','media','edu','hist_geo_arc','social'].includes(m.id)) s += 0.06;
+        }
+        if(branch === 'sci'){
+          if(['med','ee','me_ind','civil','math_phys','chem_bio_biotech','ai_cs'].includes(m.id)) s += 0.08;
+        }
+        if(branch === 'sharia'){
+          if(['law_sharia','islamic'].includes(m.id)) s += 0.10;
+        }
+        if(branch === 'biz'){
+          if(['biz','media','lang'].includes(m.id)) s += 0.08;
+        }
+        if(branch === 'industrial'){
+          if(['me_ind','ee','civil'].includes(m.id)) s += 0.09;
+        }
+        if(branch === 'it'){
+          if(['ai_cs','soft_web','it'].includes(m.id) || ['it'].includes(m.id)) s += 0.12;
+          if(['it','sw','ai_cs'].includes(m.id)) s += 0.02; // small extra for related
+        }
+        if(branch === 'agri'){
+          if(['earth_marine','chem_bio_biotech','health'].includes(m.id)) s += 0.07;
+        }
+        if(branch === 'hotel'){
+          if(['biz','social','media'].includes(m.id)) s += 0.06;
+        }
+      }
+      if(m.id==='med' && !(norm.health>0.7 && norm.sci_chem_bio>0.7)) s -= 0.15;
+      if(['ee','me_ind','civil'].includes(m.id) && norm.sci_math<0.45) s -= 0.08;
+      if(m.id==='arch' && norm.arch<0.5) s -= 0.08;
+      if(m.id==='ai_cs' && norm.ai_cs<0.5) s -= 0.08;
+      // تعديل أكبر حسب تقدير التوجيهي لأن المستخدم أكد أهميته
+      if(profile.tawjihi){
+        const g = profile.tawjihi;
+        if(g >= 95) s += 0.08;
+        else if(g >= 90) s += 0.06;
+        else if(g >= 80) s += 0.03;
+        else if(g < 60) s -= 0.06;
+      }
+      return {...m, score: Math.max(0, s)};
+    }).sort((a,b)=>b.score-a.score);
+    return ranked;
+  }
+
+  function topDomainStr(norm){
+    const top = Object.entries(norm).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    const label = k => (DOMAINS.find(d=>d.key===k)?.title || k);
+    return top.map(([k,v])=>`${label(k)} (${Math.round(v*100)}٪)`).join(' • ');
+  }
+
+  function showResults(){
+    const answered = Object.keys(responses).length;
+  if(answered < TOTAL){ alert('الرجاء إكمال جميع الأسئلة قبل عرض التوصيات.'); return; }
+    const norm = computeNormScores();
+    const ranked = rankMajors(norm);
+    // ملخص
+  summary.textContent = `أبرز مجالات ملاءتك: ${topDomainStr(norm)}. فيما يلي ترشيحات مبدئية لبرامج الجامعة الإسلامية بغزة:`;
+    // بطاقات
+    cards.innerHTML='';
+    ranked.slice(0,8).forEach(m=>{
+      const topTags = Object.keys(m.dom).map(k=>DOMAINS.find(d=>d.key===k)?.title || k).slice(0,3).join('، ');
+      const div = document.createElement('div');
+      div.className='card';
+        div.innerHTML = `
+        <div style="font-weight:700">${m.name}</div>
+        <div class="muted">محاور بارزة: ${topTags}</div>
+        <div class="tag">مدى الملاءمة: ${Math.round(m.score*100)}%</div>
+        <div style="margin-top:6px">${m.note}</div>
+        ${m.id==='med' ? '<div class="muted" style="margin-top:6px">ملاحظة: هذا التخصص يتطلب تحصيلًا أكاديميًا قويًا ومدة دراسة طويلة.</div>' : ''}
+      `;
+      cards.appendChild(div);
+    });
+    chatUI.style.display='none';
+    // ensure results visible and not covered by the fixed status bar
+    results.style.display='block';
+    // compute offset caused by the status bar (if present)
+    (function ensureVisible(){
+      try{
+        const statusBar = document.getElementById('status-bar');
+        const placeholder = document.getElementById('status-bar-placeholder');
+        let offset = 0;
+        if (statusBar){
+          // Use its offsetHeight; if it's hidden the placeholder may carry the height
+          offset = statusBar.offsetHeight || (placeholder ? placeholder.offsetHeight : 0);
+        } else if (placeholder){
+          offset = placeholder.offsetHeight || 0;
+        }
+        // Add a small margin so the content isn't flush under the bar
+        const margin = 12;
+        results.style.position = results.style.position || 'relative';
+        results.style.zIndex = results.style.zIndex || '1100';
+        results.style.scrollMarginTop = (offset + margin) + 'px';
+        const top = results.getBoundingClientRect().top + window.scrollY - offset - margin;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      }catch(e){ window.scrollTo({top:0,behavior:'smooth'}); }
+    })();
+  }
+
+  btnFinish.onclick = showResults;
+  btnRestart.onclick = ()=>{
+    idx=0; for(const k in responses) delete responses[k];
+    results.style.display='none';
+    // رجوع للمقدمة
+    intro.style.display='grid';
+    fill.style.width='0%'; progTxt.textContent='';
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+  
+btnRestart.onclick = ()=>{
+  idx=0; for(const k in responses) delete responses[k];
+  results.style.display='none';
+  intro.style.display='grid';
+  chatUI.classList.remove('chat-panel');
+  fill.style.width='0%'; progTxt.textContent='';
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+  /* ====== مؤثرات صوتية بسيطة ====== */
+const ctx = new (window.AudioContext||window.webkitAudioContext)();
+window.uiMuted = localStorage.getItem('iug-ui-muted') === '1';
+function beep({freq=500,dur=0.1,type='sine'}={}) {
+  if (window.uiMuted) return; // respect mute
+  if(!ctx) return;
+  const o=ctx.createOscillator(), g=ctx.createGain();
+  o.type=type; o.frequency.value=freq;
+  o.connect(g); g.connect(ctx.destination);
+  g.gain.value=0.05;
+  o.start(); o.stop(ctx.currentTime+dur);
+}
+
+/* أصوات */
+const sfx = {
+  msg: ()=>beep({freq:520,dur:.1,type:'triangle'}),
+  click: ()=>beep({freq:420,dur:.08,type:'square'}),
+  success: ()=>{ beep({freq:500}); setTimeout(()=>beep({freq:760}),80); }
+};
+
+/* ربط الأصوات مع الأحداث */
+const origAddBot = addBot;
+addBot = function(txt){
+  origAddBot(txt);
+  sfx.msg();
+};
+
+const origAddUser = addUser;
+addUser = function(txt){
+  origAddUser(txt);
+  sfx.click();
+};
+
+const origShowResults = showResults;
+showResults = function(){
+  origShowResults();
+  sfx.success();
+};
+
+// UI mute toggle button
+document.addEventListener('DOMContentLoaded', ()=>{
+  const toggle = document.getElementById('ui-sound-toggle');
+    function updateToggle(){
+    if (!toggle) return;
+    toggle.setAttribute('aria-pressed', window.uiMuted ? 'true' : 'false');
+    toggle.textContent = window.uiMuted ? '🔈 مكتوم' : '🔊 تشغيل الأصوات';
+  }
+  updateToggle();
+  toggle.addEventListener('click', ()=>{
+    // resume AudioContext on first interaction
+    try{ if (ctx.state === 'suspended') ctx.resume(); }catch(e){}
+    window.uiMuted = !window.uiMuted;
+    localStorage.setItem('iug-ui-muted', window.uiMuted ? '1' : '0');
+    updateToggle();
+  });
+});
+
+</script>
+
+<script defer="True" src="assets/js/statusBar.js"></script>
+<!-- GSAP for micro-animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+</body>
+</html>
+
+<!-- inline audio fallback (optional element) -->
+<audio id="transition-sound" preload="auto" src="assets/sounds/turning.mp3"></audio>

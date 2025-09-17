@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>شهادة إتمام الرحلة</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&amp;family=Marhey:wght@500&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <audio id="success-audio" preload="auto" src="assets/sounds/nashed.mp3"></audio>
+        <audio id="transition-sound" preload="auto" src="assets/sounds/turning.mp3"></audio>
+    <style>
+        /* هذا هو ملف الـ CSS المعدل والجاهز */
+        :root {
+            --primary-color: #004d40; /* Deep Teal */
+            --secondary-color: #bcaaa4; /* Light Brown/Gold Accent */
+            --text-color: #333;
+            --bg-color: #f9f9f7;
+            --social-facebook: #1877f2;
+            --social-twitter: #1da1f2;
+            --social-linkedin: #0a66c2;
+            --social-whatsapp: #25d366;
+            --social-telegram: #0088cc;
+            --social-instagram: #E1306C;
+        }
+
+        body {
+            font-family: "Cairo", sans-serif;
+            background: var(--bg-color);
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #printable-certificate {
+            width: 800px;
+            background: white;
+            border: 10px solid var(--primary-color);
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            background-image: url('assets/images/logo-watermark.webp');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 400px;
+        }
+
+        .cert-border {
+            border: 2px solid var(--secondary-color);
+            padding: 20px;
+        }
+
+        .cert-header {
+            margin-bottom: 25px;
+        }
+
+        .cert-header img {
+            width: 120px;
+            margin-bottom: 10px;
+        }
+
+        .cert-header h1 {
+            font-family: 'Marhey', cursive;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .cert-header h2 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin: 5px 0;
+        }
+
+        .cert-body .intro-text {
+            font-size: 1.2rem;
+            margin: 20px 0 5px 0;
+        }
+
+        .cert-body .student-name {
+            font-family: 'Marhey', cursive;
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin: 0 0 15px 0;
+        }
+
+        .cert-body .main-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin: 0 auto 30px auto;
+            max-width: 90%;
+        }
+
+        .results-section {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: rgba(240, 240, 240, 0.5);
+            border-radius: 10px;
+        }
+
+        .score-container, .scholarship-container {
+            text-align: center;
+        }
+
+        .results-section p {
+            margin: 0;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .results-section strong {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            display: block;
+            margin-top: 5px;
+        }
+
+        .cert-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 40px;
+        }
+
+        .signature-area, .qr-code-area {
+            text-align: center;
+        }
+
+        /* Ensure QR and its caption stack vertically and do not overlap */
+        .qr-code-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            position: relative;
+        }
+
+        #qrcode {
+            position: relative;
+            z-index: 2; /* make sure QR is above caption */
+            background: #fff; /* ensure white background to prevent text bleed */
+        }
+
+        .qr-code-area p {
+            margin: 0;
+            z-index: 1;
+            position: relative;
+            padding-top: 2px;
+        }
+
+        .signature-area p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive QR container: scale with viewport but cap at 140px */
+        #qrcode {
+            width: min(140px, 45vw);
+            height: auto;
+            display: block;
+            margin: 0 auto 8px auto;
+            border: 2px solid #e6e6e6;
+            padding: 6px;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            box-sizing: border-box;
+        }
+
+        .signature-area .sig-name {
+            font-family: 'Marhey', cursive;
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            margin: 0 0 6px 0;
+        }
+        .signature-area .sig-title {
+            font-size: 0.95rem;
+            color: #444;
+            margin: 0;
+        }
+        .signature-area .sig-date {
+            font-size: 0.82rem;
+            color: #777;
+            margin-top: 6px;
+        }
+
+        /* New professional button layout */
+        .certificate-actions {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .actions-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .certificate-actions button, .certificate-actions a {
+            font-family: 'Cairo', sans-serif;
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            margin: 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .certificate-actions button:hover, .certificate-actions a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .btn-social {
+            color: white;
+        }
+
+        .btn-facebook { background-color: var(--social-facebook); }
+        .btn-twitter { background-color: var(--social-twitter); }
+        .btn-linkedin { background-color: var(--social-linkedin); }
+        .btn-whatsapp { background-color: var(--social-whatsapp); }
+        .btn-telegram { background-color: var(--social-telegram); }
+        .btn-instagram { background-color: var(--social-instagram); }
+        
+        /* Media query for mobile devices */
+        @media (max-width: 600px) {
+            #printable-certificate {
+                width: 95%;
+                padding: 10px;
+            }
+
+            .cert-border {
+                padding: 10px;
+            }
+
+            .cert-header img {
+                width: 70px;
+            }
+            
+            .cert-header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .cert-header h2 {
+                font-size: 0.9rem;
+            }
+
+            .cert-body .intro-text,
+            .cert-body .main-text,
+            .signature-area p,
+            .qr-code-area p {
+                font-size: 0.8rem;
+            }
+            
+            .cert-body .student-name {
+                font-size: 1.5rem;
+            }
+
+            .results-section {
+                flex-direction: column;
+                gap: 10px;
+                padding: 8px;
+            }
+            
+            .results-section strong {
+                font-size: 1.1rem;
+            }
+
+            .cert-footer {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            /* Allow responsive QR sizing (handled by base rule) */
+            #qrcode { max-width: 120px; }
+
+            .qr-code-area { display: flex; justify-content: center; align-items: center; }
+
+            .certificate-actions {
+                flex-direction: column;
+                gap: 15px;
+                width: 100%;
+            }
+
+            .certificate-actions button, .certificate-actions a {
+                font-size: 0.9rem;
+                padding: 10px 20px;
+            }
+            
+            .actions-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media print {
+            body * { visibility: hidden; }
+            #printable-certificate, #printable-certificate * {
+                visibility: visible;
+            }
+            #printable-certificate {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                border: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 20px;
+            }
+            .certificate-actions { display: none; }
+        }
+    </style>
+    <link href="favicon.png" rel="icon" type="image/png"/><link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/></head>
+<body>
+<div id="printable-certificate">
+    <div class="cert-border">
+        <div class="cert-header">
+            <img alt="شعار الجامعة الإسلامية" src="assets/images/logo.webp"/>
+            <h1>الجامعة الإسلامية - غزة</h1>
+            <h2>شهادة إتمام رحلة تعريفية</h2>
+        </div>
+        <div class="cert-body">
+            <p class="intro-text">تشهد عمادة شؤون الطلبة بأن الطالب/ة</p>
+            <h2 class="student-name" id="cert-player-name">[اسم الطالب]</h2>
+            <p class="main-text">قد أتم بنجاح رحلة "رحلتي في الإسلامية" التعريفية الافتراضية، وأظهر معرفة ممتازة بمرافق الجامعة وكلياتها المتنوعة.</p>
+            <div class="results-section">
+                <div class="score-container">
+                    <p>النقاط المكتسبة</p>
+                    <strong id="cert-final-score">0</strong>
+                </div>
+                <div class="scholarship-container">
+                    <p>المنحة المستحقة</p>
+                    <strong id="cert-scholarship-details">---</strong>
+                </div>
+            </div>
+        </div>
+        <div class="cert-footer">
+            <div class="signature-area">
+                <p class="sig-name">الأستاذة الدكتورة ختام يوسف الوصيفي</p>
+                <p class="sig-title"><strong>عميد شؤون الطلبة</strong></p>
+                <p class="sig-date">15/09/2025</p>
+            </div>
+            <div class="qr-code-area">
+                <div id="qrcode"></div>
+                <p>رمز التحقق</p>
+            </div>
+            <div class="signature-area">
+                <p class="sig-name">الأستاذ الدكتور أسعد يوسف أسعد</p>
+                <p class="sig-title"><strong>رئيس الجامعة</strong></p>
+                <p class="sig-date">15/09/2025</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="certificate-actions">
+    <div class="actions-group">
+        <button class="btn-primary" onclick="window.print()">
+            <i class="fa-solid fa-print"></i> طباعة الشهادة
+        </button>
+        <button class="btn-primary" onclick="downloadCertificate()">
+            <i class="fa-solid fa-download"></i> تحميل كصورة
+        </button>
+    </div>
+
+    <div class="actions-group">
+        <!-- Unified share button: uses Web Share API when available, otherwise falls back to copy+WhatsApp share -->
+        <button class="btn-primary" onclick="shareUnified()">
+            <i class="fa-solid fa-share-nodes"></i> مشاركة الشهادة
+        </button>
+    </div>
+
+    <div class="actions-group">
+        <a href="https://t.me/iug2006" target="_blank" class="btn-social btn-telegram">
+            <i class="fa-brands fa-telegram"></i> مجتمع طلاب 2006
+        </a>
+        <a href="https://t.me/Iug2007" target="_blank" class="btn-social btn-telegram">
+            <i class="fa-brands fa-telegram"></i> مجتمع طلاب 2007
+        </a>
+    </div>
+    
+    <div class="actions-group">
+        <a href="index.html" class="btn-secondary">
+            <i class="fa-solid fa-house-chimney-user"></i> العودة للعبة
+        </a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+    function populateCertificateData() {
+        const params = new URLSearchParams(window.location.search);
+        let playerName = params.get("name");
+        let playerScore = parseInt(params.get("score"));
+
+        try {
+            const saved = localStorage.getItem('iugGameProgress');
+            if (saved) {
+                const state = JSON.parse(saved);
+                if (!playerName || playerName.trim() === "") {
+                    if (state.playerName) playerName = state.playerName;
+                    else if (state.name) playerName = state.name;
+                    else if (state.player) playerName = state.player;
+                }
+                if (!Number.isFinite(playerScore)) {
+                    if (typeof state.score === "number") playerScore = state.score;
+                    else if (typeof state.totalScore === "number") playerScore = state.totalScore;
+                    else if (typeof state.points === "number") playerScore = state.points;
+                }
+            }
+        } catch (e) {
+            console.warn("Failed to read game state:", e);
+        }
+
+        if (!playerName || playerName.trim() === "") playerName = "[اسم الطالب]";
+        if (!Number.isFinite(playerScore)) playerScore = 0;
+
+        document.getElementById("cert-player-name").textContent = playerName;
+        document.getElementById("cert-final-score").textContent = playerScore;
+
+        const scholarshipEl = document.getElementById("cert-scholarship-details");
+        let scholarshipPercentage = 0;
+        if (playerScore >= 50) scholarshipPercentage = 50;
+        else if (playerScore > 0) scholarshipPercentage = playerScore;
+        scholarshipEl.textContent =
+            scholarshipPercentage > 0
+                ? `منحة ${scholarshipPercentage}% للفصل الدراسي الأول`
+                : "لم يتم الحصول على منحة";
+
+        const audio = document.getElementById("success-audio");
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(err => console.log("Autoplay blocked:", err));
+        }
+
+        const qrcodeContainer = document.getElementById("qrcode");
+        if (qrcodeContainer) {
+            function renderQR() {
+                qrcodeContainer.innerHTML = '';
+                const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+                // choose 40vw but cap between 90 and 140 px for readability
+                const size = Math.min(140, Math.max(90, Math.floor(vw * 0.4)));
+                try {
+                    new QRCode(qrcodeContainer, {
+                        text: `https://iug.example/certificate?name=${encodeURIComponent(playerName)}&score=${encodeURIComponent(playerScore)}`,
+                        width: size,
+                        height: size,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                } catch (qrErr) {
+                    console.warn('QR generation failed, falling back to text.', qrErr);
+                    qrcodeContainer.textContent = `رمز: ${playerName} | نقاط: ${playerScore}`;
+                }
+            }
+            renderQR();
+            // regenerate on orientation change / resize for mobile
+            let qrResizeTimer = null;
+            window.addEventListener('resize', () => {
+                clearTimeout(qrResizeTimer);
+                qrResizeTimer = setTimeout(renderQR, 260);
+            });
+        }
+    }
+
+        async function shareUnified() {
+            const certificate = document.getElementById('printable-certificate');
+            const title = "أنا أنهيت رحلة الجامعة الإسلامية الافتراضية بنجاح!";
+            const text = `أنا "${document.getElementById("cert-player-name").textContent}" وقد أنهيت رحلة الجامعة الإسلامية الافتراضية بنجاح! حصلت على ${document.getElementById("cert-final-score").textContent} نقطة!`;
+            const url = window.location.href;
+
+            // Try Web Share API with image file if available
+            if (navigator.canShare) {
+                try {
+                    const canvas = await html2canvas(certificate, { scale: 2, useCORS: true, logging: false });
+                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                    const file = new File([blob], 'شهادة-إتمام-الرحلة.png', { type: 'image/png' });
+
+                    if (navigator.canShare({ files: [file] })) {
+                        await navigator.share({ files: [file], title, text, url });
+                        return;
+                    }
+                } catch (e) {
+                    // fall through to text/url fallback
+                    console.warn('Web Share with file failed:', e);
+                }
+            }
+
+            // Fallback: copy URL to clipboard and open WhatsApp share with text
+            try {
+                await navigator.clipboard.writeText(url);
+                // open WhatsApp share as convenient fallback for mobile/desktop
+                const waText = `${text} ${url}`;
+                const waUrl = `https://wa.me/?text=${encodeURIComponent(waText)}`;
+                window.open(waUrl, '_blank');
+                alert('تم نسخ رابط الشهادة إلى الحافظة. يمكنك لصقه ومشاركته.');
+            } catch (copyErr) {
+                // final fallback: open an email compose window
+                console.warn('Clipboard write failed:', copyErr);
+                window.open(`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(text + '\n' + url)}`);
+            }
+        }
+
+    async function shareCertificate(platform) {
+        const certificate = document.getElementById('printable-certificate');
+        
+        const title = "أنا أنهيت رحلة الجامعة الإسلامية الافتراضية بنجاح!";
+        const text = `أنا "${document.getElementById("cert-player-name").textContent}" وقد أنهيت رحلة الجامعة الإسلامية الافتراضية بنجاح! حصلت على ${document.getElementById("cert-final-score").textContent} نقطة!`;
+        const url = window.location.href;
+
+        // Use the native Web Share API which works best on mobile devices
+        if (navigator.canShare) {
+            try {
+                const canvas = await html2canvas(certificate, { scale: 2, useCORS: true, logging: true });
+                const imageBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                const file = new File([imageBlob], "شهادة-إتمام-الرحلة.png", { type: "image/png" });
+
+                if (navigator.canShare({ files: [file], title: title, text: text, url: url })) {
+                    await navigator.share({
+                        files: [file],
+                        title: title,
+                        text: text,
+                        url: url,
+                    });
+                    console.log("Certificate shared successfully!");
+                    return; // Exit after successful share
+                }
+            } catch (error) {
+                console.error("Error sharing via Web Share API:", error);
+                // Fallback will be triggered below if Web Share API fails
+            }
+        }
+
+        // Fallback for browsers/devices that don't support the Web Share API or for specific platforms.
+        // This fallback only shares the text and URL, as image sharing from the web is not universally supported.
+        switch (platform) {
+            case 'facebook':
+                window.open(`https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(text)}&u=${encodeURIComponent(url)}`, '_blank');
+                break;
+            case 'twitter':
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+                break;
+            case 'whatsapp':
+                window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`, '_blank');
+                break;
+            case 'linkedin':
+                window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(text)}`, '_blank');
+                break;
+            case 'instagram':
+                // For Instagram, the Web Share API is the only effective method.
+                // We've already tried it above. If it fails, we simply do nothing
+                // to avoid showing an error message, as a direct share is not possible.
+                console.log("Direct sharing to Instagram is not supported on this device.");
+                break;
+        }
+    }
+
+    function downloadCertificate() {
+        const certificate = document.getElementById('printable-certificate');
+        html2canvas(certificate, { scale: 2, useCORS: true, logging: true }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'شهادة-إتمام-الرحلة.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    }
+
+    window.addEventListener('DOMContentLoaded', populateCertificateData);
+</script>
+</body>
+</html>
