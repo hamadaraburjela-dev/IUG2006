@@ -45,19 +45,6 @@
   .choices{
     display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:12px 8px;margin-top:14px;justify-items:center;align-items:center
   }
-  /* layout variations for choices */
-  .choices--scale{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;padding:10px 18px}
-  .choices--scale .choice{flex:0 1 auto;min-width:110px;max-width:180px}
-  .choices--stack{display:flex;flex-direction:column;gap:12px;align-items:center;padding:8px 18px}
-  .choices--grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-  /* when inside the chat panel make choices a centered, wrapping pill-list */
-  /* center the choices but leave horizontal padding so they don't collide with the bot avatar */
-  .chat-wrap.chat-panel .choices{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;padding:8px 56px;margin-top:6px;z-index:1000;max-width:calc(100% - 24px);margin-inline:auto}
-  .chat-wrap.chat-panel .choices .choice{display:inline-flex;justify-content:center;align-items:center;flex:0 1 calc(50% - 12px);min-width:120px;max-width:46%;padding:10px 16px;border-radius:18px;background:linear-gradient(180deg,#fff,#f6fff6);border:1px solid #e8f4ea;box-shadow:0 8px 20px rgba(6,60,40,0.04);text-align:center;white-space:normal}
-  /* larger screens: up to 3 columns */
-  @media (min-width:560px){
-    .chat-wrap.chat-panel .choices .choice{flex:0 1 calc(33.33% - 12px);min-width:140px}
-  }
   .choice{
     padding:12px 18px;border-radius:14px;background:linear-gradient(180deg,#ffffff,#f7fff8);border:1px solid #e6f3ed;cursor:pointer;text-align:center;transition:transform .16s cubic-bezier(.2,.9,.2,1),box-shadow .16s,color .12s,background .12s;
     min-width:120px;max-width:260px;box-shadow:0 6px 18px rgba(6,60,40,0.04);font-weight:600;color:var(--iug-green);
@@ -109,25 +96,8 @@
   /* Phone-like centered chat panel */
   .chat-wrap.chat-panel{max-width:420px;margin:28px auto;background:linear-gradient(180deg,#f9fffb,#ffffff);border-radius:18px;padding:8px;box-shadow:0 20px 50px rgba(10,80,40,0.06)}
   .chat-wrap.chat-panel .progress{padding:6px 6px 0}
-  /* make the chat panel position relative so we can place the controls inside it */
-  .chat-wrap.chat-panel{position:relative}
-  .chat-wrap.chat-panel .chat{height:64vh;min-height:420px;max-height:72vh;padding:18px;padding-bottom:110px;overflow:auto;border-radius:12px}
-  /* place controls visually inside the panel at its bottom */
-  .chat-wrap.chat-panel .controls{position:absolute;left:12px;right:12px;bottom:12px;padding-top:6px}
-
-  /* show a subtle input-placeholder bar when there are no choices (gives visual anchor) */
-  .chat-wrap.chat-panel:not(.has-choices) .controls::before{
-    content:'';display:block;height:46px;border-radius:999px;background:linear-gradient(180deg,#ffffff,#f7fff8);border:1px solid #eef7ee;box-shadow:0 8px 20px rgba(6,60,40,0.04);margin:6px 6px 0}
-  .chat-wrap.chat-panel:not(.has-choices) .controls{padding-top:2px}
-
-  /* bottom-sheet choices (hidden by default, shown when .has-choices is set) */
-  .chat-wrap.chat-panel .choices{position:absolute;left:14px;right:14px;bottom:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:14px;border-radius:16px;background:#ffffff;border:1px solid rgba(10,107,58,0.04);box-shadow:0 28px 50px rgba(6,60,40,0.08);z-index:1400;transform:translateY(26px);opacity:0;pointer-events:none;transition:transform .28s cubic-bezier(.2,.9,.2,1),opacity .22s}
-  .chat-wrap.chat-panel.has-choices .choices{transform:none;opacity:1;pointer-events:auto}
-  .chat-wrap.chat-panel .choices::before{content:'';display:block;width:56px;height:6px;border-radius:6px;background:linear-gradient(90deg,#eef7ee,#ffffff);margin:0 auto 8px}
-  .chat-wrap.chat-panel .choices .choice{display:inline-flex;justify-content:center;align-items:center;padding:12px 18px;border-radius:999px;background:#f7fff8;border:1px solid rgba(7,120,64,0.06);color:var(--iug-green-700);font-weight:700;font-size:1rem;box-shadow:0 12px 26px rgba(6,60,40,0.06);white-space:normal}
-  .chat-wrap.chat-panel .choices .choice:hover{transform:translateY(-4px);box-shadow:0 18px 36px rgba(6,60,40,0.08)}
-  .chat-wrap.chat-panel .choices .choice:focus{outline:3px solid rgba(7,120,64,0.12);outline-offset:3px}
-  .chat-wrap.chat-panel.has-choices .chat{padding-bottom:220px}
+  .chat-wrap.chat-panel .chat{height:64vh;min-height:420px;max-height:72vh;padding:18px;overflow:auto;border-radius:12px}
+  .chat-wrap.chat-panel .controls{position:relative;padding-top:8px}
 
   /* sticky input / quick replies bar */
   .input-bar{position:sticky;bottom:0;background:transparent;padding:12px 4px 8px;margin-top:6px;display:flex;justify-content:center;align-items:center}
@@ -160,18 +130,8 @@
   .dot:nth-child(3){animation-delay:.24s}
   @keyframes blink{0%{transform:translateY(0);opacity:.35}50%{transform:translateY(-4px);opacity:1}100%{transform:translateY(0);opacity:.35}}
 
-  /* fallback for non-chat-panel layout */
   .controls{position:sticky;bottom:0;background:transparent;padding-top:6px}
-  /* Actions bar: visually embedded into the chat panel as a rounded footer */
-  .actions{display:flex;justify-content:center;gap:12px;margin-top:12px}
-  .controls .actions{background:linear-gradient(180deg,#ffffff,#f8fff8);padding:10px;border-radius:14px;border:1px solid rgba(10,107,58,0.04);box-shadow:0 12px 30px rgba(6,60,40,0.04);align-items:center}
-  .controls .actions .btn{border-radius:999px;padding:10px 16px;font-size:0.95rem;min-width:120px;box-shadow:none}
-  .controls .actions .btn.primary{background:var(--accent);color:#fff;box-shadow:0 8px 22px rgba(10,107,58,0.10)}
-  .controls .actions .btn.ghost{background:transparent;color:var(--iug-green);border:1px solid rgba(10,107,58,0.08)}
-  @media (max-width:420px){
-    .controls .actions{flex-wrap:wrap;gap:8px;padding:8px}
-    .controls .actions .btn{min-width:100px;padding:8px 12px;font-size:0.92rem}
-  }
+  .actions{display:flex;justify-content:center;gap:8px;margin-top:10px}
 
   /* Results */
   .results{padding:18px;background:transparent}
@@ -499,11 +459,7 @@
   }
 
   function renderChoices(){
-  choices.innerHTML = '';
-  try{ chatUI.classList.add('has-choices'); }catch(e){}
-  try{ ensureLastMessageVisibleAboveSheet(); }catch(e){}
-  // set layout for numeric scale (1..5) as a horizontal scale
-  try{ setChoicesLayout('scale'); }catch(e){}
+    choices.innerHTML = '';
     const labels = ['1 لا ينطبق','2 ينطبق قليلاً','3 محايد','4 ينطبق','5 ينطبق جدّاً'];
     labels.forEach((lbl, i)=>{
       const b = document.createElement('button');
@@ -544,49 +500,9 @@
     btnBack.style.display = idx>0 ? 'inline-block' : 'none';
   }
 
-  // helper: set choices layout (scale | stack | grid)
-  function setChoicesLayout(name){
-    choices.classList.remove('choices--scale','choices--stack','choices--grid');
-    if(name === 'scale') choices.classList.add('choices--scale');
-    else if(name === 'stack') choices.classList.add('choices--stack');
-    else choices.classList.add('choices--grid');
-  }
-
-  // ensure the last bot/user message remains visible above the bottom-sheet
-  function ensureLastMessageVisibleAboveSheet(){
-    try{
-      const sheet = chatUI.querySelector('.choices');
-      if(!sheet || !chat) return;
-      // try after short delay (allow CSS transition to settle)
-      function doScroll(){
-        const rows = chat.querySelectorAll('.row'); if(!rows || rows.length===0) return;
-        let target = null;
-        for(let i=rows.length-1;i>=0;i--){ if(rows[i].classList.contains('bot')){ target = rows[i]; break; } }
-        if(!target) target = rows[rows.length-1];
-        const targetOffset = target.offsetTop;
-        const targetHeight = target.offsetHeight || 0;
-        const sheetHeight = sheet.offsetHeight || 0;
-        const chatClientH = chat.clientHeight || 0;
-        // we want target.bottom to be at most (chatClientH - sheetHeight - margin)
-        const margin = 12;
-        const allowedBottom = chatClientH - sheetHeight - margin;
-        const targetBottom = targetOffset + targetHeight;
-        // compute desired scrollTop so targetBottom == allowedBottom
-        let desired = targetBottom - allowedBottom;
-        if(desired < 0) desired = 0;
-        // only scroll forward (no jump back unexpectedly)
-        if(desired > chat.scrollTop){ chat.scrollTop = desired; }
-      }
-      setTimeout(doScroll, 80); setTimeout(doScroll, 320);
-    }catch(e){/* ignore */}
-  }
-
   // --- profile collection UI: branch (أدبي/علمي) + تقدير التوجيهي ---
   function showProfileForm(){
-  choices.innerHTML = '';
-  try{ chatUI.classList.add('has-choices'); }catch(e){}
-  try{ setChoicesLayout('stack'); }catch(e){}
-  try{ ensureLastMessageVisibleAboveSheet(); }catch(e){}
+    choices.innerHTML = '';
     // extended branch list per user request
     const branches = [
       {id:'sci', label:'الفرع العلمي'},
@@ -646,9 +562,7 @@
   }
 
   function nextQuestion(){
-  choices.innerHTML = ''; try{ chatUI.classList.remove('has-choices'); }catch(e){}
-  try{ setChoicesLayout('grid'); }catch(e){}
-  showTyping(true); setChoicesEnabled(false);
+  choices.innerHTML = ''; showTyping(true); setChoicesEnabled(false);
   setTimeout(()=>{ showTypingRow(false); askQuestion(); }, 420);
   }
 
@@ -668,14 +582,11 @@
 
   // show the ready / not now prompt; can be called again by a 'تراجع' button
   function showReadyPrompt(){
-  addBot('الاختبار يتكوّن من 60 سؤالًا قصيرة وسريعة. هل تود بدء الاختبار الآن؟');
-  choices.innerHTML = '';
-  try{ chatUI.classList.add('has-choices'); }catch(e){}
-  try{ setChoicesLayout('scale'); }catch(e){}
-  try{ ensureLastMessageVisibleAboveSheet(); }catch(e){}
+    addBot('الاختبار يتكوّن من 60 سؤالًا قصيرة وسريعة. هل تود بدء الاختبار الآن؟');
+    choices.innerHTML = '';
     const yes = document.createElement('button'); yes.className='choice'; yes.textContent='نعم، ابدأ الآن';
     const no = document.createElement('button'); no.className='choice'; no.textContent='لا، لاحقًا';
-    yes.onclick = ()=>{ addUser('نعم، ابدأ الآن'); choices.innerHTML=''; try{ chatUI.classList.remove('has-choices'); }catch(e){}; showProfileForm(); };
+    yes.onclick = ()=>{ addUser('نعم، ابدأ الآن'); choices.innerHTML=''; showProfileForm(); };
     no.onclick = ()=>{
       addUser('لا، لاحقًا');
       addBot('حسنًا. عد متى شئت، وسأكون هنا لمساعدتك.');
@@ -684,7 +595,7 @@
       const back = document.createElement('button'); back.className='choice'; back.textContent='تراجع';
       const keep = document.createElement('button'); keep.className='choice'; keep.textContent='لا أريد الآن';
       back.onclick = ()=>{ choices.innerHTML=''; showReadyPrompt(); };
-      keep.onclick = ()=>{ choices.innerHTML=''; try{ chatUI.classList.remove('has-choices'); }catch(e){} };
+      keep.onclick = ()=>{ choices.innerHTML=''; };
       choices.appendChild(back); choices.appendChild(keep);
     };
     choices.appendChild(yes); choices.appendChild(no);
@@ -709,7 +620,7 @@
       showTypingRow(false);
       addBot('أحسنت! أنهيت جميع الأسئلة. جاهز تشوف توصياتي؟');
       btnFinish.style.display='inline-block';
-      choices.innerHTML=''; try{ chatUI.classList.remove('has-choices'); }catch(e){}
+      choices.innerHTML='';
     }, 500);
   }
 
@@ -877,8 +788,7 @@
     idx=0; for(const k in responses) delete responses[k];
     results.style.display='none';
     // رجوع للمقدمة
-  intro.style.display='grid';
-  try{ chatUI.classList.remove('has-choices'); }catch(e){}
+    intro.style.display='grid';
     fill.style.width='0%'; progTxt.textContent='';
     window.scrollTo({top:0,behavior:'smooth'});
   };
