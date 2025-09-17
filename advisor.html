@@ -501,6 +501,7 @@
   function renderChoices(){
   choices.innerHTML = '';
   try{ chatUI.classList.add('has-choices'); }catch(e){}
+  try{ ensureLastMessageVisibleAboveSheet(); }catch(e){}
   // set layout for numeric scale (1..5) as a horizontal scale
   try{ setChoicesLayout('scale'); }catch(e){}
     const labels = ['1 لا ينطبق','2 ينطبق قليلاً','3 محايد','4 ينطبق','5 ينطبق جدّاً'];
@@ -551,11 +552,41 @@
     else choices.classList.add('choices--grid');
   }
 
+  // ensure the last bot/user message remains visible above the bottom-sheet
+  function ensureLastMessageVisibleAboveSheet(){
+    try{
+      const sheet = chatUI.querySelector('.choices');
+      if(!sheet || !chat) return;
+      // try after short delay (allow CSS transition to settle)
+      function doScroll(){
+        const rows = chat.querySelectorAll('.row'); if(!rows || rows.length===0) return;
+        let target = null;
+        for(let i=rows.length-1;i>=0;i--){ if(rows[i].classList.contains('bot')){ target = rows[i]; break; } }
+        if(!target) target = rows[rows.length-1];
+        const targetOffset = target.offsetTop;
+        const targetHeight = target.offsetHeight || 0;
+        const sheetHeight = sheet.offsetHeight || 0;
+        const chatClientH = chat.clientHeight || 0;
+        // we want target.bottom to be at most (chatClientH - sheetHeight - margin)
+        const margin = 12;
+        const allowedBottom = chatClientH - sheetHeight - margin;
+        const targetBottom = targetOffset + targetHeight;
+        // compute desired scrollTop so targetBottom == allowedBottom
+        let desired = targetBottom - allowedBottom;
+        if(desired < 0) desired = 0;
+        // only scroll forward (no jump back unexpectedly)
+        if(desired > chat.scrollTop){ chat.scrollTop = desired; }
+      }
+      setTimeout(doScroll, 80); setTimeout(doScroll, 320);
+    }catch(e){/* ignore */}
+  }
+
   // --- profile collection UI: branch (أدبي/علمي) + تقدير التوجيهي ---
   function showProfileForm(){
   choices.innerHTML = '';
   try{ chatUI.classList.add('has-choices'); }catch(e){}
   try{ setChoicesLayout('stack'); }catch(e){}
+  try{ ensureLastMessageVisibleAboveSheet(); }catch(e){}
     // extended branch list per user request
     const branches = [
       {id:'sci', label:'الفرع العلمي'},
@@ -641,6 +672,7 @@
   choices.innerHTML = '';
   try{ chatUI.classList.add('has-choices'); }catch(e){}
   try{ setChoicesLayout('scale'); }catch(e){}
+  try{ ensureLastMessageVisibleAboveSheet(); }catch(e){}
     const yes = document.createElement('button'); yes.className='choice'; yes.textContent='نعم، ابدأ الآن';
     const no = document.createElement('button'); no.className='choice'; no.textContent='لا، لاحقًا';
     yes.onclick = ()=>{ addUser('نعم، ابدأ الآن'); choices.innerHTML=''; try{ chatUI.classList.remove('has-choices'); }catch(e){}; showProfileForm(); };
