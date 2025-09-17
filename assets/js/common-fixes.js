@@ -65,36 +65,44 @@ window.showAttemptsModal = function({ title, message }){
 (function(){
   function createRipple(e){
     try{
-      const btn = e.currentTarget;
-      const rect = btn.getBoundingClientRect();
-      const ripple = document.createElement('span');
-      ripple.className = 'touch-ripple';
-      const size = Math.max(rect.width, rect.height) * 1.2;
-      ripple.style.position = 'absolute';
-      ripple.style.width = ripple.style.height = size + 'px';
-      ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
-      ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
-      ripple.style.background = 'rgba(255,255,255,0.18)';
-      ripple.style.borderRadius = '50%';
-      ripple.style.pointerEvents = 'none';
-      ripple.style.transform = 'scale(0)';
-      ripple.style.transition = 'transform 350ms ease, opacity 420ms ease';
-      ripple.style.zIndex = 3;
-      btn.style.position = btn.style.position || 'relative';
-      btn.appendChild(ripple);
-      requestAnimationFrame(()=>{ ripple.style.transform = 'scale(1)'; ripple.style.opacity = '1'; });
-      setTimeout(()=>{ ripple.style.opacity = '0'; }, 250);
-      setTimeout(()=>{ try{ btn.removeChild(ripple); }catch(e){} }, 700);
+  const btn = e.currentTarget;
+  const rect = btn.getBoundingClientRect();
+  const ripple = document.createElement('span');
+  ripple.className = 'touch-ripple';
+  const coarse = window.matchMedia && window.matchMedia('(pointer:coarse)').matches;
+  const size = Math.max(rect.width, rect.height) * (coarse ? 1.6 : 1.2);
+  ripple.style.position = 'absolute';
+  ripple.style.width = ripple.style.height = size + 'px';
+  // support touch events coordinates when available
+  const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+  const clientY = (e.touches && e.touches[0]) ? e.touches[0].clientY : e.clientY;
+  ripple.style.left = (clientX - rect.left - size/2) + 'px';
+  ripple.style.top = (clientY - rect.top - size/2) + 'px';
+  ripple.style.borderRadius = '50%';
+  ripple.style.pointerEvents = 'none';
+  ripple.style.transform = 'scale(0)';
+  ripple.style.opacity = '0';
+  ripple.style.transition = 'transform 320ms cubic-bezier(.2,.8,.2,1), opacity 360ms linear';
+  ripple.style.zIndex = 3;
+  // only set relative positioning if element is static
+  if (getComputedStyle(btn).position === 'static') btn.style.position = 'relative';
+  btn.appendChild(ripple);
+  requestAnimationFrame(()=>{ ripple.style.transform = 'scale(1)'; ripple.style.opacity = '1'; });
+  // fade and remove quicker to keep interaction snappy on mobile
+  setTimeout(()=>{ ripple.style.opacity = '0'; }, 360);
+  setTimeout(()=>{ try{ btn.removeChild(ripple); }catch(e){} }, 520);
     }catch(e){}
   }
 
-  document.addEventListener('DOMContentLoaded', function(){
-    // attach to primary interactive elements
-    const targets = document.querySelectorAll('.action-button, .option-btn, .guide-card, .feature-card');
-    targets.forEach(t => {
-      t.addEventListener('pointerdown', createRipple, {passive:true});
-    });
-  });
+  // Use event delegation so ripples also apply to elements added after load
+  document.addEventListener('pointerdown', function(ev){
+    try{
+      const el = ev.target && ev.target.closest && ev.target.closest('.action-button, .option-btn, .guide-card, .feature-card');
+      if (!el) return;
+      // forward a minimal event-like object to createRipple so it can read coordinates
+      createRipple({ currentTarget: el, clientX: ev.clientX, clientY: ev.clientY, touches: ev.touches });
+    }catch(e){}
+  }, { passive: true });
 })();
 
 // Site visitor counter removed per project decision. Runtime visitor counting and
