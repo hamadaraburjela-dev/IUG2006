@@ -14,6 +14,27 @@ const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
 
+// Optional API key middleware - use functions config or environment variable
+let DEPLOY_API_KEY = null;
+try {
+  const cfg = functions.config && functions.config();
+  DEPLOY_API_KEY = (cfg && cfg.api && cfg.api.key) ? cfg.api.key : process.env.API_KEY || null;
+} catch (e) {
+  DEPLOY_API_KEY = process.env.API_KEY || null;
+}
+
+function requireApiKey(req, res, next) {
+  if (!DEPLOY_API_KEY) return next(); // not configured -> allow
+  const headerKey = req.get('x-api-key') || '';
+  const qsKey = req.query && req.query.key ? String(req.query.key) : '';
+  const authBearer = (req.get('authorization') || '').replace(/^Bearer\s+/i, '');
+  const provided = headerKey || qsKey || authBearer;
+  if (provided === DEPLOY_API_KEY) return next();
+  return res.status(401).json({ error: 'unauthorized' });
+}
+
+app.use(requireApiKey);
+
 // Simple health check
 app.get('/_health', (req, res) => {
   res.json({ ok: true, time: Date.now() });
@@ -63,25 +84,42 @@ app.post('/updateScore', async (req, res) => {
 
     const docRef = db.collection('students').doc(id);
 
-    // Use transaction to ensure atomic update
+    // If delta provided, prefer FieldValue.increment for better concurrency
+    if (typeof delta === 'number' && typeof score !== 'number') {
+      // perform increment without transaction
+      await docRef.update({
+        score: admin.firestore.FieldValue.increment(delta),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      }).catch(err => {
+        // If doc doesn't exist, return not_found
+        throw new Error(err.message || 'update_failed');
+      });
+
+      // Read final value to clamp and return
+      const snap = await docRef.get();
+      if (!snap.exists) throw new Error('not_found');
+      let final = snap.get('score') || 0;
+      // clamp
+      final = Math.max(0, Math.min(10000, final));
+      // if clamp changed value, write it back
+      if (final !== snap.get('score')) {
+        await docRef.update({ score: final, updatedAt: admin.firestore.FieldValue.serverTimestamp() });
+      }
+      return res.json({ ok: true, id, score: final });
+    }
+
+    // Otherwise handle absolute score via transaction
     const result = await db.runTransaction(async (tx) => {
       const doc = await tx.get(docRef);
       if (!doc.exists) {
         throw new Error('not_found');
       }
 
-      let current = doc.get('score') || 0;
-      let next;
-      if (typeof score === 'number') {
-        next = score;
-      } else if (typeof delta === 'number') {
-        next = current + delta;
-      } else {
+      if (typeof score !== 'number') {
         throw new Error('missing_delta_or_score');
       }
 
-      // clamp between 0 and a reasonable max (e.g., 10000)
-      next = Math.max(0, Math.min(10000, next));
+      let next = Math.max(0, Math.min(10000, score));
 
       tx.update(docRef, {
         score: next,
