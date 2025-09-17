@@ -399,6 +399,81 @@ h1 {
     display: block;
 }
 
+/* ----------------- Touch & Mobile enhancements ----------------- */
+/* Improve tap targets, focus visibility and active feedback for touch devices */
+/* These rules aim to be non-invasive and target common interactive classes used
+   across the site: .action-button, .feature-card, .guide-card, .option-btn */
+
+:root {
+    --touch-hit-size: 56px; /* recommended minimum touch target */
+}
+
+/* Make primary interactive elements easy to tap */
+.action-button,
+.feature-card,
+.guide-card,
+.option-btn {
+    -webkit-tap-highlight-color: transparent; /* remove ugly highlight on older webviews */
+    touch-action: manipulation; /* prefer immediate taps */
+    min-height: var(--touch-hit-size);
+    padding-top: 14px;
+    padding-bottom: 14px;
+    transition: transform 120ms ease, box-shadow 160ms ease, background-color 160ms ease;
+    will-change: transform, box-shadow;
+    position: relative; /* for ripples */
+    overflow: hidden; /* contain ripple */
+}
+
+/* Slightly larger font and spacing for inputs on touch devices */
+input[type="text"],
+input[type="tel"],
+input[type="number"],
+select,
+textarea {
+    font-size: 17px;
+    padding: 14px 12px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Active state for touch (use scale down instead of heavy shadow) */
+.action-button:active,
+.feature-card:active,
+.guide-card:active,
+.option-btn:active {
+    transform: scale(0.995);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+}
+
+/* Focus-visible for keyboard and accessibility users */
+.action-button:focus-visible,
+.feature-card:focus-visible,
+.guide-card:focus-visible,
+.option-btn:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0,102,51,0.12), 0 6px 18px rgba(0,0,0,0.06);
+    border-radius: 12px;
+}
+
+/* Small-screen tweaks */
+@media (max-width: 900px), (pointer: coarse) {
+    .action-button { font-size: 18px; padding: 16px 18px; border-radius: 28px; }
+    .feature-card, .guide-card { padding: 18px; border-radius: 18px; }
+    .features-grid { gap: 14px; }
+    .game-container { padding: 16px; }
+}
+
+/* Ensure ripple spans don't overflow their parent */
+.touch-ripple { pointer-events: none; }
+
+/* Gentle visual accent for important buttons on mobile */
+@media (max-width: 480px) {
+    .action-button { box-shadow: var(--shadow-light); }
+}
+
+
 /* ================== Touch & Mobile Enhancements ================== */
 /* Improve tap targets, touch feedback and spacing for mobile/touch devices */
 html, body {
