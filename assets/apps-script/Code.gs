@@ -38,6 +38,13 @@ function doPost(e) {
     }
 
     var action = e.parameter && e.parameter.action;
+
+    // Route visitor actions without opening the sheet here (they open and inspect sheet themselves)
+    if (action === 'visitorIncrement' || action === 'visitorGet') {
+      return handleVisitorAction(e);
+    }
+
+    // For register/updateScore we need the sheet
     var sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
     if (!sheet) throw new Error('Sheet not found: ' + SHEET_NAME);
 
@@ -45,9 +52,6 @@ function doPost(e) {
       return registerUser(e, sheet);
     } else if (action == "updateScore") {
       return updateScore(e, sheet);
-    } else if (action === 'visitorIncrement' || action === 'visitorGet') {
-      // Route visitor counter actions to a dedicated handler
-      return handleVisitorAction(e);
     } else {
       throw new Error("Action not specified or invalid.");
     }
@@ -87,14 +91,23 @@ function registerUser(e, sheet) {
   var lastRow = sheet.getLastRow();
   try {
     CacheService.getScriptCache().put(CACHE_PREFIX + uniqueId, String(lastRow), CACHE_TTL);
-    // مزامنة عدّ "المسجلين" في Script Properties كنسخة احتياطية
-    try {
-      PropertiesService.getScriptProperties().setProperty('visitor_count', String(Math.max(0, lastRow - 1)));
-    } catch (pe) {
-      // لا نفشل التسجيل إن لم تنجح الخاصية
-    }
   } catch (e) {
     // عدم القدرة على الكاش ليس مشكلة حرجة، نستمر بدون فشل
+  }
+
+  // مزامنة عدّ "المسجلين" في Script Properties كنسخة احتياطية
+  try {
+    var lr = sheet.getLastRow();
+    var registered = 0;
+    if (lr >= 2) {
+      var ids = sheet.getRange(2, COLS.UNIQUE_ID, lr - 1, 1).getValues();
+      for (var i = 0; i < ids.length; i++) {
+        if (ids[i][0] && String(ids[i][0]).trim() !== '') registered++;
+      }
+    }
+    PropertiesService.getScriptProperties().setProperty('visitor_count', String(registered));
+  } catch (pe) {
+    // ignore property sync errors
   }
 
   return createJson({ result: 'success', uniqueId: uniqueId, row: lastRow });
@@ -165,9 +178,14 @@ function handleVisitorAction(e) {
   try {
     var sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
     if (!sheet) throw new Error('Sheet not found');
-    var lastRow = sheet.getLastRow();
-    // assume first row is header; registered users = lastRow - 1
-    var registeredCount = Math.max(0, lastRow - 1);
+    var lr = sheet.getLastRow();
+    var registeredCount = 0;
+    if (lr >= 2) {
+      var ids = sheet.getRange(2, COLS.UNIQUE_ID, lr - 1, 1).getValues();
+      for (var i = 0; i < ids.length; i++) {
+        if (ids[i][0] && String(ids[i][0]).trim() !== '') registeredCount++;
+      }
+    }
     // keep Script Properties in sync (best-effort)
     try { PropertiesService.getScriptProperties().setProperty('visitor_count', String(registeredCount)); } catch(e) {}
     return jsonResponse({ result: 'success', count: registeredCount });
