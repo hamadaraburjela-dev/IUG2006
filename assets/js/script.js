@@ -2,7 +2,7 @@
 
 // غيّر للرابط الخاص بك
 // ضع رابط نشر Google Apps Script هنا 👇
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzZ94Ux8i977C_3m-6TimQPFqGrwDo-GeOTJ3Pq3mhDLk-ZWWp_sA_odK6Dmhf-aDXBLA/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6to-AsjwIH1xUkWLuf3bmTcLvPIjbrYJX5B1_kp7EJLYNBgmhK5IwCGWCsJyF8EYGbQ/exec';
 
 // --- بداية منطق الشارات ---
 const allBadges = {
@@ -144,6 +144,10 @@ function registerPlayer(name, phone, year) {
     formData.append('name', name);
     formData.append('phone', phone);
     formData.append('year', year);
+    try {
+        const token = (typeof ensureVisitorToken === 'function') ? ensureVisitorToken() : localStorage.getItem('siteVisitorToken');
+        if (token) formData.append('token', token);
+    } catch (e) {}
     return fetch(SCRIPT_URL, { method: 'POST', body: formData }).then(response => response.json());
 }
 
@@ -958,4 +962,123 @@ null
             }
         });
     }
+
+// --- Visitor counter: generate a persistent token, report visit to Apps Script, and show counter ---
+function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+function ensureVisitorToken() {
+    try {
+        let token = localStorage.getItem('siteVisitorToken');
+        if (!token) {
+            token = generateUUID();
+            localStorage.setItem('siteVisitorToken', token);
+        }
+        return token;
+    } catch (e) {
+        return null;
+    }
+}
+
+function updateVisitorUI(countOrText) {
+    try {
+        let el = document.getElementById('site-visitor-counter');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'site-visitor-counter';
+            el.setAttribute('aria-hidden', 'true');
+            el.style.position = 'fixed';
+            el.style.left = '12px';
+            el.style.bottom = '12px';
+            el.style.padding = '8px 12px';
+            el.style.background = 'rgba(0,0,0,0.6)';
+            el.style.color = '#fff';
+            el.style.fontSize = '14px';
+            el.style.borderRadius = '8px';
+            el.style.zIndex = 9999;
+            document.body.appendChild(el);
+        }
+        el.textContent = typeof countOrText === 'number' ? `الزوار: ${countOrText}` : String(countOrText || '—');
+    } catch (e) {
+        // ignore UI errors
+    }
+}
+
+function reportVisitToServer() {
+    const token = ensureVisitorToken();
+    if (!SCRIPT_URL) return Promise.reject(new Error('SCRIPT_URL not set'));
+
+    const url = SCRIPT_URL + '?action=visitorIncrement' + (token ? '&token=' + encodeURIComponent(token) : '');
+    return fetch(url, { method: 'GET', mode: 'cors' })
+        .then(resp => resp.json ? resp.json() : resp.text())
+        .then(data => {
+            console.debug('visitorIncrement response', data);
+            // expected server JSON: { result: 'success', count: N } or similar
+            if (!data) {
+                // try to fetch the canonical count
+                return fetch(SCRIPT_URL + '?action=visitorGet', { method: 'GET', mode: 'cors' })
+                    .then(r => r.json ? r.json() : r.text())
+                    .then(d => {
+                        console.debug('visitorGet fallback response', d);
+                        const c = d && (d.count || d.total || d.visitorCount) || null;
+                        if (c !== null) updateVisitorUI(c);
+                        return d;
+                    })
+                    .catch(() => { updateVisitorUI(localStorage.getItem('siteVisitsLocal') || '—'); return null; });
+            }
+            if (typeof data === 'object') {
+                const count = data.count || data.total || data.visitorCount || null;
+                if (count !== null) {
+                    localStorage.setItem('siteVisitsLocal', String(count));
+                    updateVisitorUI(count);
+                    return data;
+                }
+                // try canonical getter when increment didn't return total
+                return fetch(SCRIPT_URL + '?action=visitorGet', { method: 'GET', mode: 'cors' })
+                    .then(r => r.json ? r.json() : r.text())
+                    .then(d => {
+                        console.debug('visitorGet response', d);
+                        const c = d && (d.count || d.total || d.visitorCount) || null;
+                        if (c !== null) {
+                            localStorage.setItem('siteVisitsLocal', String(c));
+                            updateVisitorUI(c);
+                        } else {
+                            updateVisitorUI(data.result === 'success' ? (data.message || 'تم التسجيل') : (data.message || '—'));
+                        }
+                        return d || data;
+                    })
+                    .catch(() => { updateVisitorUI(data.result === 'success' ? (data.message || 'تم التسجيل') : (data.message || '—')); return data; });
+            }
+            // if server returned plain text, show it
+            updateVisitorUI(data);
+            return data;
+        })
+        .catch(err => {
+            // fallback: keep a local counter so user sees something
+            console.warn('visitorIncrement failed', err);
+            try {
+                let local = parseInt(localStorage.getItem('siteVisitsLocal') || '0', 10) || 0;
+                local += 1;
+                localStorage.setItem('siteVisitsLocal', String(local));
+                updateVisitorUI(local);
+            } catch (e) {}
+            // don't rethrow so page scripts aren't blocked by visitor reporting
+            return null;
+        });
+}
+
+// Trigger a visit report shortly after load (non-blocking)
+try {
+    document.addEventListener('DOMContentLoaded', function() {
+        // small delay so page metrics & other scripts run first
+        setTimeout(() => {
+            reportVisitToServer().catch(() => {});
+        }, 600);
+    });
+} catch (e) {}
     
