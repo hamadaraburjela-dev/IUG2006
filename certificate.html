@@ -251,6 +251,27 @@
         .btn-whatsapp { background-color: var(--social-whatsapp); }
         .btn-telegram { background-color: var(--social-telegram); }
         .btn-instagram { background-color: var(--social-instagram); }
+        /* Stylish WhatsApp claim button: prominent, accessible, and animated */
+        .btn-whatsapp {
+            background: linear-gradient(180deg,#22c35a,#0fa84a);
+            color: #fff;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 12px 36px rgba(15,168,74,0.22), 0 2px 8px rgba(0,0,0,0.08) inset;
+            font-weight: 800;
+            transform: translateZ(0);
+            transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+        }
+        .btn-whatsapp .fa-whatsapp { font-size: 18px; }
+        .btn-whatsapp:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 22px 56px rgba(15,168,74,0.26); filter: brightness(1.03); }
+        .btn-whatsapp:active { transform: translateY(0) scale(.995); }
+        .btn-whatsapp:focus { outline: 3px solid rgba(15,168,74,0.18); outline-offset: 4px; }
+        @keyframes whatsappPulse { 0%{ box-shadow: 0 10px 30px rgba(15,168,74,0.14);}50%{ box-shadow: 0 20px 48px rgba(15,168,74,0.2);}100%{ box-shadow: 0 10px 30px rgba(15,168,74,0.14);} }
+        .btn-whatsapp.pulse { animation: whatsappPulse 2400ms ease-in-out 400ms infinite; }
         
         /* Media query for mobile devices */
         @media (max-width: 600px) {
@@ -329,6 +350,8 @@
             #printable-certificate, #printable-certificate * {
                 visibility: visible;
             }
+            /* hide interactive buttons from the printed certificate */
+            .btn-whatsapp, .hide-for-export { display: none !important; }
             #printable-certificate {
                 position: absolute;
                 left: 0;
@@ -342,6 +365,9 @@
             }
             .certificate-actions { display: none; }
         }
+          /* show export-only helpers by default; they will be hidden programmatically during capture
+              and are hidden in print media via the @media print rule above */
+          .hide-for-export { display: inline-flex !important; }
     </style>
     <link href="favicon.png" rel="icon" type="image/png"/><link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/></head>
 <body>
@@ -364,15 +390,16 @@
                 <div class="scholarship-container">
                     <p>المنحة المستحقة</p>
                     <strong id="cert-scholarship-details">---</strong>
+                        <div style="margin-top:8px;">
+                            <a id="whatsapp-claim" class="btn-primary btn-whatsapp hide-for-export" href="#" onclick="openWhatsAppClaim(event)">
+                                <i class="fa-brands fa-whatsapp"></i> مطالبة المنحة
+                            </a>
+                        </div>
                 </div>
             </div>
         </div>
         <div class="cert-footer">
-            <div class="signature-area">
-                <p class="sig-name">الأستاذة الدكتورة ختام يوسف الوصيفي</p>
-                <p class="sig-title"><strong>عميد شؤون الطلبة</strong></p>
-                <p class="sig-date">15/09/2025</p>
-            </div>
+            
             <div class="qr-code-area">
                 <div id="qrcode"></div>
                 <p>رمز التحقق</p>
@@ -388,10 +415,10 @@
 
 <div class="certificate-actions">
     <div class="actions-group">
-        <button class="btn-primary" onclick="window.print()">
+    <button class="btn-primary" onclick="(updateCertificateDateNow(), window.print())">
             <i class="fa-solid fa-print"></i> طباعة الشهادة
         </button>
-        <button class="btn-primary" onclick="downloadCertificate()">
+    <button class="btn-primary" onclick="(updateCertificateDateNow(), downloadCertificate())">
             <i class="fa-solid fa-download"></i> تحميل كصورة
         </button>
     </div>
@@ -502,6 +529,7 @@
     }
 
         async function shareUnified() {
+        updateCertificateDateNow();
             const certificate = document.getElementById('printable-certificate');
             const title = "أنا أنهيت رحلة الجامعة الإسلامية الافتراضية بنجاح!";
             const text = `أنا "${document.getElementById("cert-player-name").textContent}" وقد أنهيت رحلة الجامعة الإسلامية الافتراضية بنجاح! حصلت على ${document.getElementById("cert-final-score").textContent} نقطة!`;
@@ -591,6 +619,62 @@
                 console.log("Direct sharing to Instagram is not supported on this device.");
                 break;
         }
+    }
+
+    async function openWhatsAppClaim(e) {
+        e.preventDefault();
+        updateCertificateDateNow();
+        const phone = '972569210941';
+        const playerName = document.getElementById('cert-player-name').textContent || '';
+        const playerScore = document.getElementById('cert-final-score').textContent || '0';
+        const scholarshipText = document.getElementById('cert-scholarship-details').textContent || '';
+        const message = `السلام عليكم، أرغب بالمطالبة بالمنحة.%0Aالاسم: ${playerName}%0Aالنقاط: ${playerScore}%0A${scholarshipText}`;
+
+        const certificate = document.getElementById('printable-certificate');
+        // Temporarily hide export-only elements to capture a clean image
+        document.querySelectorAll('.hide-for-export').forEach(el=> el.style.display = 'none');
+        try {
+            const canvas = await html2canvas(certificate, { scale: 2, useCORS: true });
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+            const file = new File([blob], 'شهادة-المطالبة.png', { type: 'image/png' });
+            // Try Web Share API with file (mobile friendly)
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({ files: [file], text: decodeURIComponent(message) });
+                    return;
+                } catch (shareErr) {
+                    console.warn('Web Share failed:', shareErr);
+                }
+            }
+
+            // Fallback: automatically download image so user can attach, then open wa.me with text
+            const link = document.createElement('a');
+            link.download = 'شهادة-المطالبة.png';
+            link.href = URL.createObjectURL(blob);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(link.href);
+
+            // Open wa.me with prefilled message (user can attach the downloaded image manually)
+            const waUrl = `https://wa.me/${phone}?text=${message}`;
+            window.open(waUrl, '_blank');
+        } catch (err) {
+            console.warn('Claim flow failed, falling back to text message only.', err);
+            window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+        } finally {
+            // restore hidden elements
+            document.querySelectorAll('.hide-for-export').forEach(el=> el.style.display = 'inline-flex');
+        }
+    }
+
+    function updateCertificateDateNow() {
+        const now = new Date();
+        const dd = String(now.getDate()).padStart(2, '0');
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const yyyy = now.getFullYear();
+        const formatted = `${dd}/${mm}/${yyyy}`;
+        document.querySelectorAll('.sig-date').forEach(el => { el.textContent = formatted; });
     }
 
     function downloadCertificate() {
