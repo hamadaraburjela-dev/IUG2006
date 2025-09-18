@@ -394,6 +394,7 @@
                             <a id="whatsapp-claim" class="btn-primary btn-whatsapp hide-for-export" href="#" onclick="openWhatsAppClaim(event)">
                                 <i class="fa-brands fa-whatsapp"></i> مطالبة المنحة
                             </a>
+                            <p id="claim-help" style="margin:8px 0 0 0; font-size:0.95rem; color:#6b6b6b; display:block;">مطلوب 30 نقطة على الأقل للمطالبة بالمنحة.</p>
                         </div>
                 </div>
             </div>
@@ -505,14 +506,42 @@
     // - Base 50% for all successful Tawjihi students
     // - +1% for every 2 points earned in the game
     // - Extra capped at 20% (so max total = 70%)
-    const baseScholarship = 50;
+    // Campaign update: base scholarship is now 100% for all registrants
+    const baseScholarship = 100;
+    // Points no longer increase the scholarship percentage in the current campaign
     const points = Number.isFinite(playerScore) ? Math.max(0, Math.floor(playerScore)) : 0;
-    const extraFromPoints = Math.min(20, Math.floor(points / 2)); // 1% per 2 points, cap 20%
-    const totalScholarship = baseScholarship + extraFromPoints;
-    const breakdown = extraFromPoints > 0 ? ` (أساسية ${baseScholarship}% + مضافة ${extraFromPoints}%)` : ` (أساسية ${baseScholarship}%)`;
-    scholarshipEl.textContent = `منحة ${totalScholarship}% للفصل الدراسي الأول${breakdown}`;
+    const extraFromPoints = 0;
+    const totalScholarship = baseScholarship;
+    // Show only the headline scholarship text (no parenthetical breakdown)
+    scholarshipEl.textContent = `منحة ${totalScholarship}% للفصل الدراسي الأول`;
     // set current date on load so printed/downloaded certificate shows actual date by default
     if (typeof updateCertificateDateNow === 'function') updateCertificateDateNow();
+
+    // Enable/disable the WhatsApp claim button based on minimum points requirement
+    (function(){
+        const minPoints = 30; // requirement
+        const claimBtn = document.getElementById('whatsapp-claim');
+        const claimHelp = document.getElementById('claim-help');
+        if (!claimBtn) return;
+        const scoreNum = Number.isFinite(playerScore) ? playerScore : 0;
+        if (scoreNum >= minPoints) {
+            // enable
+            claimBtn.classList.remove('disabled');
+            claimBtn.classList.add('pulse');
+            claimBtn.removeAttribute('aria-disabled');
+            claimBtn.style.pointerEvents = '';
+            claimBtn.title = 'مطالبة المنحة عبر واتساب';
+            if (claimHelp) claimHelp.textContent = 'يمكنك مطابقة المنحة الآن عبر الزر أعلاه.';
+        } else {
+            // disable visually and functionally
+            claimBtn.classList.add('disabled');
+            claimBtn.classList.remove('pulse');
+            claimBtn.setAttribute('aria-disabled','true');
+            claimBtn.style.pointerEvents = 'none';
+            claimBtn.title = `مطلوب ${minPoints} نقطة على الأقل للمطالبة (لديك ${scoreNum}).`;
+            if (claimHelp) claimHelp.textContent = `مطلوب ${minPoints - scoreNum} نقطة إضافية لتفعيل مطالبة المنحة.`;
+        }
+    })();
 
         const audio = document.getElementById("success-audio");
         if (audio) {

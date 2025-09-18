@@ -53,6 +53,15 @@
   .scholarship-banner .banner-text small { display:block; font-weight:600; font-size:15px; color: rgba(255,255,255,0.95); margin-top:6px; }
   .scholarship-banner .banner-head { font-size: 20px; font-weight:900; line-height:1.1; }
   .scholarship-banner .banner-desc { font-size: 14px; font-weight:600; margin-top:6px; color: rgba(255,255,255,0.96); }
+  .scholarship-banner .med-note { font-size:13px; font-weight:800; color: #053b2a; background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(255,255,255,0.92)); padding:6px 10px; border-radius:999px; margin-right:8px; box-shadow: 0 8px 24px rgba(5,59,42,0.12); position:relative; display:inline-flex; align-items:center; gap:8px; }
+  .scholarship-banner .med-note .med-icon { font-size:14px; }
+  .scholarship-banner .med-note .med-tooltip { display:none; position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:#fff; color:#0b5a3a; padding:8px 10px; border-radius:8px; font-size:13px; box-shadow: 0 10px 30px rgba(2,48,32,0.12); white-space:nowrap; z-index:40; }
+  .scholarship-banner .med-note:hover .med-tooltip, .scholarship-banner .med-note:focus-within .med-tooltip { display:block; }
+  /* Limited seats visual treatment */
+  .limited-seats { display:inline-flex; align-items:center; gap:8px; background: rgba(255,255,255,0.08); padding:6px 10px; border-radius:999px; color:#fff; font-weight:900; box-shadow: 0 6px 22px rgba(10,80,40,0.12); animation: limitedPulse 2000ms ease-in-out infinite; }
+  .limited-seats .ls-icon { font-size:16px; transform-origin:center; animation: lsTick 1400ms linear infinite; }
+  @keyframes limitedPulse { 0%{ transform: translateY(0) scale(1); filter: drop-shadow(0 6px 18px rgba(0,0,0,0.12)); }50%{ transform: translateY(-3px) scale(1.01); filter: drop-shadow(0 12px 36px rgba(10,140,70,0.18)); }100%{ transform: translateY(0) scale(1); } }
+  @keyframes lsTick { 0%{ transform: rotate(0) scale(1); }50%{ transform: rotate(-10deg) scale(1.05); }100%{ transform: rotate(0) scale(1); } }
   .scholarship-banner .highlight-word { background: rgba(255,255,255,0.12); padding:6px 10px; border-radius:8px; color: #fff; margin:0 6px; font-size:18px; font-weight:900; box-shadow: 0 8px 20px rgba(255,255,255,0.06); animation: wordPop 1600ms ease-in-out infinite alternate; }
   @keyframes wordPop { from { transform: translateY(0) scale(1); opacity:1; } to { transform: translateY(-6px) scale(1.03); opacity:0.98; } }
   /* 70% visual highlight */
@@ -108,6 +117,10 @@
     .scholarship-banner .banner-text small { display:block; font-size:13px; margin-top:8px; color: rgba(255,255,255,0.92); }
     .scholarship-banner .banner-badge { margin-left:0; margin-top:6px; }
     .scholarship-banner .highlight-word { animation: none; }
+  .limited-seats { animation: none; padding:6px 8px; font-size:13px; }
+  .limited-seats .ls-icon { display:none; }
+  .scholarship-banner .med-note { padding:6px 8px; font-size:12px; box-shadow:none; }
+  .scholarship-banner .med-note .med-tooltip { display:none; }
   }
   </style>
   <style>
@@ -137,9 +150,11 @@
       <div class="scholarship-banner" role="status" aria-live="polite">
         <span class="banner-icon" aria-hidden="true">🏅</span>
         <div class="banner-text">
-          <div class="banner-head">منحة <strong>100%</strong> للفصل الدراسي الأول — المقاعد محدودة!</div>
-          <div class="banner-desc">سارع بالتسجيل وإكمال المتطلبات الآن لضمان مكانك.</div>
-          <small>ادخل إلى الموقع، أكمل التحديات المخصصة، وتأكّد من إنهاء خطوات التقديم قبل نفاد المقاعد؛ الفرص تُعطى بأسبقية التسجيل.</small>
+          <div class="banner-head">منحة <strong>100%</strong> للفصل الأول — للمُلتحقين الجدد</div>
+          <div class="banner-desc"><span class="limited-seats" role="status" aria-live="polite">⏳ المقاعد محدودة — سجّل الآن</span> <span class="med-note" tabindex="0"> <span class="med-icon" aria-hidden="true">🏥</span> طلبة كلية الطب يحصلون على تقسيط الرسوم الدراسية
+              <span class="med-tooltip" role="dialog" aria-hidden="true">تفاصيل التقسيط متاحة عند التواصل مع الشؤون المالية — خيارات مرنة تصل إلى 12 قسطًا.</span>
+            </span></div>
+          <small>أكمل التحديات المطلوبة قبل نفاد الفرص. الأولوية لمن أتمّ التسجيل.</small>
         </div>
         <div style="display:flex; align-items:center; gap:10px;">
           <div class="banner-badge" aria-hidden="true"><strong>100%</strong></div>
