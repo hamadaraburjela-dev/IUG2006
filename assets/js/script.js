@@ -2,7 +2,7 @@
 
 // غيّر للرابط الخاص بك
 // ضع رابط نشر Google Apps Script هنا 👇
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVbsqApzo-JqOpcWo2TZkpNDYUBcKk9CnV415G9ZrGThg6Hm5aNQzhbqlX1HragNXbww/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyry0X_z7q8CeA50qqBBnWmnZVnbjUXRvGNj54ZdWZlPXQthamlVLG54dFmImqpggaAFA/exec';
 
 // --- بداية منطق الشارات ---
 const allBadges = {
@@ -201,6 +201,8 @@ function registerPlayer(name, phone, year) {
     formData.append('year', year);
     return fetch(SCRIPT_URL, { method: 'POST', body: formData }).then(response => response.json());
 }
+
+// Registrants counter removed from script
 
 function updatePlayerScore(uniqueId, score) {
     if (!uniqueId) {
@@ -697,6 +699,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if(startScreen) startScreen.classList.add('hidden');
                     const guideScreen = document.getElementById('guide-selection-screen');
                     if (guideScreen) guideScreen.classList.remove('hidden');
+                    // registrants counter removed
                 } else {
                     showModal('خطأ في التسجيل', 'حدث خطأ أثناء التسجيل. الرجاء المحاولة مرة أخرى.', null);
                     startButton.disabled = false;

@@ -83,7 +83,6 @@ function registerUser(e, sheet) {
 
   // Append row بطريقة بسيطة داخل القفل
   sheet.appendRow([timestamp, name, phone, year, '', uniqueId]);
-
   // احصل على رقم الصف الأخير وخزّنه في الكاش
   var lastRow = sheet.getLastRow();
   try {
@@ -92,7 +91,17 @@ function registerUser(e, sheet) {
     // عدم القدرة على الكاش ليس مشكلة حرجة، نستمر بدون فشل
   }
 
-  // no visitor_count sync required
+  // تحديث عداد الزوار المخزن في Script Properties (عدد الصفوف المسجلة)
+  try {
+    var registeredCount = 0;
+    if (lastRow >= 2) {
+      var ids = sheet.getRange(2, COLS.UNIQUE_ID, lastRow - 1, 1).getValues();
+      for (var i = 0; i < ids.length; i++) {
+        if (ids[i][0] && String(ids[i][0]).trim() !== '') registeredCount++;
+      }
+    }
+    PropertiesService.getScriptProperties().setProperty('visitor_count', String(registeredCount));
+  } catch (e) { /* non-fatal */ }
 
   return createJson({ result: 'success', uniqueId: uniqueId, row: lastRow });
 }
@@ -157,19 +166,9 @@ function updateScore(e, sheet) {
 // Handle visitor counter actions (increment / get)
 function handleVisitorAction(e) {
   const action = (e.parameter && e.parameter.action) || (e.postData && tryParse(e.postData.contents).action) || '';
-
-  // The visitor counter is based on the number of registered users in the sheet.
+  // Use helper to calculate registered count (counts non-empty UNIQUE_ID cells)
   try {
-    var sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
-    if (!sheet) throw new Error('Sheet not found');
-    var lr = sheet.getLastRow();
-    var registeredCount = 0;
-    if (lr >= 2) {
-      var ids = sheet.getRange(2, COLS.UNIQUE_ID, lr - 1, 1).getValues();
-      for (var i = 0; i < ids.length; i++) {
-        if (ids[i][0] && String(ids[i][0]).trim() !== '') registeredCount++;
-      }
-    }
+    var registeredCount = getRegisteredCount();
     // keep Script Properties in sync (best-effort)
     try { PropertiesService.getScriptProperties().setProperty('visitor_count', String(registeredCount)); } catch(e) {}
     return jsonResponse({ result: 'success', count: registeredCount });
@@ -181,6 +180,21 @@ function handleVisitorAction(e) {
   }
 }
 
+// Count registered users by reading UNIQUE_ID column rows (robust central helper)
+function getRegisteredCount(){
+  var sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
+  if (!sheet) throw new Error('Sheet not found');
+  var lr = sheet.getLastRow();
+  var registeredCount = 0;
+  if (lr >= 2) {
+    var ids = sheet.getRange(2, COLS.UNIQUE_ID, lr - 1, 1).getValues();
+    for (var i = 0; i < ids.length; i++) {
+      if (ids[i][0] && String(ids[i][0]).trim() !== '') registeredCount++;
+    }
+  }
+  return registeredCount;
+}
+
 function jsonResponse(obj, statusCode) {
   return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
@@ -188,4 +202,23 @@ function jsonResponse(obj, statusCode) {
 
 function tryParse(s) {
   try { return JSON.parse(s); } catch(e) { return {}; }
+}
+
+// Allow a simple GET request to retrieve visitor/registrants count.
+// Example: GET https://script.google.com/macros/s/XXX/exec?action=visitor
+function doGet(e) {
+  try {
+    // If caller requested JSONP (callback param), wrap response
+    var callback = e.parameter && e.parameter.callback;
+    var response = handleVisitorAction(e);
+    // handleVisitorAction returns a ContentService TextOutput; extract text
+    var txt = response.getContent();
+    if (callback) {
+      // return as JavaScript so JSONP consumers can read it
+      return ContentService.createTextOutput(callback + '(' + txt + ')').setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
+    return response;
+  } catch (err) {
+    return createErrorOutput(err.toString());
+  }
 }
