@@ -452,14 +452,17 @@
         document.getElementById("cert-player-name").textContent = playerName;
         document.getElementById("cert-final-score").textContent = playerScore;
 
-        const scholarshipEl = document.getElementById("cert-scholarship-details");
-        let scholarshipPercentage = 0;
-        if (playerScore >= 50) scholarshipPercentage = 50;
-        else if (playerScore > 0) scholarshipPercentage = playerScore;
-        scholarshipEl.textContent =
-            scholarshipPercentage > 0
-                ? `منحة ${scholarshipPercentage}% للفصل الدراسي الأول`
-                : "لم يتم الحصول على منحة";
+    const scholarshipEl = document.getElementById("cert-scholarship-details");
+    // Scholarship logic:
+    // - Base 50% for all successful Tawjihi students
+    // - +1% for every 2 points earned in the game
+    // - Extra capped at 20% (so max total = 70%)
+    const baseScholarship = 50;
+    const points = Number.isFinite(playerScore) ? Math.max(0, Math.floor(playerScore)) : 0;
+    const extraFromPoints = Math.min(20, Math.floor(points / 2)); // 1% per 2 points, cap 20%
+    const totalScholarship = baseScholarship + extraFromPoints;
+    const breakdown = extraFromPoints > 0 ? ` (أساسية ${baseScholarship}% + مضافة ${extraFromPoints}%)` : ` (أساسية ${baseScholarship}%)`;
+    scholarshipEl.textContent = `منحة ${totalScholarship}% للفصل الدراسي الأول${breakdown}`;
 
         const audio = document.getElementById("success-audio");
         if (audio) {
