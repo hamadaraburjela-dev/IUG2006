@@ -490,6 +490,8 @@
     const totalScholarship = baseScholarship + extraFromPoints;
     const breakdown = extraFromPoints > 0 ? ` (أساسية ${baseScholarship}% + مضافة ${extraFromPoints}%)` : ` (أساسية ${baseScholarship}%)`;
     scholarshipEl.textContent = `منحة ${totalScholarship}% للفصل الدراسي الأول${breakdown}`;
+    // set current date on load so printed/downloaded certificate shows actual date by default
+    if (typeof updateCertificateDateNow === 'function') updateCertificateDateNow();
 
         const audio = document.getElementById("success-audio");
         if (audio) {
