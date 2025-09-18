@@ -51,6 +51,8 @@
   .scholarship-banner .banner-icon { font-size: 28px; margin-right:6px; }
   .scholarship-banner .banner-text { line-height:1.15; }
   .scholarship-banner .banner-text small { display:block; font-weight:600; font-size:15px; color: rgba(255,255,255,0.95); margin-top:6px; }
+  .scholarship-banner .banner-head { font-size: 20px; font-weight:900; line-height:1.1; }
+  .scholarship-banner .banner-desc { font-size: 14px; font-weight:600; margin-top:6px; color: rgba(255,255,255,0.96); }
   .scholarship-banner .highlight-word { background: rgba(255,255,255,0.12); padding:6px 10px; border-radius:8px; color: #fff; margin:0 6px; font-size:18px; font-weight:900; box-shadow: 0 8px 20px rgba(255,255,255,0.06); animation: wordPop 1600ms ease-in-out infinite alternate; }
   @keyframes wordPop { from { transform: translateY(0) scale(1); opacity:1; } to { transform: translateY(-6px) scale(1.03); opacity:0.98; } }
   /* 70% visual highlight */
@@ -88,6 +90,24 @@
     .hero-title { font-size:20px; }
     /* reduce hero margins so cards have breathing room on small screens */
     #landing-screen { padding-left:10px; padding-right:10px; }
+    /* Scholarship banner: stack and wrap text on small screens */
+    .scholarship-banner {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 12px 14px;
+      gap: 10px;
+      font-size: 15px;
+      word-break: break-word;
+      animation: none; /* stop pulsing on small screens to avoid layout shift */
+    }
+    .scholarship-banner .banner-icon { margin-right:0; margin-bottom:6px; }
+    .scholarship-banner .banner-text { max-width: 100%; white-space: normal; font-size: 15px; line-height:1.25; }
+    .scholarship-banner .banner-head { font-size: 18px; }
+    .scholarship-banner .banner-desc { font-size: 13px; }
+    .scholarship-banner .banner-text small { display:block; font-size:13px; margin-top:8px; color: rgba(255,255,255,0.92); }
+    .scholarship-banner .banner-badge { margin-left:0; margin-top:6px; }
+    .scholarship-banner .highlight-word { animation: none; }
   }
   </style>
   <style>
@@ -113,17 +133,16 @@
       <img class="logo" src="assets/images/logo.webp" alt="شعار الجامعة"/>
       <h2 class="hero-title">رحلتك نحو المعرفة والتميز تبدأ الآن</h2>
       <p class="hero-sub">منصة تفاعلية لطلبة الثانوية العامة — اجمع النقاط، اربح جوائز، وحوّل مجهودك إلى منح دراسية.</p>
-      <!-- Prominent scholarship banner: baseline 50% and boosted 70% after completion -->
+      <!-- Prominent scholarship banner: 100% offer for new enrollees -->
       <div class="scholarship-banner" role="status" aria-live="polite">
         <span class="banner-icon" aria-hidden="true">🏅</span>
-        <div class="banner-text">منحة للناجحين في الثانوية العامة (التوجيهي): <strong>50%</strong> لجميع الناجحين.
-          <small>اكمل في الموقع <span class="highlight-word">واحصل</span> على منحة بنسبة <span class="scholarship-percent" aria-hidden="true"><span class="sparkle">✨</span><span class="percent-core">70%</span><span class="sparkle">✨</span></span><span class="sr-only">70 بالمئة</span>.</small>
+        <div class="banner-text">
+          <div class="banner-head">منحة <strong>100%</strong> للفصل الدراسي الأول — المقاعد محدودة!</div>
+          <div class="banner-desc">سارع بالتسجيل وإكمال المتطلبات الآن لضمان مكانك.</div>
+          <small>ادخل إلى الموقع، أكمل التحديات المخصصة، وتأكّد من إنهاء خطوات التقديم قبل نفاد المقاعد؛ الفرص تُعطى بأسبقية التسجيل.</small>
         </div>
         <div style="display:flex; align-items:center; gap:10px;">
-          <div class="banner-badge" aria-hidden="true"><strong>50% → 70%</strong></div>
-          <a class="whatsapp-claim-btn" href="https://wa.me/972569210941?text=%D8%A3%D8%B1%D8%BA%D8%A8%D8%A9%20%D8%A8%D8%A7%D9%84%D9%85%D8%B2%D9%8A%D8%AF%20%D9%85%D8%B9%D9%84%D9%88%D9%85%D8%A9%20%D8%B9%D9%86%20%D8%A7%D9%84%D9%85%D9%86%D8%AD%D8%A9" target="_blank" rel="noopener noreferrer" aria-label="مراسلة للمطالبة بالمنحة عبر واتساب">
-            <span class="icon">💬</span> مطالبة المنحة
-          </a>
+          <div class="banner-badge" aria-hidden="true"><strong>100%</strong></div>
         </div>
       </div>
     </div>
@@ -171,8 +190,8 @@
 
 <script>
   (function(){
-    const nameEl = document.getElementById('name');
-    const phoneEl = document.getElementById('phone');
+  const nameEl = document.getElementById('name');
+  const phoneEl = document.getElementById('phone');
     const yearEl = document.getElementById('tawjihi-year');
     const startBtn = document.getElementById('start-button');
 
