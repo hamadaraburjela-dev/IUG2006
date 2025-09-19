@@ -70,7 +70,7 @@
 <h2 id="modal-title">الكليات المتاحة</h2>
 </div>
 <div id="modal-body"></div>
-<div class="modal-footer">
+<div class="modal-footer" id="modal-footer" style="display: none;">
 <p><strong>ملاحظة هامة:</strong> تقديم طلب الالتحاق لا يعني قبول الطالب في كلية الطب، وإنما هي مرحلة أولية للمنافسة، وتتم المنافسة حسب المقاعد المتوفرة. للمزيد من التفاصيل يرجى مراجعة صفحة عمادة القبول والتسجيل.</p>
 </div>
 </div>
@@ -139,6 +139,7 @@
             const modalTitle = document.getElementById('modal-title');
             const modalIcon = document.getElementById('modal-icon');
             const modalBody = document.getElementById('modal-body');
+            const modalFooter = document.getElementById('modal-footer');
 
             categoryCards.forEach(card => {
                 card.addEventListener('click', () => {
@@ -149,6 +150,14 @@
                         modalIcon.className = `${data.icon} fa-fw`;
                         modalBody.innerHTML = data.content;
                         modalBody.scrollTop = 0; 
+                        
+                        // إظهار الملاحظة فقط لقسم العلوم الصحية والطب
+                        if (category === 'health') {
+                            modalFooter.style.display = 'block';
+                        } else {
+                            modalFooter.style.display = 'none';
+                        }
+                        
                         modal.classList.add('active');
                     }
                 });
