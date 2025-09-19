@@ -28,29 +28,49 @@
 </div>
 </header>
 <div id="categories-grid">
+<div class="category-card" data-category="medicine">
+<i class="fas fa-user-md"></i>
+<h3>الطب البشري</h3>
+</div>
 <div class="category-card" data-category="health">
 <i class="fas fa-heartbeat"></i>
-<h3>العلوم الصحية والطب</h3>
+<h3>العلوم الصحية</h3>
+</div>
+<div class="category-card" data-category="nursing">
+<i class="fas fa-user-nurse"></i>
+<h3>التمريض والقبالة</h3>
 </div>
 <div class="category-card" data-category="engineering">
 <i class="fas fa-drafting-compass"></i>
 <h3>الهندسة</h3>
 </div>
-<div class="category-card" data-category="it_science">
+<div class="category-card" data-category="science">
+<i class="fas fa-flask"></i>
+<h3>العلوم</h3>
+</div>
+<div class="category-card" data-category="it">
 <i class="fas fa-laptop-code"></i>
-<h3>العلوم وتكنولوجيا المعلومات</h3>
+<h3>تكنولوجيا المعلومات</h3>
 </div>
 <div class="category-card" data-category="humanities">
 <i class="fas fa-book-open"></i>
 <h3>الآداب والعلوم الإنسانية</h3>
 </div>
-<div class="category-card" data-category="management_education">
+<div class="category-card" data-category="economics">
 <i class="fas fa-chart-line"></i>
-<h3>الاقتصاد والتربية</h3>
+<h3>الاقتصاد والعلوم الإدارية</h3>
+</div>
+<div class="category-card" data-category="education">
+<i class="fas fa-graduation-cap"></i>
+<h3>التربية</h3>
 </div>
 <div class="category-card" data-category="sharia">
+<i class="fas fa-balance-scale"></i>
+<h3>الشريعة والقانون</h3>
+</div>
+<div class="category-card" data-category="religion">
 <i class="fas fa-mosque"></i>
-<h3>الشريعة وأصول الدين</h3>
+<h3>أصول الدين</h3>
 </div>
 </div>
 <div class="back-button-container">
@@ -90,9 +110,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Original Faculty Modal Logic
             const facultiesData = {
-                health: {
-                    title: 'العلوم الصحية والطب',
-                    icon: 'fas fa-heartbeat',
+                medicine: {
+                    title: 'الطب البشري',
+                    icon: 'fas fa-user-md',
                     content: `
                         <ul>
                             <li>
@@ -102,7 +122,21 @@
                                     <div class="rates-group"><span class="gender-title">طالبات</span><span class="rate-item"><span class="stream">علمي</span><span class="rate-value">96%</span></span><span class="rate-item"><span class="stream">موازي</span><span class="rate-value">90%</span></span></div>
                                 </div>
                             </li>
-                            <li><p class="major-title">العلوم الصحية</p><p>العلوم الطبية المخبرية، البصريات، العلاج الطبيعي، التغذية السريرية (<span class="new-major">جديد</span>)</p><div class="rates-grid"><div class="rates-group" style="grid-column: 1 / -1;"><span class="gender-title">طلاب وطالبات</span><span class="rate-item"><span class="stream">علمي</span><span class="rate-value">70%</span></span></div></div></li>
+                        </ul>`
+                },
+                health: {
+                    title: 'العلوم الصحية',
+                    icon: 'fas fa-heartbeat',
+                    content: `
+                        <ul>
+                            <li><p class="major-title">العلوم الصحية</p><p>العلوم الطبية المخبرية، البصريات، العلاج الطبيعي، التغذية السريرية، تقنيات تصوير طبي (<span class="new-major">جديد</span>)</p><div class="rates-grid"><div class="rates-group" style="grid-column: 1 / -1;"><span class="gender-title">طلاب وطالبات</span><span class="rate-item"><span class="stream">علمي</span><span class="rate-value">70%</span></span></div></div></li>
+                        </ul>`
+                },
+                nursing: {
+                    title: 'التمريض والقبالة',
+                    icon: 'fas fa-user-nurse',
+                    content: `
+                        <ul>
                             <li><p class="major-title">التمريض</p><div class="rates-grid"><div class="rates-group"><span class="gender-title">طلاب</span><span class="rate-item"><span class="stream">علمي</span><span class="rate-value">70%</span></span><span class="rate-item"><span class="stream">أدبي</span><span class="rate-value">80%</span></span></div><div class="rates-group"><span class="gender-title">طالبات</span><span class="rate-item"><span class="stream">علمي</span><span class="rate-value">70%</span></span><span class="rate-item"><span class="stream">أدبي</span><span class="rate-value">80%</span></span></div></div></li>
                             <li><p class="major-title">القبالة</p><div class="rates-grid"><div class="rates-group" style="grid-column: 1 / -1;"><span class="gender-title">طلاب وطالبات</span><span class="rate-item"><span class="stream">علمي</span><span class="rate-value">70%</span></span></div></div></li>
                         </ul>`
@@ -110,27 +144,96 @@
                 engineering: {
                     title: 'الهندسة',
                     icon: 'fas fa-drafting-compass',
-                    content: `<ul><li><p class="major-title">الهندسة</p><p>الهندسة المعمارية (تصميم داخلي، تكنولوجيا)، الهندسة المدنية، هندسة الحاسوب، الهندسة الصناعية، الهندسة الكهربائية، الهندسة البيئية، الهندسة الميكانيكية، هندسة النظم الذكية.</p><div class="rates-grid"><div class="rates-group" style="grid-column: 1 / -1;"><span class="gender-title">طلاب وطالبات</span><span class="rate-item"><span class="stream">علمي</span><span class="rate-value">80%</span></span></div></div></li></ul>`
+                    content: `<ul><li><p class="major-title">الهندسة</p><p>الهندسة المعمارية (<span class="arch-dept" style="background: linear-gradient(45deg, #3498db, #2980b9); color: white; padding: 2px 6px; border-radius: 10px; margin: 1px; font-size: 0.85em;">🏗️ تصميم داخلي</span>، <span class="arch-dept" style="background: linear-gradient(45deg, #e74c3c, #c0392b); color: white; padding: 2px 6px; border-radius: 10px; margin: 1px; font-size: 0.85em;">🏢 تكنولوجيا مباني</span>، <span class="arch-dept" style="background: linear-gradient(45deg, #27ae60, #229954); color: white; padding: 2px 6px; border-radius: 10px; margin: 1px; font-size: 0.85em;">🗺️ تخطيط معماري</span>)، الهندسة المدنية، هندسة الحاسوب، الهندسة الصناعية، الهندسة الكهربائية، الهندسة البيئية، الهندسة الميكانيكية، هندسة النظم الذكية.</p><div class="rates-grid"><div class="rates-group" style="grid-column: 1 / -1;"><span class="gender-title">طلاب وطالبات</span><span class="rate-item"><span class="stream">علمي</span><span class="rate-value">80%</span></span></div></div></li></ul>`
                 },
-                it_science: {
-                    title: 'العلوم وتكنولوجيا المعلومات',
+                science: {
+                    title: 'العلوم',
+                    icon: 'fas fa-flask',
+                    content: `<ul><li><p class="major-title">العلوم</p><p>الكيمياء، الرياضيات، الفيزياء، الأحياء، علوم الأرض والبيئة، الكيمياء الحيوية، علوم البحار، الإنتاج النباتي، التكنولوجيا الحيوية، رياضيات فرعي كمبيوتر.</p><div class="rates-grid"><div class="rates-group" style="grid-column: 1 / -1;"><span class="gender-title">طلاب وطالبات</span><span class="rate-item"><span class="stream">علمي</span><span class="rate-value">65%</span></span></div></div></li></ul>`
+                },
+                it: {
+                    title: 'تكنولوجيا المعلومات',
                     icon: 'fas fa-laptop-code',
-                    content: `<ul><li><p class="major-title">العلوم</p><p>الكيمياء، الرياضيات، الفيزياء، الأحياء، علوم الأرض والبيئة، الكيمياء الحيوية، علوم البحار، الإنتاج النباتي، التكنولوجيا الحيوية، رياضيات فرعي كمبيوتر.</p><div class="rates-grid"><div class="rates-group" style="grid-column: 1 / -1;"><span class="gender-title">طلاب وطالبات</span><span class="rate-item"><span class="stream">علمي</span><span class="rate-value">65%</span></span></div></div></li><li><p class="major-title">تكنولوجيا المعلومات</p><p>علم الحاسوب، تطوير البرمجيات، تكنولوجيا المعلومات، حوسبة (<span class="new-major">جديد</span>)، تكنولوجيا الوسائط المتعددة وتطوير الويب.</p><div class="rates-grid"><div class="rates-group"><span class="gender-title">طلاب</span><span class="rate-item"><span class="stream">علمي</span><span class="rate-value">70%</span></span><span class="rate-item"><span class="stream">أدبي</span><span class="rate-value">65%</span></span></div><div class="rates-group"><span class="gender-title">طالبات</span><span class="rate-item"><span class="stream">علمي</span><span class="rate-value">70%</span></span><span class="rate-item"><span class="stream">أدبي</span><span class="rate-value">65%</span></span></div></div></li></ul>`
+                    content: `<ul>
+                        <li>
+                            <p class="major-title">علم الحاسوب، تطوير البرمجيات، تكنولوجيا المعلومات، حوسبة</p>
+                            <p><span class="new-major">(جديد)</span></p>
+                            <div class="rates-grid">
+                                <div class="rates-group">
+                                    <span class="gender-title">طلاب</span>
+                                    <span class="rate-item"><span class="stream">علمي</span><span class="rate-value">70%</span></span>
+                                    <span class="rate-item"><span class="stream">أدبي</span><span class="rate-value">65%</span></span>
+                                </div>
+                                <div class="rates-group">
+                                    <span class="gender-title">طالبات</span>
+                                    <span class="rate-item"><span class="stream">علمي</span><span class="rate-value">70%</span></span>
+                                    <span class="rate-item"><span class="stream">أدبي</span><span class="rate-value">65%</span></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <p class="major-title">تكنولوجيا الوسائط المتعددة وتطوير الويب</p>
+                            <div class="rates-grid">
+                                <div class="rates-group" style="grid-column: 1 / -1;">
+                                    <span class="gender-title">طلاب وطالبات</span>
+                                    <span class="rate-item"><span class="stream">علمي</span><span class="rate-value">65%</span></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <p class="major-title">الهندسة المتقدمة وتطبيقات الأجهزة الذكية</p>
+                            <div class="rates-grid">
+                                <div class="rates-group" style="grid-column: 1 / -1;">
+                                    <span class="gender-title">طلاب وطالبات</span>
+                                    <span class="rate-item"><span class="stream">علمي</span><span class="rate-value">65%</span></span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>`
                 },
                 humanities: {
                     title: 'الآداب والعلوم الإنسانية',
                     icon: 'fas fa-book-open',
                     content: `<ul><li><p class="major-title">الآداب</p><p>اللغة العربية، اللغة العربية فرعي الصحافة، اللغة الإنجليزية، اللغة الإنجليزية فرعي ترجمة، لغة إنجليزية فرعي دراسات فرنسية، لغة إنجليزية فرعي صحافة وإعلام (<span class="new-major">جديد</span>)، الجغرافيا، الجغرافيا فرعي نظم المعلومات الجغرافية، الصحافة والإعلام، الإعلام الرقمي، الخدمة الاجتماعية، التاريخ، الآثار.</p><div class="rates-grid"><div class="rates-group" style="grid-column: 1 / -1;"><span class="gender-title">طلاب وطالبات</span><span class="rate-item"><span class="stream">أدبي/علمي</span><span class="rate-value">65%</span></span></div></div></li></ul>`
                 },
-                management_education: {
-                    title: 'الاقتصاد والتربية',
+                economics: {
+                    title: 'الاقتصاد والعلوم الإدارية',
                     icon: 'fas fa-chart-line',
-                    content: `<ul><li><p class="major-title">الاقتصاد والعلوم الإدارية</p><p>المحاسبة (الدراسة باللغة العربية)، إدارة الأعمال (الدراسة باللغة الإنجليزية)، المحاسبة (الدراسة باللغة الإنجليزية)، إدارة الأعمال فرعي الإدارة، إدارة الأعمال فرعي الاقتصاد، العلوم السياسية، الاقتصاد، الاقتصاد فرعي الإحصاء، والإعلام الاقتصادي والعلوم التطبيقي، العلوم الصيرفية، المحاسبة فرعي تكنولوجيا المعلومات، الاقتصاد الرقمي وتكنولوجيا المال.</p><div class="rates-grid"><div class="rates-group" style="grid-column: 1 / -1;"><span class="gender-title">طلاب وطالبات</span><span class="rate-item"><span class="stream">أدبي/علمي</span><span class="rate-value">65%</span></span></div></div></li><li><p class="major-title">التربية</p><p>تعليم اللغة العربية، تعليم اللغة الإنجليزية، تعليم العلوم، تعليم الرياضيات، تعليم اجتماعيات، تعليم التربية الإسلامية، المرحلة الأساسية، الإرشاد النفسي والتوجيه التربوي، الكيمياء وأساليب تدريسها، الفيزياء وأساليب تدريسها، الأحياء وأساليب تدريسها، الحاسوب وتكنولوجيا التعليم، اللغة العربية وأساليب تدريسها، اللغة الإنجليزية وأساليب تدريسها، التاريخ وأساليب تدريسه، الجغرافيا وأساليب تدريسها، الرياضيات وأساليب تدريسها.</p><div class="rates-grid"><div class="rates-group" style="grid-column: 1 / -1;"><span class="gender-title">طلاب وطالبات</span><span class="rate-item"><span class="stream">أدبي/علمي</span><span class="rate-value">65%</span></span></div></div></li></ul>`
+                    content: `<ul><li><p class="major-title">الاقتصاد والعلوم الإدارية</p><p>المحاسبة (الدراسة باللغة العربية)، إدارة الأعمال (الدراسة باللغة الإنجليزية)، المحاسبة (الدراسة باللغة الإنجليزية)، إدارة الأعمال فرعي الإدارة، إدارة الأعمال فرعي الاقتصاد، العلوم السياسية، الاقتصاد، الاقتصاد فرعي الإحصاء، والإعلام الاقتصادي والعلوم التطبيقي، العلوم الصيرفية، المحاسبة فرعي تكنولوجيا المعلومات، الاقتصاد الرقمي وتكنولوجيا المال.</p><div class="rates-grid"><div class="rates-group" style="grid-column: 1 / -1;"><span class="gender-title">طلاب وطالبات</span><span class="rate-item"><span class="stream">أدبي/علمي</span><span class="rate-value">65%</span></span></div></div></li></ul>`
+                },
+                education: {
+                    title: 'التربية',
+                    icon: 'fas fa-graduation-cap',
+                    content: `<ul><li><p class="major-title">التربية</p><p>تعليم اللغة العربية، تعليم اللغة الإنجليزية، تعليم العلوم، تعليم الرياضيات، تعليم اجتماعيات، تعليم التربية الإسلامية، المرحلة الأساسية، الإرشاد النفسي والتوجيه التربوي، الكيمياء وأساليب تدريسها، الفيزياء وأساليب تدريسها، الأحياء وأساليب تدريسها، الحاسوب وتكنولوجيا التعليم، اللغة العربية وأساليب تدريسها، اللغة الإنجليزية وأساليب تدريسها، التاريخ وأساليب تدريسه، الجغرافيا وأساليب تدريسها، الرياضيات وأساليب تدريسها.</p><div class="rates-grid"><div class="rates-group" style="grid-column: 1 / -1;"><span class="gender-title">طلاب وطالبات</span><span class="rate-item"><span class="stream">أدبي/علمي</span><span class="rate-value">65%</span></span></div></div></li></ul>`
                 },
                 sharia: {
-                    title: 'الشريعة وأصول الدين',
+                    title: 'الشريعة والقانون',
+                    icon: 'fas fa-balance-scale',
+                    content: `<ul>
+                        <li>
+                            <p class="major-title">الشريعة الإسلامية فرعي فتوى وتحكيم</p>
+                            <div class="rates-grid">
+                                <div class="rates-group" style="grid-column: 1 / -1;">
+                                    <span class="gender-title">طلاب وطالبات</span>
+                                    <span class="rate-item"><span class="stream">أدبي/علمي</span><span class="rate-value">65%</span></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <p class="major-title">الشريعة والقانون</p>
+                            <div class="rates-grid">
+                                <div class="rates-group" style="grid-column: 1 / -1;">
+                                    <span class="gender-title">طلاب وطالبات</span>
+                                    <span class="rate-item"><span class="stream">أدبي/علمي</span><span class="rate-value">75%</span></span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>`
+                },
+                religion: {
+                    title: 'أصول الدين',
                     icon: 'fas fa-mosque',
-                    content: `<ul><li><p class="major-title">الشريعة والقانون</p><p>الشريعة الإسلامية، الشريعة الإسلامية فرعي فتوى وتحكيم.</p><div class="rates-grid"><div class="rates-group"><span class="gender-title">طلاب</span><span class="rate-item"><span class="stream">أدبي/علمي</span><span class="rate-value">75%</span></span></div><div class="rates-group"><span class="gender-title">طالبات</span><span class="rate-item"><span class="stream">أدبي/علمي</span><span class="rate-value">75%</span></span></div></div></li><li><p class="major-title">أصول الدين</p><p>أصول دين (عام)، الدعوة والإعلام.</p><div class="rates-grid"><div class="rates-group" style="grid-column: 1 / -1;"><span class="gender-title">طلاب وطالبات</span><span class="rate-item"><span class="stream">أدبي/علمي</span><span class="rate-value">65%</span></span></div></div></li></ul>`
+                    content: `<ul><li><p class="major-title">أصول الدين</p><p>أصول دين (عام)، الدعوة والإعلام.</p><div class="rates-grid"><div class="rates-group" style="grid-column: 1 / -1;"><span class="gender-title">طلاب وطالبات</span><span class="rate-item"><span class="stream">أدبي/علمي</span><span class="rate-value">65%</span></span></div></div></li></ul>`
                 }
             };
 
@@ -152,8 +255,8 @@
                         modalBody.innerHTML = data.content;
                         modalBody.scrollTop = 0; 
                         
-                        // إظهار الملاحظة فقط لقسم العلوم الصحية والطب
-                        if (category === 'health') {
+                        // إظهار الملاحظة فقط لكلية الطب البشري
+                        if (category === 'medicine') {
                             modalFooter.style.display = 'block';
                         } else {
                             modalFooter.style.display = 'none';

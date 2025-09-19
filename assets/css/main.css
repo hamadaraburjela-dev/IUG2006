@@ -41,9 +41,12 @@
     --icon-glow: 0 0 15px rgba(0, 102, 51, 0.5);
     
     /* ألوان الكليات المميزة */
+    --medicine-color: #c0392b;
     --health-color: #e74c3c;
+    --nursing-color: #8e44ad;
     --engineering-color: #3498db;
-    --it-science-color: #9b59b6;
+    --science-color: #16a085;
+    --it-color: #9b59b6;
     --humanities-color: #e67e22;
     --management-color: #f39c12;
     --sharia-color: #27ae60;
@@ -2536,7 +2539,44 @@ body {
 }
 
 /* === أنماط مخصصة للكليات مع لمسات بصرية محسنة === */
-/* كلية العلوم الصحية والطب */
+/* كلية الطب البشري */
+.category-card[data-category="medicine"] {
+    background: linear-gradient(145deg, #fdf2f2, #ffffff);
+    border: 2px solid rgba(192, 57, 43, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.category-card[data-category="medicine"]::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(192, 57, 43, 0.05) 0%, transparent 70%);
+    z-index: 0;
+}
+
+.category-card[data-category="medicine"] i {
+    color: var(--medicine-color);
+    text-shadow: 0 0 20px rgba(192, 57, 43, 0.3);
+    z-index: 1;
+    position: relative;
+}
+
+.category-card[data-category="medicine"]:hover {
+    border-color: var(--medicine-color);
+    box-shadow: 0 15px 35px rgba(192, 57, 43, 0.2);
+    background: linear-gradient(145deg, #fcebeb, #ffffff);
+}
+
+.category-card[data-category="medicine"]:hover i {
+    transform: scale(1.15) rotate(-5deg);
+    filter: drop-shadow(0 0 15px rgba(192, 57, 43, 0.4));
+}
+
+/* كلية العلوم الصحية */
 .category-card[data-category="health"] {
     background: linear-gradient(145deg, #fff5f5, #ffffff);
     border: 2px solid rgba(231, 76, 60, 0.2);
@@ -2571,6 +2611,43 @@ body {
 .category-card[data-category="health"]:hover i {
     transform: scale(1.15) rotate(-5deg);
     filter: drop-shadow(0 0 15px rgba(231, 76, 60, 0.4));
+}
+
+/* كلية التمريض والقبالة */
+.category-card[data-category="nursing"] {
+    background: linear-gradient(145deg, #f8f5ff, #ffffff);
+    border: 2px solid rgba(142, 68, 173, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.category-card[data-category="nursing"]::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(142, 68, 173, 0.05) 0%, transparent 70%);
+    z-index: 0;
+}
+
+.category-card[data-category="nursing"] i {
+    color: var(--nursing-color);
+    text-shadow: 0 0 20px rgba(142, 68, 173, 0.3);
+    z-index: 1;
+    position: relative;
+}
+
+.category-card[data-category="nursing"]:hover {
+    border-color: var(--nursing-color);
+    box-shadow: 0 15px 35px rgba(142, 68, 173, 0.2);
+    background: linear-gradient(145deg, #f3f0ff, #ffffff);
+}
+
+.category-card[data-category="nursing"]:hover i {
+    transform: scale(1.15) rotate(-3deg);
+    filter: drop-shadow(0 0 15px rgba(142, 68, 173, 0.4));
 }
 
 /* كلية الهندسة */
@@ -2610,15 +2687,52 @@ body {
     filter: drop-shadow(0 0 15px rgba(52, 152, 219, 0.4));
 }
 
-/* كلية العلوم وتكنولوجيا المعلومات */
-.category-card[data-category="it_science"] {
+/* كلية العلوم */
+.category-card[data-category="science"] {
+    background: linear-gradient(145deg, #f0fffc, #ffffff);
+    border: 2px solid rgba(22, 160, 133, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.category-card[data-category="science"]::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(22, 160, 133, 0.05) 0%, transparent 70%);
+    z-index: 0;
+}
+
+.category-card[data-category="science"] i {
+    color: var(--science-color);
+    text-shadow: 0 0 20px rgba(22, 160, 133, 0.3);
+    z-index: 1;
+    position: relative;
+}
+
+.category-card[data-category="science"]:hover {
+    border-color: var(--science-color);
+    box-shadow: 0 15px 35px rgba(22, 160, 133, 0.2);
+    background: linear-gradient(145deg, #e8fff8, #ffffff);
+}
+
+.category-card[data-category="science"]:hover i {
+    transform: scale(1.15) rotate(-3deg);
+    filter: drop-shadow(0 0 15px rgba(22, 160, 133, 0.4));
+}
+
+/* كلية تكنولوجيا المعلومات */
+.category-card[data-category="it"] {
     background: linear-gradient(145deg, #faf5ff, #ffffff);
     border: 2px solid rgba(155, 89, 182, 0.2);
     position: relative;
     overflow: hidden;
 }
 
-.category-card[data-category="it_science"]::before {
+.category-card[data-category="it"]::before {
     content: '';
     position: absolute;
     top: -50%;
@@ -2629,20 +2743,20 @@ body {
     z-index: 0;
 }
 
-.category-card[data-category="it_science"] i {
-    color: var(--it-science-color);
+.category-card[data-category="it"] i {
+    color: var(--it-color);
     text-shadow: 0 0 20px rgba(155, 89, 182, 0.3);
     z-index: 1;
     position: relative;
 }
 
-.category-card[data-category="it_science"]:hover {
-    border-color: var(--it-science-color);
+.category-card[data-category="it"]:hover {
+    border-color: var(--it-color);
     box-shadow: 0 15px 35px rgba(155, 89, 182, 0.2);
     background: linear-gradient(145deg, #f5f0ff, #ffffff);
 }
 
-.category-card[data-category="it_science"]:hover i {
+.category-card[data-category="it"]:hover i {
     transform: scale(1.15) rotate(-3deg);
     filter: drop-shadow(0 0 15px rgba(155, 89, 182, 0.4));
 }
