@@ -61,10 +61,13 @@
 
         .header h1 {
             font-size: 3.2rem;
-            color: var(--primary-dark);
+            background: linear-gradient(135deg, #006633, #004d25);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
             font-weight: 800;
             margin-bottom: 15px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+            text-shadow: none;
         }
         
         #categories-grid {
@@ -74,16 +77,17 @@
         }
 
         .category-card {
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, rgba(0, 102, 51, 0.1), rgba(0, 77, 37, 0.1));
+            border: 2px solid rgba(0, 102, 51, 0.3);
             border-radius: var(--border-radius-large);
             text-align: center;
             padding: 40px 20px;
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            border: 2px solid transparent;
+            transform: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 102, 51, 0.15);
             animation: fadeInCard 0.5s ease-out forwards;
             opacity: 0;
-            transform: translateY(20px);
         }
         
         .category-card:nth-child(1) { animation-delay: 0.1s; }
@@ -100,9 +104,8 @@
         .category-card i {
             font-size: 4rem;
             margin-bottom: 20px;
-            background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--primary-color);
+            text-shadow: 0 0 15px rgba(0, 102, 51, 0.4);
             transition: all 0.3s ease-in-out;
         }
 
@@ -114,30 +117,50 @@
         }
         
         .category-card:hover {
-            transform: translateY(-12px) scale(1.03);
-            box-shadow: var(--shadow-hover);
-            border-color: var(--primary-color);
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 15px 35px rgba(0, 102, 51, 0.25);
         }
 
         .category-card:hover i { transform: scale(1.1) rotate(5deg); }
         .category-card:hover h3 { color: var(--primary-dark); }
         
         .welcome-banner {
-            background: linear-gradient(135deg, rgba(0, 102, 51, 0.05), rgba(0, 77, 37, 0.08));
-            border-right: 5px solid var(--primary-color);
+            background: linear-gradient(135deg, rgba(0, 102, 51, 0.1), rgba(0, 77, 37, 0.1));
+            border: 2px solid rgba(0, 102, 51, 0.2);
             border-radius: var(--border-radius-medium);
             padding: 25px 20px; margin: 30px auto 0; max-width: 750px;
             display: flex; align-items: center; gap: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px rgba(0, 102, 51, 0.15);
             animation: slideInBanner 1s ease-out forwards;
         }
         @keyframes slideInBanner { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
-        .welcome-banner i.fa-bullhorn { font-size: 2.5rem; color: var(--primary-color); }
-        .welcome-banner p { margin: 0; font-size: 1.2rem; color: var(--text-main); text-align: right; }
+        .welcome-banner i.fa-bullhorn { 
+            font-size: 2.5rem; 
+            color: var(--primary-color); 
+            text-shadow: 0 0 15px rgba(0, 102, 51, 0.3);
+            animation: pulse 2s infinite;
+        }
+        .welcome-banner p { 
+            margin: 0; 
+            font-size: 1.2rem; 
+            color: #2c3e50; 
+            text-align: right;
+            font-weight: 500;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
         
         .back-button-container {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.9));
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             text-align: center;
-            margin-top: 50px;
+            margin-top: 20px;
         }
 
         .action-button {
@@ -147,19 +170,21 @@
             padding: 16px 35px;
             border: none;
             border-radius: 50px;
-            background: linear-gradient(45deg, var(--primary-color), #007a3f);
+            background: linear-gradient(135deg, var(--primary-color), #007a3f);
             color: var(--white-color);
             font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 102, 51, 0.2);
+            transform: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 102, 51, 0.3);
             margin: 5px;
+            text-decoration: none;
         }
 
         .action-button:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(0, 102, 51, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 102, 51, 0.4);
         }
 
         /* === تصميم النافذة المنبثقة المحسّن === */
@@ -278,11 +303,11 @@
 <div class="container">
 <header class="header">
 <img alt="شعار الجامعة الإسلامية بغزة" class="university-logo" height="250" loading="lazy" src="assets/images/logo.webp" width="250"/>
-<h1>التبادل الأكاديمي</h1>
+<h1>🌍 التبادل الأكاديمي</h1>
 <div class="welcome-banner">
 <i class="fas fa-bullhorn"></i>
 <p>
-                    مرحباً بك في عالم التبادل الأكاديمي! اكتشف فرص الدراسة في الخارج والبرامج المتاحة التي تثري مسيرتك الجامعية.
+                    🌟 مرحباً بك في عالم التبادل الأكاديمي! اكتشف فرص الدراسة في الخارج والبرامج المتاحة التي تثري مسيرتك الجامعية.
                 </p>
 </div>
 </header>
