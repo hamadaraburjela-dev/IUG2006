@@ -48,8 +48,10 @@
     --science-color: #16a085;
     --it-color: #9b59b6;
     --humanities-color: #e67e22;
-    --management-color: #f39c12;
-    --sharia-color: #27ae60;
+    --economics-color: #f39c12;
+    --education-color: #2c3e50;
+    --sharia-color: #8b4513;
+    --religion-color: #27ae60;
 }
 
 body {
@@ -2798,15 +2800,16 @@ body {
     filter: drop-shadow(0 0 15px rgba(230, 126, 34, 0.4));
 }
 
-/* كلية الاقتصاد والتربية */
-.category-card[data-category="management_education"] {
+
+/* كلية الاقتصاد والعلوم الإدارية */
+.category-card[data-category="economics"] {
     background: linear-gradient(145deg, #fffaf0, #ffffff);
     border: 2px solid rgba(243, 156, 18, 0.2);
     position: relative;
     overflow: hidden;
 }
 
-.category-card[data-category="management_education"]::before {
+.category-card[data-category="economics"]::before {
     content: '';
     position: absolute;
     top: -50%;
@@ -2817,28 +2820,65 @@ body {
     z-index: 0;
 }
 
-.category-card[data-category="management_education"] i {
-    color: var(--management-color);
+.category-card[data-category="economics"] i {
+    color: var(--economics-color);
     text-shadow: 0 0 20px rgba(243, 156, 18, 0.3);
     z-index: 1;
     position: relative;
 }
 
-.category-card[data-category="management_education"]:hover {
-    border-color: var(--management-color);
+.category-card[data-category="economics"]:hover {
+    border-color: var(--economics-color);
     box-shadow: 0 15px 35px rgba(243, 156, 18, 0.2);
     background: linear-gradient(145deg, #fff8e6, #ffffff);
 }
 
-.category-card[data-category="management_education"]:hover i {
+.category-card[data-category="economics"]:hover i {
     transform: scale(1.15) rotate(-7deg);
     filter: drop-shadow(0 0 15px rgba(243, 156, 18, 0.4));
 }
 
-/* كلية الشريعة وأصول الدين */
+/* كلية التربية */
+.category-card[data-category="education"] {
+    background: linear-gradient(145deg, #f8f9fa, #ffffff);
+    border: 2px solid rgba(44, 62, 80, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.category-card[data-category="education"]::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(44, 62, 80, 0.05) 0%, transparent 70%);
+    z-index: 0;
+}
+
+.category-card[data-category="education"] i {
+    color: var(--education-color);
+    text-shadow: 0 0 20px rgba(44, 62, 80, 0.3);
+    z-index: 1;
+    position: relative;
+}
+
+.category-card[data-category="education"]:hover {
+    border-color: var(--education-color);
+    box-shadow: 0 15px 35px rgba(44, 62, 80, 0.2);
+    background: linear-gradient(145deg, #f4f5f7, #ffffff);
+}
+
+.category-card[data-category="education"]:hover i {
+    transform: scale(1.15) rotate(5deg);
+    filter: drop-shadow(0 0 15px rgba(44, 62, 80, 0.4));
+}
+
+/* كلية الشريعة والقانون */
 .category-card[data-category="sharia"] {
-    background: linear-gradient(145deg, #f0fff4, #ffffff);
-    border: 2px solid rgba(39, 174, 96, 0.2);
+    background: linear-gradient(145deg, #fdf5e6, #ffffff);
+    border: 2px solid rgba(139, 69, 19, 0.2);
     position: relative;
     overflow: hidden;
 }
@@ -2850,25 +2890,62 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(39, 174, 96, 0.05) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(139, 69, 19, 0.05) 0%, transparent 70%);
     z-index: 0;
 }
 
 .category-card[data-category="sharia"] i {
     color: var(--sharia-color);
-    text-shadow: 0 0 20px rgba(39, 174, 96, 0.3);
+    text-shadow: 0 0 20px rgba(139, 69, 19, 0.3);
     z-index: 1;
     position: relative;
 }
 
 .category-card[data-category="sharia"]:hover {
     border-color: var(--sharia-color);
-    box-shadow: 0 15px 35px rgba(39, 174, 96, 0.2);
-    background: linear-gradient(145deg, #e8fff0, #ffffff);
+    box-shadow: 0 15px 35px rgba(139, 69, 19, 0.2);
+    background: linear-gradient(145deg, #f9f0e1, #ffffff);
 }
 
 .category-card[data-category="sharia"]:hover i {
     transform: scale(1.15) rotate(4deg);
+    filter: drop-shadow(0 0 15px rgba(139, 69, 19, 0.4));
+}
+
+/* كلية أصول الدين */
+.category-card[data-category="religion"] {
+    background: linear-gradient(145deg, #f0fff4, #ffffff);
+    border: 2px solid rgba(39, 174, 96, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.category-card[data-category="religion"]::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(39, 174, 96, 0.05) 0%, transparent 70%);
+    z-index: 0;
+}
+
+.category-card[data-category="religion"] i {
+    color: var(--religion-color);
+    text-shadow: 0 0 20px rgba(39, 174, 96, 0.3);
+    z-index: 1;
+    position: relative;
+}
+
+.category-card[data-category="religion"]:hover {
+    border-color: var(--religion-color);
+    box-shadow: 0 15px 35px rgba(39, 174, 96, 0.2);
+    background: linear-gradient(145deg, #e8fff0, #ffffff);
+}
+
+.category-card[data-category="religion"]:hover i {
+    transform: scale(1.15) rotate(-4deg);
     filter: drop-shadow(0 0 15px rgba(39, 174, 96, 0.4));
 }
 

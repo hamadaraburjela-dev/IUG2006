@@ -8,6 +8,30 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
 <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" referrerpolicy="no-referrer" rel="stylesheet"/>
 <link href="assets/css/main.css" rel="stylesheet"/>
+<style>
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.content-section {
+    animation: fadeInUp 0.8s ease-out;
+}
+.item-card {
+    animation: fadeInUp 0.6s ease-out;
+    animation-fill-mode: both;
+}
+.item-card:nth-child(1) { animation-delay: 0.1s; }
+.item-card:nth-child(2) { animation-delay: 0.2s; }
+.item-card:nth-child(3) { animation-delay: 0.3s; }
+.item-card:nth-child(4) { animation-delay: 0.4s; }
+.item-card:nth-child(5) { animation-delay: 0.5s; }
+.item-card:nth-child(6) { animation-delay: 0.6s; }
+</style>
 <meta content="اكتشف خدمات الكافيتيريا في جامعة المعرفة – وجبات سريعة وصحية للطلاب وأعضاء الهيئة التدريسية." name="description"/><meta content="جامعة المعرفة | الكافيتيريا" property="og:title"/><meta content="اكتشف خدمات الكافيتيريا في جامعة المعرفة – وجبات سريعة وصحية للطلاب وأعضاء الهيئة التدريسية." property="og:description"/><meta content="/assets/images/arts-logo.webp" property="og:image"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="True" href="https://fonts.gstatic.com" rel="preconnect"/><meta content="ar_AR" property="og:locale"/><meta content="summary_large_image" name="twitter:card"/><meta content="جامعة المعرفة | الكافيتيريا" name="twitter:title"/><meta content="اكتشف خدمات الكافيتيريا في جامعة المعرفة – وجبات سريعة وصحية للطلاب وأعضاء الهيئة التدريسية." name="twitter:description"/><meta content="/assets/images/arts-logo.webp" name="twitter:image"/><link href="https://example.com/cafeteria.html" rel="canonical"/><link href="favicon.png" rel="icon" type="image/png"/><link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/></head>
 <body>
 <div id="status-bar-placeholder"></div>
@@ -19,53 +43,53 @@
 <div class="container">
 <header class="header">
 <img alt="شعار الجامعة الإسلامية بغزة" class="logo" height="250" loading="lazy" src="assets/images/logo.webp" width="250"/>
-<h1>الكافتيريا الجامعية</h1>
-<div class="welcome-banner">
-<i class="fas fa-utensils"></i>
-<p>
-                    مكانك المثالي لأخذ قسط من الراحة بين المحاضرات، والاستمتاع بأشهى المأكولات والمشروبات في أجواء طلابية مريحة.
+<h1 style="background: linear-gradient(135deg, #27ae60, #2ecc71); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: none;">🍽️ الكافيتيريا الجامعية</h1>
+<div class="welcome-banner" style="background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(46, 204, 113, 0.1)); border: 2px solid rgba(39, 174, 96, 0.2); box-shadow: 0 10px 30px rgba(39, 174, 96, 0.15);">
+<i class="fas fa-utensils" style="color: #27ae60; text-shadow: 0 0 15px rgba(39, 174, 96, 0.3); animation: pulse 2s infinite;"></i>
+<p style="color: #2c3e50; font-weight: 500;">
+                    🌟 مكانك المثالي لأخذ قسط من الراحة بين المحاضرات، والاستمتاع بأشهى المأكولات والمشروبات في أجواء طلابية مريحة.
                 </p>
 </div>
 </header>
-<div class="content-section" style="display: block;">
-<h2><i class="fas fa-hamburger heading-icon"></i> قائمة طعام متنوعة</h2>
-<p>نفخر بتقديم قائمة طعام غنية تلبي جميع الأذواق، حيث نسعى للارتقاء بمستوى الخدمات التي نقدمها لطلابنا الأعزاء.</p>
-<h3><i class="fas fa-shopping-basket heading-icon"></i> ماذا نقدم؟</h3>
+<div class="content-section" style="display: block; background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.9)); border-radius: 20px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08); padding: 30px; margin: 20px 0;">
+<h2 style="background: linear-gradient(135deg, #27ae60, #2ecc71); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 10px rgba(39, 174, 96, 0.2); font-size: 2.2em; margin-bottom: 20px;"><i class="fas fa-hamburger heading-icon" style="color: #27ae60; text-shadow: 0 0 15px rgba(39, 174, 96, 0.3);"></i> 🍔 قائمة طعام متنوعة</h2>
+<p style="background: linear-gradient(135deg, rgba(39, 174, 96, 0.05), rgba(46, 204, 113, 0.05)); padding: 20px; border-radius: 15px; border-left: 5px solid #27ae60; color: #2c3e50; font-weight: 500; line-height: 1.8; box-shadow: 0 5px 15px rgba(39, 174, 96, 0.1);">✨ نفخر بتقديم قائمة طعام غنية تلبي جميع الأذواق، حيث نسعى للارتقاء بمستوى الخدمات التي نقدمها لطلابنا الأعزاء.</p>
+<h3 style="background: linear-gradient(135deg, #2ecc71, #27ae60); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.8em; margin: 30px 0 20px 0;"><i class="fas fa-shopping-basket heading-icon" style="color: #2ecc71; text-shadow: 0 0 10px rgba(46, 204, 113, 0.3);"></i> 🛒 ماذا نقدم؟</h3>
 <div class="item-card-grid">
-<div class="item-card">
-<i class="fas fa-egg icon"></i>
-<span><b>الطعام الشعبي:</b> فول، حمص، فلافل ومشتقاتها.</span>
+<div class="item-card" style="background: linear-gradient(135deg, rgba(241, 196, 15, 0.1), rgba(243, 156, 18, 0.1)); border: 2px solid rgba(241, 196, 15, 0.3); transform: none; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(241, 196, 15, 0.15);" onmouseover="this.style.transform='translateY(-8px) scale(1.03)'; this.style.boxShadow='0 15px 35px rgba(241, 196, 15, 0.25)'" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 8px 25px rgba(241, 196, 15, 0.15)'">
+<i class="fas fa-egg icon" style="color: #f1c40f; text-shadow: 0 0 15px rgba(241, 196, 15, 0.4); font-size: 2em;"></i>
+<span><b style="color: #e67e22;">🥙 الطعام الشعبي:</b> فول، حمص، فلافل ومشتقاتها.</span>
 </div>
-<div class="item-card">
-<i class="fas fa-pizza-slice icon"></i>
-<span><b>الطعام السريع:</b> بيتزا، معجنات ومشتقاتها.</span>
+<div class="item-card" style="background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1)); border: 2px solid rgba(231, 76, 60, 0.3); transform: none; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(231, 76, 60, 0.15);" onmouseover="this.style.transform='translateY(-8px) scale(1.03)'; this.style.boxShadow='0 15px 35px rgba(231, 76, 60, 0.25)'" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 8px 25px rgba(231, 76, 60, 0.15)'">
+<i class="fas fa-pizza-slice icon" style="color: #e74c3c; text-shadow: 0 0 15px rgba(231, 76, 60, 0.4); font-size: 2em;"></i>
+<span><b style="color: #c0392b;">🍕 الطعام السريع:</b> بيتزا، معجنات ومشتقاتها.</span>
 </div>
-<div class="item-card">
-<i class="fas fa-drumstick-bite icon"></i>
-<span><b>وجبات الغداء:</b> شاورما، مشاوي، سندويشات متنوعة.</span>
+<div class="item-card" style="background: linear-gradient(135deg, rgba(155, 89, 182, 0.1), rgba(142, 68, 173, 0.1)); border: 2px solid rgba(155, 89, 182, 0.3); transform: none; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(155, 89, 182, 0.15);" onmouseover="this.style.transform='translateY(-8px) scale(1.03)'; this.style.boxShadow='0 15px 35px rgba(155, 89, 182, 0.25)'" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 8px 25px rgba(155, 89, 182, 0.15)'">
+<i class="fas fa-drumstick-bite icon" style="color: #9b59b6; text-shadow: 0 0 15px rgba(155, 89, 182, 0.4); font-size: 2em;"></i>
+<span><b style="color: #8e44ad;">🥙 وجبات الغداء:</b> شاورما، مشاوي، سندويشات متنوعة.</span>
 </div>
-<div class="item-card">
-<i class="fas fa-coffee icon"></i>
-<span><b>المشروبات والحلويات:</b> مشروبات ساخنة، حلويات، آيس كريم.</span>
+<div class="item-card" style="background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(41, 128, 185, 0.1)); border: 2px solid rgba(52, 152, 219, 0.3); transform: none; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(52, 152, 219, 0.15);" onmouseover="this.style.transform='translateY(-8px) scale(1.03)'; this.style.boxShadow='0 15px 35px rgba(52, 152, 219, 0.25)'" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 8px 25px rgba(52, 152, 219, 0.15)'">
+<i class="fas fa-coffee icon" style="color: #3498db; text-shadow: 0 0 15px rgba(52, 152, 219, 0.4); font-size: 2em;"></i>
+<span><b style="color: #2980b9;">☕ المشروبات والحلويات:</b> مشروبات ساخنة، حلويات، آيس كريم.</span>
 </div>
-<div class="item-card">
-<i class="fas fa-shopping-cart icon"></i>
-<span><b>ميني ماركت:</b> لتلبية احتياجاتك اليومية السريعة.</span>
+<div class="item-card" style="background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(22, 160, 133, 0.1)); border: 2px solid rgba(39, 174, 96, 0.3); transform: none; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(39, 174, 96, 0.15);" onmouseover="this.style.transform='translateY(-8px) scale(1.03)'; this.style.boxShadow='0 15px 35px rgba(39, 174, 96, 0.25)'" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 8px 25px rgba(39, 174, 96, 0.15)'">
+<i class="fas fa-shopping-cart icon" style="color: #27ae60; text-shadow: 0 0 15px rgba(39, 174, 96, 0.4); font-size: 2em;"></i>
+<span><b style="color: #16a085;">🛒 ميني ماركت:</b> لتلبية احتياجاتك اليومية السريعة.</span>
 </div>
-<div class="item-card">
-<i class="fas fa-leaf icon"></i>
-<span><b>خيارات صحية:</b> سلطات ومشروبات طازجة.</span>
+<div class="item-card" style="background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(22, 160, 133, 0.1)); border: 2px solid rgba(39, 174, 96, 0.3); transform: none; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(39, 174, 96, 0.15);" onmouseover="this.style.transform='translateY(-8px) scale(1.03)'; this.style.boxShadow='0 15px 35px rgba(39, 174, 96, 0.25)'" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 8px 25px rgba(39, 174, 96, 0.15)'">
+<i class="fas fa-leaf icon" style="color: #27ae60; text-shadow: 0 0 15px rgba(39, 174, 96, 0.4); font-size: 2em;"></i>
+<span><b style="color: #16a085;">🥗 خيارات صحية:</b> سلطات ومشروبات طازجة.</span>
 </div>
 </div>
-<h3 style="margin-top: 40px;"><i class="fas fa-users heading-icon"></i> أجواء مثالية</h3>
-<p>توفر الكافتيريا مساحات جلوس مريحة ومناسبة للدراسة أو لقاء الأصدقاء، مما يجعلها مركزاً حيوياً للحياة الطلابية في الحرم الجامعي.</p>
+<h3 style="margin-top: 40px; background: linear-gradient(135deg, #3498db, #2980b9); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.8em;"><i class="fas fa-users heading-icon" style="color: #3498db; text-shadow: 0 0 10px rgba(52, 152, 219, 0.3);"></i> 👥 أجواء مثالية</h3>
+<p style="background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(41, 128, 185, 0.05)); padding: 20px; border-radius: 15px; border-left: 5px solid #3498db; color: #2c3e50; font-weight: 500; line-height: 1.8; box-shadow: 0 5px 15px rgba(52, 152, 219, 0.1);">🪑 توفر الكافتيريا مساحات جلوس مريحة ومناسبة للدراسة أو لقاء الأصدقاء، مما يجعلها مركزاً حيوياً للحياة الطلابية في الحرم الجامعي.</p>
 </div>
-<div class="back-button-container">
-<button class="action-button" id="start-cafeteria-quiz-btn">
-                ابدأ تحدي الكافتيريا! <span class="btn-icon">😋</span>
+<div class="back-button-container" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.9)); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); margin-top: 20px;">
+<button class="action-button" id="start-cafeteria-quiz-btn" style="background: linear-gradient(135deg, #27ae60, #2ecc71); border: none; box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3); transform: none; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 12px 35px rgba(39, 174, 96, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(39, 174, 96, 0.3)'"
+                🍴 ابدأ تحدي الكافتيريا! <span class="btn-icon">😋</span>
 </button>
-<a class="action-button" href="index.html">
-<i class="fas fa-home"></i> العودة للخريطة
+<a class="action-button" href="index.html" style="background: linear-gradient(135deg, #3498db, #2980b9); border: none; box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3); transform: none; transition: all 0.3s ease; text-decoration: none;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 12px 35px rgba(52, 152, 219, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(52, 152, 219, 0.3)'">
+<i class="fas fa-home"></i> 🏠 العودة للخريطة
             </a>
 </div>
 </div>
