@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
 <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" referrerpolicy="no-referrer" rel="stylesheet"/>
 <link href="assets/css/main.css" rel="stylesheet"/>
-<link href="assets/css/brand.css" rel="stylesheet"/>
 <style>
 @keyframes pulse {
     0% { transform: scale(1); }
@@ -41,12 +40,12 @@
 <div class="container">
 <header class="header">
 <img alt="شعار الجامعة الإسلامية بغزة" class="university-logo" height="250" loading="lazy" src="assets/images/logo.webp" width="250"/>
-<h1 class="hero-title">💰 دليل المنح والمساعدات</h1>
-<div class="welcome-banner info-card">
-    <i class="fas fa-bullhorn icon" aria-hidden="true"></i>
-    <p class="text-muted">
-        🌟 ترحب بكم <b>الجامعة الإسلامية</b>، وتستعرض لكم أبرز المنح والمساعدات التي تقدمها لدعم مسيرتكم التعليمية. استكشف الفئات المختلفة وابدأ تحدي المنح لتعزيز رصيدك.
-    </p>
+<h1 style="background: linear-gradient(135deg, #f39c12, #e67e22); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: none;">💰 دليل المنح والمساعدات</h1>
+<div class="welcome-banner" style="background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1)); border: 2px solid rgba(243, 156, 18, 0.2); box-shadow: 0 10px 30px rgba(243, 156, 18, 0.15);">
+<i class="fas fa-bullhorn" style="color: #f39c12; text-shadow: 0 0 15px rgba(243, 156, 18, 0.3); animation: pulse 2s infinite;"></i>
+<p style="color: #2c3e50; font-weight: 500;">
+                    🌟 ترحب بكم <b>الجامعة الإسلامية</b>، وتستعرض لكم أبرز المنح والمساعدات التي تقدمها لدعم مسيرتكم التعليمية. استكشف الفئات المختلفة وابدأ تحدي المنح لتعزيز رصيدك.
+                </p>
 </div>
 </header>
 <div id="categories-grid">
@@ -67,13 +66,13 @@
 <h3>منح الدعم الأسري والمجتمعي</h3>
 </div>
 </div>
-<div class="back-button-container" style="margin-top:20px;">
-    <button class="action-button gold-btn" id="start-grants-quiz-btn">
-        💰 ابدأ تحدي المنح الآن! <span class="btn-icon">💡</span>
-    </button>
-    <button class="action-button" id="back-to-home-btn">
-        <i class="fas fa-home"></i> 🏠 العودة للرئيسية
-    </button>
+<div class="back-button-container" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.9)); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); margin-top: 20px;">
+<button class="action-button" id="start-grants-quiz-btn" style="background: linear-gradient(135deg, #f39c12, #e67e22); border: none; box-shadow: 0 8px 25px rgba(243, 156, 18, 0.3); transform: none; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 12px 35px rgba(243, 156, 18, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(243, 156, 18, 0.3)'">
+💰 ابدأ تحدي المنح الآن! <span class="btn-icon">💡</span>
+</button>
+<button class="action-button" id="back-to-home-btn" style="background: linear-gradient(135deg, #3498db, #2980b9); border: none; box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3); transform: none; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 12px 35px rgba(52, 152, 219, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(52, 152, 219, 0.3)'">
+<i class="fas fa-home"></i> 🏠 العودة للرئيسية
+            </button>
 </div>
 </div>
 <audio id="correct-sound" preload="auto" src="assets/sounds/correct.mp3"></audio>
