@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>عمادة شؤون الطلبة - الجامعة الإسلامية بغزة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" referrerpolicy="no-referrer" rel="stylesheet"/>
+<link href="assets/css/main.css" rel="stylesheet"/>
+<style>
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.content-section {
+    animation: fadeInUp 0.8s ease-out;
+}
+.category-card {
+    animation: fadeInUp 0.6s ease-out;
+    animation-fill-mode: both;
+}
+.category-card:nth-child(1) { animation-delay: 0.1s; }
+.category-card:nth-child(2) { animation-delay: 0.2s; }
+.category-card:nth-child(3) { animation-delay: 0.3s; }
+.category-card:nth-child(4) { animation-delay: 0.4s; }
+</style>
+<meta content="عمادة شؤون الطلبة - الجامعة الإسلامية بغزة" property="og:title"/><meta content="" property="og:description"/><meta content="/assets/images/arts-logo.webp" property="og:image"/><meta content="ar_AR" property="og:locale"/><meta content="summary_large_image" name="twitter:card"/><meta content="/assets/images/arts-logo.webp" name="twitter:image"/><link href="https://example.com/studentaffairs.html" rel="canonical"/><link href="favicon.png" rel="icon" type="image/png"/><link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/></head>
+<body>
+<div id="status-bar-placeholder"></div>
+<audio id="correct-sound" preload="auto" src="assets/sounds/correct.mp3"></audio>
+<audio id="incorrect-sound" preload="auto" src="assets/sounds/funny.mp3"></audio>
+<audio id="transition-sound" preload="auto" src="assets/sounds/turning.mp3"></audio>
+<audio id="guide-appears-sound" preload="auto" src="assets/sounds/guide_appears.mp3"></audio>
+<audio id="badge-sound" preload="auto" src="assets/sounds/badge.mp3"></audio>
+<div class="container">
+<header class="header">
+<img alt="شعار الجامعة الإسلامية بغزة" class="university-logo" src="assets/images/logo.webp"/>
+<h1 style="background: linear-gradient(135deg, #9b59b6, #8e44ad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: none;">🎓 عمادة شؤون الطلبة</h1>
+<div class="welcome-banner" style="background: linear-gradient(135deg, rgba(155, 89, 182, 0.1), rgba(142, 68, 173, 0.1)); border: 2px solid rgba(155, 89, 182, 0.2); box-shadow: 0 10px 30px rgba(155, 89, 182, 0.15);">
+<i class="fas fa-bullhorn" style="color: #9b59b6; text-shadow: 0 0 15px rgba(155, 89, 182, 0.3); animation: pulse 2s infinite;"></i>
+<p style="color: #2c3e50; font-weight: 500;">
+                    🌟 ترحب بكم عمادة شؤون الطلبة، رفيقكم الدائم خلال رحلتكم الجامعية نحو التميز والإبداع.
+                </p>
+</div>
+</header>
+<div id="categories-grid">
+<div class="category-card" data-category="about">
+<i class="fas fa-info-circle"></i>
+<h3>عن العمادة</h3>
+</div>
+<div class="category-card" data-category="services">
+<i class="fas fa-hands-helping"></i>
+<h3>الأقسام والخدمات</h3>
+</div>
+<div class="category-card" data-category="non-curricular">
+<i class="fas fa-basketball-ball"></i>
+<h3>الأنشطة اللامنهجية</h3>
+</div>
+<div class="category-card" data-category="guidance">
+<i class="fas fa-comments"></i>
+<h3>التوجيه والإرشاد</h3>
+</div>
+</div>
+<div class="back-button-container" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.9)); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); margin-top: 20px;">
+<button class="action-button" id="start-studentaffairs-quiz-btn" style="background: linear-gradient(135deg, #9b59b6, #8e44ad); border: none; box-shadow: 0 8px 25px rgba(155, 89, 182, 0.3); transform: none; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 12px 35px rgba(155, 89, 182, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(155, 89, 182, 0.3)'">
+🎓 ابدأ تحدي شؤون الطلبة الآن! <span class="btn-icon">💡</span>
+</button>
+<button class="action-button" id="back-to-home-btn" style="background: linear-gradient(135deg, #3498db, #2980b9); border: none; box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3); transform: none; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 12px 35px rgba(52, 152, 219, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(52, 152, 219, 0.3)'">
+<i class="fas fa-home"></i> 🏠 العودة للرئيسية
+            </button>
+</div>
+</div>
+<div class="modal-container" id="faculty-modal">
+<div class="modal-content">
+<button class="close-button" id="close-modal-btn"><i class="fas fa-times"></i></button>
+<div class="modal-header">
+<i class="fas fa-university" id="modal-icon"></i>
+<h2 id="modal-title"></h2>
+</div>
+<div id="modal-body"></div>
+<div class="modal-footer">
+<p><strong>ملاحظة هامة:</strong> المعلومات هنا ملخصة. يرجى مراجعة الموقع الرسمي للعمادة للحصول على التفاصيل الكاملة.</p>
+</div>
+</div>
+</div>
+<div class="modal-container" id="quiz-modal">
+<div class="modal-content">
+<button class="close-button" id="close-quiz-modal-btn"><i class="fas fa-times"></i></button>
+<div class="modal-header">
+<i class="fas fa-question-circle"></i>
+<h2>تحدي شؤون الطلبة</h2>
+</div>
+<div id="quiz-body">
+</div>
+</div>
+</div>
+<div class="feedback-popup-container" id="feedback-popup">
+<div class="feedback-popup-content">
+<span id="feedback-emoji"></span>
+<p id="feedback-message"></p>
+<p class="feedback-hint" id="feedback-hint"></p>
+<div class="feedback-progress-bar"></div>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoriesData = {
+                about: {
+                    title: 'عن العمادة',
+                    icon: 'fas fa-info-circle',
+                    content: `
+                        <ul>
+                            <li>
+                                <p class="major-title">تاريخ ومهام</p>
+                                <p>أنشئت عمادة شؤون الطلبة في عام 1981م. وتتولى المهام التالية:</p>
+                                <ul class="info-list" style="list-style: none; padding-right: 20px;">
+                                    <li><i class="fas fa-check-circle" style="color: var(--primary-color); margin-left: 5px;"></i> دراسة مشكلات الطلبة الاقتصادية والاجتماعية.</li>
+                                    <li><i class="fas fa-check-circle" style="color: var(--primary-color); margin-left: 5px;"></i> الإشراف على الأنشطة اللامنهجية (الثقافية، الرياضية، الفنية).</li>
+                                    <li><i class="fas fa-check-circle" style="color: var(--primary-color); margin-left: 5px;"></i> متابعة مجالس الطلبة وحل مشاكلهم اليومية.</li>
+                                    <li><i class="fas fa-check-circle" style="color: var(--primary-color); margin-left: 5px;"></i> الإشراف على مرافق الجامعة ومراقبة انتظام الدراسة.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    `
+                },
+                services: {
+                    title: 'الأقسام والخدمات',
+                    icon: 'fas fa-hands-helping',
+                    content: `
+                        <ul>
+                            <li>
+                                <p class="major-title">قسم البحث الاجتماعي</p>
+                                <p>يساعد الطلبة مالياً من خلال توفير المنح والقروض الجامعية. يبدأ الأمر بتعبئة استمارة إلكترونية ثم إرفاق الأوراق الثبوتية.</p>
+                            </li>
+                             <li>
+                                <p class="major-title">وحدة التوجيه والإرشاد</p>
+                                <p>تقدم استشارات نفسية وتربوية، وتنظم ندوات وورش عمل لمساعدة الطلاب في رحلتهم الأكاديمية والشخصية.</p>
+                            </li>
+                        </ul>
+                    `
+                },
+                'non-curricular': {
+                    title: 'الأنشطة اللامنهجية',
+                    icon: 'fas fa-basketball-ball',
+                    content: `
+                        <ul>
+                            <li>
+                                <p class="major-title">الأنشطة الرياضية والفنية والثقافية</p>
+                                <p>تهدف إلى تنمية شخصية الطالب وتزويده بالمهارات والخبرات. تشمل تنظيم فعاليات رياضية وفنية وثقافية متنوعة.</p>
+                            </li>
+                            <li>
+                                <p class="major-title">العمل التطوعي</p>
+                                <p>مساق اختياري يشرف عليه العمادة لتكليف الطلبة بأنشطة تطوعية تخدم المجتمع وتصقل مواهبهم.</p>
+                            </li>
+                        </ul>
+                    `
+                },
+                guidance: {
+                    title: 'التوجيه والإرشاد',
+                    icon: 'fas fa-comments',
+                    content: `
+                        <ul>
+                            <li>
+                                <p class="major-title">خدمات التوجيه</p>
+                                <p>تشمل التوجيه الأكاديمي والمهني، وتقديم الدعم النفسي للطلبة. كما تنظم ورش عمل ودورات لتنمية مهاراتهم.</p>
+                            </li>
+                        </ul>
+                    `
+                }
+            };
+
+            const categoryCards = document.querySelectorAll('.category-card');
+            const modal = document.getElementById('faculty-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const modalTitle = document.getElementById('modal-title');
+            const modalIcon = document.getElementById('modal-icon');
+            const modalBody = document.getElementById('modal-body');
+
+            categoryCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const category = card.dataset.category;
+                    const data = categoriesData[category];
+                    if (data) {
+                        modalTitle.textContent = data.title;
+                        modalIcon.className = `${data.icon} fa-fw`;
+                        modalBody.innerHTML = data.content;
+                        modalBody.scrollTop = 0; 
+                        modal.classList.add('active');
+                    }
+                });
+            });
+
+            const closeModal = () => modal.classList.remove('active');
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (event) => { if (event.target === modal) closeModal(); });
+            document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeModal(); });
+        });
+    </script>
+<script src="assets/js/common-fixes.js"></script>
+<script src="assets/js/statusBar.js"></script>
+<script src="assets/js/quiz-logic.js"></script>
+<script src="assets/js/faculty-page.js"></script>
+<script src="assets/js/script.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const backBtn = document.getElementById('back-to-home-btn');
+        if (backBtn) {
+            backBtn.addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+        }
+    });
+</script>
+</body>
+</html>
