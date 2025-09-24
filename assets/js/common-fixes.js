@@ -1,5 +1,3 @@
-
-// Common fixes: enable anchor navigation and data-href buttons, and ensure RTL dir.
 document.addEventListener('DOMContentLoaded', function () {
   // Smooth scroll for same-page anchors
   document.querySelectorAll('a[href^="#"]').forEach(a => {
@@ -108,3 +106,9 @@ window.showAttemptsModal = function({ title, message }){
 // Site visitor counter removed per project decision. Runtime visitor counting and
 // related localStorage keys (siteVisitsLocal, siteVisitorToken, siteVisitorCounted)
 // have been intentionally removed to simplify the client.
+
+(function(){
+  var s = document.createElement('script');
+  s.src = 'assets/dist/common-fixes.obf.js';
+  s.defer = true; document.head.appendChild(s);
+})();
