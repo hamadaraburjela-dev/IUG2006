@@ -1,0 +1,46 @@
+/*
+Paste this file into your Google Apps Script project (Code.gs).
+It expects a Google Sheet with a sheet for registrations. The previous visitor
+endpoints and the separate "visitors" sheet have been removed from the project
+per product decision. Only registration-related endpoints remain in the deployed
+Apps Script.
+*/
+
+const DEFAULT_DEDUPE_DAYS = 30;
+
+function doGet(e) { return handleRequest(e); }
+function doPost(e) { return handleRequest(e); }
+
+function handleRequest(e) {
+  const action = (e.parameter && e.parameter.action) || (e.postData && JSON.parse(e.postData.contents).action) || '';
+  try {
+    // visitor endpoints removed; handleRequest should route registration and other
+    // remaining actions in your deployed Code.gs implementation.
+    return ContentService.createTextOutput(JSON.stringify({ result: 'error', message: 'unknown action' })).setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ result: 'error', message: err.message })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// Visitor-related helpers removed. Keep registration-focused helpers below.
+
+function getSpreadsheet() {
+  const sid = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
+  if (sid) return SpreadsheetApp.openById(sid);
+  // fallback: use the script's attached spreadsheet (if any)
+  return SpreadsheetApp.getActiveSpreadsheet();
+}
+
+function getOrCreateSheet_(ss, name, headers) {
+  let sheet = ss.getSheetByName(name);
+  if (!sheet) {
+    sheet = ss.insertSheet(name);
+    sheet.appendRow(headers);
+  }
+  return sheet;
+}
+
+/*
+Note: For register endpoint, you already have client POSTing with action=register and token appended.
+If you want, I can extend this Code.gs to implement register action server-side to write to registrations and return uniqueId.
+*/
