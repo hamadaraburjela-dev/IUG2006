@@ -16,7 +16,7 @@
     --primary-color: #006633;
     --primary-dark: #004422;
     --secondary-color: #fdd835;
-    --light-bg: #e6f3ee;
+    --light-bg: #f0f4f8; /* Adjusted light background color */
     --correct-color: #28a745;
     --incorrect-color: #dc3545;
     --info-color: #17a2b8;

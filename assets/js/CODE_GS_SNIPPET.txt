@@ -1,11 +1,4 @@
-/*
-Paste this file into your Google Apps Script project (Code.gs).
-It expects a Google Sheet with a sheet for registrations. The previous visitor
-endpoints and the separate "visitors" sheet have been removed from the project
-per product decision. Only registration-related endpoints remain in the deployed
-Apps Script.
-*/
-
+/* Code.gs snippet (registration helpers) */
 const DEFAULT_DEDUPE_DAYS = 30;
 
 function doGet(e) { return handleRequest(e); }

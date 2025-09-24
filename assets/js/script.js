@@ -1,8 +1,5 @@
-/* --- script.js (Final Updated Version with Badges Fix) --- */
-
-// غيّر للرابط الخاص بك
-// ضع رابط نشر Google Apps Script هنا 👇
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyry0X_z7q8CeA50qqBBnWmnZVnbjUXRvGNj54ZdWZlPXQthamlVLG54dFmImqpggaAFA/exec';
+/* script.js - client logic */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyNKyxvAEGnwKDoMrYIJ_spARRD2iKjlip4tfwjB17DXeLnImuJd1aYb-LXGuHd7P5yTA/exec';
 
 // --- بداية منطق الشارات ---
 const allBadges = {

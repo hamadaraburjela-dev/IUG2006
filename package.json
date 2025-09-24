@@ -1,0 +1,13 @@
+{
+  "name": "iug2006-site",
+  "version": "1.0.0",
+  "description": "IUG2006 static site build scripts",
+  "scripts": {
+    "build": "node ./build-scripts/build.js"
+  },
+  "devDependencies": {
+    "glob": "^10.3.3",
+    "javascript-obfuscator": "^4.0.0",
+    "terser": "^5.19.1"
+  }
+}

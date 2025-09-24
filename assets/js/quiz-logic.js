@@ -1,5 +1,4 @@
 // Track remaining attempts per-quiz (keyed by quizId) and per-quiz attempt scores.
-// NOTE: storing a null/undefined remaining means the quiz is at full MAX_ATTEMPTS.
 // Per user request, each challenge gets two attempts.
 const MAX_ATTEMPTS = 2;
 

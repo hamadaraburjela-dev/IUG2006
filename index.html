@@ -30,8 +30,8 @@
   .scholarship-banner {
     display:flex;
     align-items:center;
-    justify-content:center;
-    gap:18px;
+  justify-content:center;
+  gap:18px;
     background: linear-gradient(90deg,#0a7a47,#0c9a59);
     color: #fff;
     padding: 16px 20px;
@@ -50,12 +50,6 @@
   }
   .scholarship-banner .banner-icon { font-size: 28px; margin-right:6px; }
   .scholarship-banner .banner-text { line-height:1.15; }
-  .scholarship-banner .banner-text small { display:block; font-weight:600; font-size:15px; color: rgba(255,255,255,0.95); margin-top:6px; }
-  .scholarship-banner .banner-head { font-size: 20px; font-weight:900; line-height:1.1; }
-  .scholarship-banner .banner-desc { font-size: 14px; font-weight:600; margin-top:6px; color: rgba(255,255,255,0.96); }
-  .scholarship-banner .med-note { font-size:13px; font-weight:800; color: #053b2a; background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(255,255,255,0.92)); padding:6px 10px; border-radius:999px; margin-right:8px; box-shadow: 0 8px 24px rgba(5,59,42,0.12); position:relative; display:inline-flex; align-items:center; gap:8px; }
-  .scholarship-banner .med-note .med-icon { font-size:14px; }
-  .scholarship-banner .med-note .med-tooltip { display:none; position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:#fff; color:#0b5a3a; padding:8px 10px; border-radius:8px; font-size:13px; box-shadow: 0 10px 30px rgba(2,48,32,0.12); white-space:nowrap; z-index:40; }
   .scholarship-banner .med-note:hover .med-tooltip, .scholarship-banner .med-note:focus-within .med-tooltip { display:block; }
   /* Limited seats visual treatment */
   .limited-seats { display:inline-flex; align-items:center; gap:8px; background: rgba(255,255,255,0.08); padding:6px 10px; border-radius:999px; color:#fff; font-weight:900; box-shadow: 0 6px 22px rgba(10,80,40,0.12); animation: limitedPulse 2000ms ease-in-out infinite; }
@@ -129,7 +123,7 @@
   </style>
   <style>
   /* Form helper and error styles */
-  .field-help { font-size: 0. nine rem; color: #556b63; opacity: 0.9; margin-top:6px; }
+  .field-help { font-size: 0.9rem; color: #556b63; opacity: 0.9; margin-top:6px; }
   .field-error { font-size: 0.95rem; color: #b22222; margin-top:6px; display:none; }
   .form-group { margin-bottom: 14px; }
   .action-button[disabled] { opacity: 0.6; cursor: not-allowed; }
@@ -380,29 +374,7 @@
 <video id="welcome-video" preload="metadata"><source src="assets/media/hares-1.mp4" type="video/mp4"/>متصفحك لا يدعم عرض الفيديو.</video>
 <button class="action-button" id="skip-video-btn">تخطي الفيديو</button>
 </div>
-<div class="modal hidden" id="logout-confirm-modal">
-<div class="modal-content">
-<h2>تأكيد الخروج</h2>
-<p>هل أنت متأكد أنك تريد بدء رحلة جديدة؟ سيتم حذف كل تقدمك الحالي.</p>
-<div class="modal-actions">
-<button class="action-button danger" id="confirm-logout-btn">نعم، اخرج</button>
-<button class="action-button secondary" id="cancel-logout-btn">لا، ابقَ هنا</button>
-<!-- مودال المحاولات -->
-<div id="odv-modal" class="odv-modal" hidden>
-  <div class="odv-modal__overlay" data-close></div>
-  <div class="odv-modal__dialog" dir="rtl">
-    <button class="odv-modal__close" type="button" data-close>×</button>
-    <div class="odv-modal__icon" id="odv-modal-icon"></div>
-    <h2 class="odv-modal__title" id="odv-modal-title">لقد أكملت جميع المحاولات</h2>
-    <p class="odv-modal__desc" id="odv-modal-desc">لا مزيد من المحاولات المسموح بها.</p>
-    <div class="odv-modal__actions">
-      <button id="odv-modal-ok" class="odv-btn odv-btn--primary" type="button">حسنًا</button>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-</div>
+<!-- duplicate logout-confirm-modal removed (kept first occurrence earlier) -->
 <div id="toast-notification"></div>
     <!-- Visual & audio small enhancements -->
   <style>
