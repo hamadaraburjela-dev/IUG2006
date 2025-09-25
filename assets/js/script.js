@@ -629,6 +629,8 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionStorage.clear();
         location.reload();
     }
+    // expose to global scope so listeners added outside this closure can call it
+    try { window.performLogout = performLogout; } catch(e) { /* ignore if not writable */ }
 
     function showLogoutConfirmation() {
         const logoutModal = document.getElementById('logout-confirm-modal');
