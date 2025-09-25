@@ -1007,7 +1007,13 @@ null
     const cancelLogoutBtn = document.getElementById('cancel-logout-btn');
 
     if (confirmLogoutBtn) {
-        confirmLogoutBtn.addEventListener('click', performLogout);
+        confirmLogoutBtn.addEventListener('click', function(){
+            if (typeof window.performLogout === 'function') {
+                try { window.performLogout(); } catch(e){ console.warn('performLogout call failed', e); }
+            } else {
+                console.warn('performLogout is not ready yet');
+            }
+        });
     }
 
     if (cancelLogoutBtn) {
