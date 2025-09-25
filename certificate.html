@@ -392,9 +392,9 @@
                     <strong id="cert-scholarship-details">---</strong>
                         <div style="margin-top:8px;">
                             <a id="whatsapp-claim" class="btn-primary btn-whatsapp hide-for-export" href="#" onclick="openWhatsAppClaim(event)">
-                                <i class="fa-brands fa-whatsapp"></i> مطالبة المنحة
+                                <i class="fa-brands fa-whatsapp"></i> اطلب مفاجتك
                             </a>
-                            <p id="claim-help" style="margin:8px 0 0 0; font-size:0.95rem; color:#6b6b6b; display:block;">مطلوب 30 نقطة على الأقل للمطالبة بالمنحة.</p>
+                            <p id="claim-help" style="margin:8px 0 0 0; font-size:0.95rem; color:#6b6b6b; display:block;">مطلوب 30 نقطة على الأقل لطلب المفاجأة.</p>
                         </div>
                 </div>
             </div>
@@ -450,18 +450,18 @@
 <!-- Claim verification modal (prevent easy/unauthorized claims) -->
 <div id="claim-modal" class="modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); align-items:center; justify-content:center; z-index:1200;">
     <div style="background:#fff; border-radius:12px; max-width:520px; width:94%; padding:20px; box-shadow:0 24px 60px rgba(0,0,0,0.25); text-align:right; direction:rtl; margin:auto;">
-        <h3 style="margin-top:0; color:#0b5a3a;">مطالبة المنحة — خطوات التحقق</h3>
-        <p style="color:#444; margin-bottom:12px;">للمطالبة بالمنحة نحتاج بعض المعلومات الأساسية للتحقق. الرجاء تعبئة رقم الهوية والتأكيد أدناه.</p>
+    <h3 style="margin-top:0; color:#0b5a3a;">طلب المفاجأة — خطوات التحقق</h3>
+    <p style="color:#444; margin-bottom:12px;">لطلب المفاجأة نحتاج بعض المعلومات الأساسية للتحقق. الرجاء تعبئة رقم الهوية والتأكيد أدناه.</p>
         <div style="display:flex; flex-direction:column; gap:10px;">
             <label style="font-weight:600;">رقم الهوية / الرقم الوطني</label>
             <input id="claim-id-input" type="text" inputmode="numeric" pattern="[0-9]+" placeholder="مثال: 123456789" style="padding:10px; border:1px solid #e2e2e2; border-radius:8px; font-size:15px;" />
             <label style="display:flex; gap:8px; align-items:center;">
                 <input id="claim-confirm-checkbox" type="checkbox" />
-                <span>أؤكد أن البيانات صحيحة وأوافق على شروط المطالبة (قد يُطلب مستند إثبات لاحقًا).</span>
+                <span>أؤكد أن البيانات صحيحة وأوافق على شروط طلب المفاجأة (قد يُطلب مستند إثبات لاحقًا).</span>
             </label>
             <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:6px;">
                 <button id="claim-cancel" class="btn-secondary" style="padding:8px 12px;">إلغاء</button>
-                <button id="claim-submit" class="btn-primary" style="padding:8px 12px;">إرسال المطالبة</button>
+                <button id="claim-submit" class="btn-primary" style="padding:8px 12px;">إرسال الطلب</button>
             </div>
             <p id="claim-error" style="color:#b22222; display:none; margin:0; font-size:13px;"></p>
         </div>
@@ -506,14 +506,18 @@
     // - Base 50% for all successful Tawjihi students
     // - +1% for every 2 points earned in the game
     // - Extra capped at 20% (so max total = 70%)
-    // Campaign update: base scholarship is now 100% for all registrants
-    const baseScholarship = 100;
-    // Points no longer increase the scholarship percentage in the current campaign
+    // Campaign update: scholarship is presented as a surprise — users request it to reveal details
+    const isSurpriseCampaign = true;
     const points = Number.isFinite(playerScore) ? Math.max(0, Math.floor(playerScore)) : 0;
-    const extraFromPoints = 0;
-    const totalScholarship = baseScholarship;
-    // Show only the headline scholarship text (no parenthetical breakdown)
-    scholarshipEl.textContent = `منحة ${totalScholarship}% للفصل الدراسي الأول`;
+    if (isSurpriseCampaign) {
+        scholarshipEl.textContent = `مفاجأة — اطلبها لمعرفة قيمتها`;
+    } else {
+        // legacy behavior
+        const baseScholarship = 100;
+        const extraFromPoints = 0;
+        const totalScholarship = baseScholarship;
+        scholarshipEl.textContent = `منحة ${totalScholarship}% للفصل الدراسي الأول`;
+    }
     // set current date on load so printed/downloaded certificate shows actual date by default
     if (typeof updateCertificateDateNow === 'function') updateCertificateDateNow();
 
@@ -530,16 +534,16 @@
             claimBtn.classList.add('pulse');
             claimBtn.removeAttribute('aria-disabled');
             claimBtn.style.pointerEvents = '';
-            claimBtn.title = 'مطالبة المنحة عبر واتساب';
-            if (claimHelp) claimHelp.textContent = 'يمكنك مطابقة المنحة الآن عبر الزر أعلاه.';
+            claimBtn.title = 'اطلب مفاجتك عبر واتساب';
+            if (claimHelp) claimHelp.textContent = 'يمكنك طلب مفاجتك الآن عبر الزر أعلاه.';
         } else {
             // disable visually and functionally
             claimBtn.classList.add('disabled');
             claimBtn.classList.remove('pulse');
             claimBtn.setAttribute('aria-disabled','true');
             claimBtn.style.pointerEvents = 'none';
-            claimBtn.title = `مطلوب ${minPoints} نقطة على الأقل للمطالبة (لديك ${scoreNum}).`;
-            if (claimHelp) claimHelp.textContent = `مطلوب ${minPoints - scoreNum} نقطة إضافية لتفعيل مطالبة المنحة.`;
+            claimBtn.title = `مطلوب ${minPoints} نقطة على الأقل لطلب المفاجأة (لديك ${scoreNum}).`;
+            if (claimHelp) claimHelp.textContent = `مطلوب ${minPoints - scoreNum} نقطة إضافية لطلب المفاجأة.`;
         }
     })();
 
@@ -558,7 +562,7 @@
                 const size = Math.min(140, Math.max(90, Math.floor(vw * 0.4)));
                 try {
                     new QRCode(qrcodeContainer, {
-                        text: `https://iug.example/certificate?name=${encodeURIComponent(playerName)}&score=${encodeURIComponent(playerScore)}`,
+                        text: `https://join-iugaza.com/certificate?name=${encodeURIComponent(playerName)}&score=${encodeURIComponent(playerScore)}`,
                         width: size,
                         height: size,
                         colorDark: "#000000",
@@ -706,8 +710,9 @@
         const phone = '972569210941';
         const playerName = document.getElementById('cert-player-name').textContent || '';
         const playerScore = document.getElementById('cert-final-score').textContent || '0';
-        const scholarshipText = document.getElementById('cert-scholarship-details').textContent || '';
-        const message = `السلام عليكم، أرغب بالمطالبة بالمنحة 100% للفصل الأول.%0Aالاسم: ${playerName}%0Aالهوية: ${idNumber}%0Aالنقاط: ${playerScore}%0A${scholarshipText}`;
+    // For privacy, send a generic request; details will be revealed by the admin after verification
+    const scholarshipText = document.getElementById('cert-scholarship-details').textContent || '';
+    const message = `السلام عليكم، أرغب بطلب مفاجتي من حملة الجامعة الافتراضية.%0Aالاسم: ${playerName}%0Aالهوية: ${idNumber}%0Aالنقاط: ${playerScore}%0A${scholarshipText}`;
 
         const certificate = document.getElementById('printable-certificate');
         // Temporarily hide export-only elements to capture a clean image
@@ -715,7 +720,7 @@
         try {
             const canvas = await html2canvas(certificate, { scale: 2, useCORS: true });
             const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-            const file = new File([blob], 'شهادة-المطالبة.png', { type: 'image/png' });
+            const file = new File([blob], 'شهادة-طلب-المفاجأة.png', { type: 'image/png' });
             // Try Web Share API with file (mobile friendly)
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 try {
@@ -728,7 +733,7 @@
 
             // Fallback: automatically download image so user can attach, then open wa.me with text
             const link = document.createElement('a');
-            link.download = 'شهادة-المطالبة.png';
+            link.download = 'شهادة-طلب-المفاجأة.png';
             link.href = URL.createObjectURL(blob);
             document.body.appendChild(link);
             link.click();
