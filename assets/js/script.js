@@ -2,7 +2,20 @@
 
 // غيّر للرابط الخاص بك
 // ضع رابط نشر Google Apps Script هنا 👇
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyry0X_z7q8CeA50qqBBnWmnZVnbjUXRvGNj54ZdWZlPXQthamlVLG54dFmImqpggaAFA/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0uSWFUOAJX12-mlJpAe4jf83ONc0yUXHiZTrf0eV6uRs21-vkTtq8XxP6WzC3PHv6OA/exec';
+
+// Safe noop stub: ensure `performLogout` exists on window early to prevent
+// `ReferenceError` if some inline handlers or other scripts call it before
+// this file finishes initialization. The real implementation will override
+// this stub later in the file.
+try {
+    if (typeof window !== 'undefined' && typeof window.performLogout !== 'function') {
+        window.performLogout = function() {
+            console.warn('performLogout placeholder called before real implementation is ready.');
+            try { localStorage.clear(); sessionStorage.clear(); location.reload(); } catch(e){}
+        };
+    }
+} catch (e) { /* ignore in exotic environments */ }
 
 // --- بداية منطق الشارات ---
 const allBadges = {
@@ -943,13 +956,29 @@ null
     });
 
     const newPlayerBtn = document.getElementById('new-player-btn');
-    if (newPlayerBtn) newPlayerBtn.addEventListener('click', performLogout);
+    if (newPlayerBtn) newPlayerBtn.addEventListener('click', function(){
+        try {
+            if (typeof window.performLogout === 'function') {
+                window.performLogout();
+            } else {
+                console.warn('performLogout not ready yet');
+            }
+        } catch(e) { console.warn('performLogout call failed', e); }
+    });
     
     const logoutModal = document.getElementById('logout-confirm-modal');
     if (logoutModal) {
         const confirmBtn = document.getElementById('confirm-logout-btn');
         const cancelBtn = document.getElementById('cancel-logout-btn');
-        if (confirmBtn) confirmBtn.addEventListener('click', performLogout);
+        if (confirmBtn) confirmBtn.addEventListener('click', function(){
+            try {
+                if (typeof window.performLogout === 'function') {
+                    window.performLogout();
+                } else {
+                    console.warn('performLogout not ready yet');
+                }
+            } catch(e) { console.warn('performLogout call failed', e); }
+        });
         if (cancelBtn) cancelBtn.addEventListener('click', () => logoutModal.classList.add('hidden'));
     }
 
