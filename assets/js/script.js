@@ -202,6 +202,36 @@ function registerPlayer(name, phone, year) {
     return fetch(SCRIPT_URL, { method: 'POST', body: formData }).then(response => response.json());
 }
 
+// --- Client-side hardening helpers (rate-limit / debounce) ---
+function _getActionLogKey(action) { return `iug_action_log__${action}`; }
+function canPerformAction(action, maxCalls, windowMs) {
+    try {
+        const key = _getActionLogKey(action);
+        const raw = localStorage.getItem(key);
+        const now = Date.now();
+        const windowStart = now - windowMs;
+        const arr = raw ? JSON.parse(raw) : [];
+        // keep timestamps within window
+        const recent = arr.filter(ts => ts >= windowStart);
+        if (recent.length >= maxCalls) return false;
+        // push now and save
+        recent.push(now);
+        localStorage.setItem(key, JSON.stringify(recent));
+        return true;
+    } catch (e) {
+        // if storage fails, be permissive (avoid blocking legit users)
+        return true;
+    }
+}
+
+function safeRegisterPlayer(name, phone, year) {
+    // restrict to max 3 register attempts per 60 seconds from this client
+    if (!canPerformAction('register', 3, 60000)) {
+        return Promise.reject({ code: 'rate_limited', message: 'محاولات تسجيل كثيرة. الرجاء الانتظار ثم المحاولة مجدداً.' });
+    }
+    return registerPlayer(name, phone, year);
+}
+
 // Registrants counter removed from script
 
 function updatePlayerScore(uniqueId, score) {
@@ -689,7 +719,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startButton.disabled = true;
         startButton.innerHTML = 'جاري التسجيل... <span class="spinner"></span>';
 
-        registerPlayer(nameInput, phoneInput, tawjihiYearInput)
+        safeRegisterPlayer(nameInput, phoneInput, tawjihiYearInput)
             .then(data => {
                 if (data.result === 'success' && data.uniqueId) {
                     gameState.playerName = nameInput;
@@ -709,7 +739,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch(error => {
-                showModal('خطأ في الاتصال', 'فشل الاتصال بالخادم. الرجاء التحقق من اتصالك بالإنترنت.', null);
+                if (error && error.code === 'rate_limited') {
+                    showModal('معدل محاولات مرتفع', error.message || 'محاولات كثيرة؛ الرجاء الانتظار قليلاً.', null);
+                } else {
+                    showModal('خطأ في الاتصال', 'فشل الاتصال بالخادم. الرجاء التحقق من اتصالك بالإنترنت.', null);
+                }
                 startButton.disabled = false;
                 startButton.innerHTML = 'ابدأ الرحلة!';
             });
