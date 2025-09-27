@@ -1,20 +1,56 @@
-/* --- script.js (Final Updated Version with Badges Fix) --- */
+/* --- script.js (Final Updated Version with Badges Fix + Network Hardening) --- */
 
-// غيّر للرابط الخاص بك
-// ضع رابط نشر Google Apps Script هنا 👇
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwymry1R13U0Aazt20OBPjsW9YOAOEE8AbtRrq18IRJWLASqPcT1sfEjR_2R0yHvmkz/exec';
-// Safe noop stub: ensure `performLogout` exists on window early to prevent
-// `ReferenceError` if some inline handlers or other scripts call it before
-// this file finishes initialization. The real implementation will override
-// this stub later in the file.
-try {
-    if (typeof window !== 'undefined' && typeof window.performLogout !== 'function') {
-        window.performLogout = function() {
-            console.warn('performLogout placeholder called before real implementation is ready.');
-            try { localStorage.clear(); sessionStorage.clear(); location.reload(); } catch(e){}
-        };
+// تاريخ تحديث رابط Google Apps Script: 2025-09-27
+// تأكد أن النشر Web App هو: Execute as: Me  |  Who has access: Anyone
+// وأعد نشره (Deploy > Manage deployments > Edit) بعد أي تعديل في الكود.
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyIZxN4t2epAT7EPY6UZvAIgVeTp2Rh4WM14UOUifA9eWuZCqLTymOHffYBzsbPQZmVXw/exec';
+
+// تعريف مبكر وآمن لـ performLogout حتى لو استدعاه HTML قبل اكتمال تحميل هذا الملف
+(function earlyPerformLogoutInit(){
+    try {
+        if (typeof window !== 'undefined' && typeof window.performLogout !== 'function') {
+            window.performLogout = function performLogout(){
+                try {
+                    localStorage.removeItem('iugGameProgress');
+                    localStorage.removeItem('iugGameTargetScene');
+                    sessionStorage.clear();
+                } catch(e){}
+                try { location.reload(); } catch(e){}
+            };
+        }
+    } catch(e) { /* ignore */ }
+})();
+
+// ===== Helpers: تشخيص أخطاء الشبكة و عرض رسائل للمستخدم =====
+function showNetworkError(message){
+    console.error('[Network]', message);
+    try {
+        if (typeof showToastNotification === 'function') {
+            showToastNotification(message);
+            return;
+        }
+        let box = document.getElementById('net-error-box');
+        if (!box) {
+            box = document.createElement('div');
+            box.id = 'net-error-box';
+            box.style.cssText = 'position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#b30000;color:#fff;padding:10px 16px;border-radius:8px;font:14px/1.4 sans-serif;z-index:9999;box-shadow:0 4px 10px rgba(0,0,0,.25);max-width:92%;';
+            document.body.appendChild(box);
+        }
+        box.textContent = message;
+        box.style.opacity = '1';
+        setTimeout(()=>{ try { box.style.transition='opacity .6s'; box.style.opacity='0'; } catch(e){} }, 4500);
+    } catch(e){}
+}
+
+function diagnoseGASError(response, error){
+    if (response) {
+        if (response.status === 302 || response.redirected) return '⚠ إعادة توجيه (302). يبدو أن رابط GAS ليس exec العام. أعد النشر واختر Anyone.';
+        if (response.status === 401 || response.status === 403) return '⚠ رفض وصول (401/403). فعل النشر العام (Anyone).';
+        if (response.status === 404) return '⚠ لم يتم العثور على السكربت (404). تحقق من الرابط.';
     }
-} catch (e) { /* ignore in exotic environments */ }
+    if (error && (error.message||'').includes('Failed to fetch')) return '⚠ فشل الاتصال بـ GAS (Failed to fetch). تحقق من الإنترنت أو إعداد النشر.';
+    return null;
+}
 
 // --- بداية منطق الشارات ---
 const allBadges = {
@@ -211,7 +247,27 @@ function registerPlayer(name, phone, year) {
     formData.append('name', name);
     formData.append('phone', phone);
     formData.append('year', year);
-    return fetch(SCRIPT_URL, { method: 'POST', body: formData }).then(response => response.json());
+    return fetch(SCRIPT_URL, { method: 'POST', body: formData })
+        .then(async response => {
+            let data = null;
+            try { data = await response.clone().json(); } catch(parseErr) {}
+            if (!response.ok) {
+                const diag = diagnoseGASError(response) || `خطأ HTTP ${response.status}`;
+                showNetworkError(diag);
+                return Promise.reject({ code:'http_error', status: response.status, message: diag, raw:data });
+            }
+            if (!data) {
+                const msg = 'استجابة غير متوقعة من الخادم (لم يُفك JSON).';
+                showNetworkError(msg);
+                return Promise.reject({ code:'invalid_json', message: msg });
+            }
+            return data;
+        })
+        .catch(err => {
+            const diag = diagnoseGASError(null, err) || 'تعذر الوصول لـ GAS. تحقق من إعدادات النشر.';
+            showNetworkError(diag);
+            return Promise.reject(err);
+        });
 }
 
 // --- Client-side hardening helpers (rate-limit / debounce) ---
@@ -246,26 +302,16 @@ function safeRegisterPlayer(name, phone, year) {
 
 // Registrants counter removed from script
 
+// تعطيل إرسال النقاط للخادم (بناءً على طلبك: الاكتفاء بالاسم/الهاتف/السنة عند التسجيل)
 function updatePlayerScore(uniqueId, score) {
-    if (!uniqueId) {
-        console.error("Attempted to update score without a uniqueId.");
-        return;
-    }
-    const formData = new FormData();
-    formData.append('action', 'updateScore');
-    formData.append('uniqueId', uniqueId);
-    formData.append('score', score);
-    fetch(SCRIPT_URL, { method: 'POST', body: formData })
-        .then(response => response.json())
-        .then(data => {
-            if (data.result === 'success') {
-                console.log(`Score updated to: ${score}`);
-            } else {
-                console.error('Error updating score:', data.message);
-            }
-        })
-        .catch(error => console.error('Error in update fetch:', error));
+    // لا شيء—تجاهل التحديثات
 }
+
+// ====== تقليل عدد الطلبات: نظام مزامنة نقاط مؤجل (Debounce + Throttle) ======
+// إزالة نظام مزامنة الشبكة للنقاط؛ كل النقاط محلية فقط الآن
+function scheduleScoreSync() { /* noop */ }
+function forceScoreSync() { /* noop */ }
+// ====== نهاية نظام المزامنة المؤجل ======
 
 function shuffleArray(array) {
     let currentIndex = array.length,
@@ -282,13 +328,10 @@ function shuffleArray(array) {
     return newArray;
 }
 window.correctAnswerAction = (points) => {
-    if (window.gameState) {
-        window.gameState.score += points;
-        updatePlayerScoreDisplayAndSave();
-        if (typeof window.updatePlayerScore === 'function') {
-            window.updatePlayerScore(window.gameState.uniqueId, window.gameState.score);
-        }
-    }
+    if (!window.gameState) return;
+    window.gameState.score += points;
+    updatePlayerScoreDisplayAndSave();
+    scheduleScoreSync();
 };
 document.addEventListener('DOMContentLoaded', () => {
         function groupMapOptions() {
@@ -433,7 +476,8 @@ document.addEventListener('DOMContentLoaded', () => {
         playerName: '',
         playerPhone: '',
         tawjihiYear: '',
-        uniquePlayerId: null,
+    // unified key: uniqueId (old stored key uniquePlayerId kept for backward compatibility when loading)
+    uniqueId: null,
         score: 0,
         currentScene: 'map', // Start at map
         answeredQuestions: new Set(),
@@ -490,6 +534,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('iugGameProgress', JSON.stringify(stateToSave));
             } catch(e){}
         }
+        // جدولة مزامنة بعد اكتمال نتيجة الاختبار
+        scheduleScoreSync();
         if (window.updateStagePoints) window.updateStagePoints(quizId, rec.bestScore, rec.total);
         if (window.updateStatusBar) window.updateStatusBar();
     }
@@ -599,7 +645,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof pointsToAdd === 'number' && pointsToAdd > 0) {
             gameState.score += pointsToAdd;
             saveGameState();
-            updatePlayerScore(gameState.uniquePlayerId, gameState.score);
+            // لا نرسل مباشرة — نستخدم النظام المؤجل
+            scheduleScoreSync();
 
             if (window.updateStatusBar) {
                 window.updateStatusBar();
@@ -653,6 +700,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const savedStateJSON = localStorage.getItem('iugGameProgress');
             if (savedStateJSON) {
                 const savedState = JSON.parse(savedStateJSON);
+                // Backward compatibility: migrate uniquePlayerId -> uniqueId
+                if (savedState && savedState.uniquePlayerId && !savedState.uniqueId) {
+                    savedState.uniqueId = savedState.uniquePlayerId;
+                }
                 Object.assign(gameState, savedState);
                 gameState.answeredQuestions = new Set(savedState.answeredQuestions);
                 gameState.badges = savedState.badges || {};
@@ -665,14 +716,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function performLogout() {
-        localStorage.removeItem('iugGameProgress');
-        localStorage.removeItem('iugGameTargetScene');
-        sessionStorage.clear();
-        location.reload();
-    }
-    // expose to global scope so listeners added outside this closure can call it
-    try { window.performLogout = performLogout; } catch(e) { /* ignore if not writable */ }
+    // performLogout مُعرف مسبقاً في الأعلى لضمان عدم ظهور ReferenceError
+    // يمكن توسيع المنطق هنا مستقبلاً بإضافة تتبع إحصائيات قبل الخروج.
+    // (لا نعيد تعريفه حتى لا نكسر أي مراجع حدثت بالفعل)
 
     function showLogoutConfirmation() {
         const logoutModal = document.getElementById('logout-confirm-modal');
@@ -680,7 +726,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function restoreGameSession() {
-        if (loadGameState() && gameState.uniquePlayerId) {
+        if (loadGameState() && gameState.uniqueId) {
             if(landingScreen) landingScreen.classList.add('hidden');
             if(startScreen) startScreen.classList.add('hidden');
             if(gameSceneContainer) gameSceneContainer.classList.remove('hidden');
@@ -737,7 +783,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     gameState.playerName = nameInput;
                     gameState.playerPhone = phoneInput;
                     gameState.tawjihiYear = tawjihiYearInput;
-                    gameState.uniquePlayerId = data.uniqueId;
+                    gameState.uniqueId = data.uniqueId;
                     saveGameState();
                     if (window.updateStatusBar) window.updateStatusBar();
                     if(startScreen) startScreen.classList.add('hidden');
@@ -784,9 +830,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(whatsappBtn) whatsappBtn.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
     if(twitterBtn) twitterBtn.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
 
-    if (gameState.uniquePlayerId) {
-        updatePlayerScore(gameState.uniquePlayerId, gameState.score);
-    }
+    scheduleScoreSync();
 }
     
     function renderScene(sceneId) {

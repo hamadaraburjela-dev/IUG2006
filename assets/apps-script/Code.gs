@@ -48,7 +48,8 @@ function doPost(e) {
     if (action == "register") {
       return registerUser(e, sheet);
     } else if (action == "updateScore") {
-      return updateScore(e, sheet);
+      // تم تعطيل تحديث النقاط بطلبك. نعيد رسالة ثابتة ولا نلمس الشيت.
+      return createJson({ result: 'ignored', message: 'Score updating disabled server-side.' });
     } else {
       throw new Error("Action not specified or invalid.");
     }
@@ -91,134 +92,13 @@ function registerUser(e, sheet) {
     // عدم القدرة على الكاش ليس مشكلة حرجة، نستمر بدون فشل
   }
 
-  // تحديث عداد الزوار المخزن في Script Properties (عدد الصفوف المسجلة)
-  try {
-    var registeredCount = 0;
-    if (lastRow >= 2) {
-      var ids = sheet.getRange(2, COLS.UNIQUE_ID, lastRow - 1, 1).getValues();
-      for (var i = 0; i < ids.length; i++) {
-        if (ids[i][0] && String(ids[i][0]).trim() !== '') registeredCount++;
-      }
-    }
-    PropertiesService.getScriptProperties().setProperty('visitor_count', String(registeredCount));
-  } catch (e) { /* non-fatal */ }
+  // (أزيل منطق عدّ الزوار بناءً على طلبك)
 
   return createJson({ result: 'success', uniqueId: uniqueId, row: lastRow });
 }
 
-// دالة لتحديث النتيجة باستخدام الكاش كأسرع مسار ثم fallback للبحث
-function updateScore(e, sheet) {
-  var uniqueId = e.parameter.uniqueId;
-  var score = e.parameter.score;
-
-  if (!uniqueId) {
-    return createErrorOutput("Unique ID is required to update score.");
-  }
-
-  var cache = CacheService.getScriptCache();
-  var targetRow = -1;
-
-  // محاولة الحصول على الصف من الكاش
-  try {
-    var cached = cache.get(CACHE_PREFIX + uniqueId);
-    if (cached) {
-      var r = parseInt(cached, 10);
-      if (!isNaN(r) && r > 1) {
-        // تأكد أن الـ uniqueId في ذلك الصف فعلاً مطابق (لتجنّب الـstale cache)
-        var val = sheet.getRange(r, COLS.UNIQUE_ID).getValue();
-        if (val == uniqueId) {
-          targetRow = r;
-        } else {
-          // إن كان مختلفًا، أزل الكاش لتحفيز إعادة البحث
-          cache.remove(CACHE_PREFIX + uniqueId);
-        }
-      }
-    }
-  } catch (err) {
-    // تجاهل أخطاء الكاش، سنقوم بالبحث الكامل
-  }
-
-  // fallback: مسح العمود للعثور على الإجابة (إذا لم يجدها الكاش)
-  if (targetRow == -1) {
-    var lastRow = sheet.getLastRow();
-    if (lastRow < 2) {
-      return createErrorOutput("No users in sheet.");
-    }
-    var idColumnValues = sheet.getRange(2, COLS.UNIQUE_ID, lastRow - 1, 1).getValues();
-    for (var i = 0; i < idColumnValues.length; i++) {
-      if (idColumnValues[i][0] == uniqueId) {
-        targetRow = i + 2;
-        try {
-          cache.put(CACHE_PREFIX + uniqueId, String(targetRow), CACHE_TTL);
-        } catch (err) {}
-        break;
-      }
-    }
-  }
-
-  if (targetRow != -1) {
-    sheet.getRange(targetRow, COLS.SCORE).setValue(score);
-    return createJson({ result: 'success', message: 'Score updated.', row: targetRow });
-  } else {
-    return createErrorOutput("User with the specified Unique ID was not found.", 404);
-  }
-}
-// Handle visitor counter actions (increment / get)
-function handleVisitorAction(e) {
-  const action = (e.parameter && e.parameter.action) || (e.postData && tryParse(e.postData.contents).action) || '';
-  // Use helper to calculate registered count (counts non-empty UNIQUE_ID cells)
-  try {
-    var registeredCount = getRegisteredCount();
-    // keep Script Properties in sync (best-effort)
-    try { PropertiesService.getScriptProperties().setProperty('visitor_count', String(registeredCount)); } catch(e) {}
-    return jsonResponse({ result: 'success', count: registeredCount });
-  } catch (err) {
-    // Fallback: return property-stored value if sheet access fails
-    const props = PropertiesService.getScriptProperties();
-    let count = Number(props.getProperty('visitor_count') || 0);
-    return jsonResponse({ result: 'success', count: count });
-  }
-}
-
-// Count registered users by reading UNIQUE_ID column rows (robust central helper)
-function getRegisteredCount(){
-  var sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
-  if (!sheet) throw new Error('Sheet not found');
-  var lr = sheet.getLastRow();
-  var registeredCount = 0;
-  if (lr >= 2) {
-    var ids = sheet.getRange(2, COLS.UNIQUE_ID, lr - 1, 1).getValues();
-    for (var i = 0; i < ids.length; i++) {
-      if (ids[i][0] && String(ids[i][0]).trim() !== '') registeredCount++;
-    }
-  }
-  return registeredCount;
-}
-
-function jsonResponse(obj, statusCode) {
-  return ContentService.createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-function tryParse(s) {
-  try { return JSON.parse(s); } catch(e) { return {}; }
-}
-
-// Allow a simple GET request to retrieve visitor/registrants count.
-// Example: GET https://script.google.com/macros/s/XXX/exec?action=visitor
+// ملاحظة: منطق updateScore أزيل بناء على طلب المستخدم (النقاط محليّة فقط الآن)
+// تبسيط doGet ليكون فحص صحة فقط (Health Check)
 function doGet(e) {
-  try {
-    // If caller requested JSONP (callback param), wrap response
-    var callback = e.parameter && e.parameter.callback;
-    var response = handleVisitorAction(e);
-    // handleVisitorAction returns a ContentService TextOutput; extract text
-    var txt = response.getContent();
-    if (callback) {
-      // return as JavaScript so JSONP consumers can read it
-      return ContentService.createTextOutput(callback + '(' + txt + ')').setMimeType(ContentService.MimeType.JAVASCRIPT);
-    }
-    return response;
-  } catch (err) {
-    return createErrorOutput(err.toString());
-  }
+  return createJson({ result: 'ok', ts: Date.now(), note: 'Visitor counter removed.' });
 }
