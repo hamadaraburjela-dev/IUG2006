@@ -2,8 +2,7 @@
 
 // غيّر للرابط الخاص بك
 // ضع رابط نشر Google Apps Script هنا 👇
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0uSWFUOAJX12-mlJpAe4jf83ONc0yUXHiZTrf0eV6uRs21-vkTtq8XxP6WzC3PHv6OA/exec';
-
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwymry1R13U0Aazt20OBPjsW9YOAOEE8AbtRrq18IRJWLASqPcT1sfEjR_2R0yHvmkz/exec';
 // Safe noop stub: ensure `performLogout` exists on window early to prevent
 // `ReferenceError` if some inline handlers or other scripts call it before
 // this file finishes initialization. The real implementation will override
