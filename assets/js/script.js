@@ -18,6 +18,12 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyIZxN4t2epAT7EPY6UZ
                 try { location.reload(); } catch(e){}
             };
         }
+        // إنشاء اسم دالة عالمي performLogout إذا كان هناك أكواد أو HTML تستدعيه مباشرة بدون window.
+        if (typeof window !== 'undefined' && typeof window.performLogout === 'function' && typeof performLogout === 'undefined') {
+            // استخدام var لضمان إنشاء رمز عالمي غير مغلق
+            // eslint-disable-next-line no-var
+            var performLogout = window.performLogout; // ربط الاسم مباشرة
+        }
     } catch(e) { /* ignore */ }
 })();
 
@@ -486,6 +492,18 @@ document.addEventListener('DOMContentLoaded', () => {
         badges: {}
     };
     window.gameState = gameState;
+    // دالة لإعادة تهيئة التقدم بالكامل (تُستخدم عند تسجيل لاعب جديد حتى لو نفس الرقم)
+    function resetProgressForNewRegistration(){
+        gameState.score = 0;
+        gameState.currentScene = 'map';
+        gameState.answeredQuestions = new Set();
+        gameState.attempts = {};
+        gameState.badges = {};
+        gameState.selectedGuide = null;
+        // لا نمسح uniqueId هنا لأنه سيتم توليده من التسجيل الجديد، لكن نلغيه الآن
+        gameState.uniqueId = null;
+        try { localStorage.removeItem('iugGameProgress'); } catch(e){}
+    }
     // ===== Helpers for stage points & scoring policy =====
  function updateStagePoints(quizId, score, total){
   const el = document.querySelector(`[data-stage-points="${quizId}"]`);
@@ -777,14 +795,18 @@ document.addEventListener('DOMContentLoaded', () => {
         startButton.disabled = true;
         startButton.innerHTML = 'جاري التسجيل... <span class="spinner"></span>';
 
-        safeRegisterPlayer(nameInput, phoneInput, tawjihiYearInput)
+    // دائماً نبدأ جلسة جديدة: امسح أي تقدم سابق حتى لو نفس رقم الجوال
+    resetProgressForNewRegistration();
+
+    safeRegisterPlayer(nameInput, phoneInput, tawjihiYearInput)
             .then(data => {
                 if (data.result === 'success' && data.uniqueId) {
                     gameState.playerName = nameInput;
                     gameState.playerPhone = phoneInput;
                     gameState.tawjihiYear = tawjihiYearInput;
                     gameState.uniqueId = data.uniqueId;
-                    saveGameState();
+            // حفظ الحالة الصفرية الأولية (بدون أي أسئلة مُجابة) لضمان ظهور اختبار البوابة والفيديو
+            saveGameState();
                     if (window.updateStatusBar) window.updateStatusBar();
                     if(startScreen) startScreen.classList.add('hidden');
                     const guideScreen = document.getElementById('guide-selection-screen');
