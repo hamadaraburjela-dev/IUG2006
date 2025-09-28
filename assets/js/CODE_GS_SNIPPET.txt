@@ -44,3 +44,4 @@ function getOrCreateSheet_(ss, name, headers) {
 Note: For register endpoint, you already have client POSTing with action=register and token appended.
 If you want, I can extend this Code.gs to implement register action server-side to write to registrations and return uniqueId.
 */
+

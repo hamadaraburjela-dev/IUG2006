@@ -55,3 +55,4 @@ if (closeX) closeX.onclick = () => { if (modal) modal.style.display = "none"; };
 window.addEventListener("load", () => {
   setTimeout(showRandomAd, 15000);
 });
+

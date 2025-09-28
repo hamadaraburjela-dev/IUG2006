@@ -108,3 +108,4 @@ window.showAttemptsModal = function({ title, message }){
 // Site visitor counter removed per project decision. Runtime visitor counting and
 // related localStorage keys (siteVisitsLocal, siteVisitorToken, siteVisitorCounted)
 // have been intentionally removed to simplify the client.
+
