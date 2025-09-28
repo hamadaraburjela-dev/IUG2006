@@ -1206,6 +1206,7 @@ let currentQuizData = null;
             const attemptsScores = attemptsScoresByQuiz[quizId] || [];
             console.log('Start click for', quizId, 'attemptsRemaining=', remBefore, 'attemptsScores=', attemptsScores);
             if (!canRestartQuizFor(quizId)) {
+                // كل المحاولات استُخدمت فعلاً
                 showAttemptsModal({
                     title: "لقد أكملت جميع المحاولات",
                     message: "لا مزيد من المحاولات المسموح بها."
@@ -1251,14 +1252,14 @@ let currentQuizData = null;
                 if (quizModal) quizModal.classList.add("active");
             }
 
-                // If user already used two attempts (third click), show final summary and DO NOT start a new run
-                    if (usedSoFar >= (MAX_ATTEMPTS - 1) && attemptsScores && attemptsScores.length >= (MAX_ATTEMPTS - 1)){
-                        const s1 = attemptsScores[0] != null ? attemptsScores[0] : 'غير متوفر';
-                        const s2 = attemptsScores[1] != null ? attemptsScores[1] : 'غير متوفر';
-                        const msg = `لقد أكمَلت جميع محاولات التحدي.\nنتائجك السابقة:\nالمحاولة الأولى: ${s1}\nالمحاولة الثانية: ${s2}`;
-                        showAttemptsModal({ title: 'انتهت المحاولات', message: msg });
-                        return;
-                    }
+                // إذا استُخدمت فعلياً المحاولتان (usedSoFar >= MAX_ATTEMPTS) امنع محاولة ثالثة
+                if (usedSoFar >= MAX_ATTEMPTS) {
+                    const s1 = attemptsScores[0] != null ? attemptsScores[0] : 'غير متوفر';
+                    const s2 = attemptsScores[1] != null ? attemptsScores[1] : 'غير متوفر';
+                    const msg = `لقد أكمَلت جميع محاولات التحدي.\nنتائجك السابقة:\nالمحاولة الأولى: ${s1}\nالمحاولة الثانية: ${s2}`;
+                    showAttemptsModal({ title: 'انتهت المحاولات', message: msg });
+                    return;
+                }
                 // otherwise proceed to start normally
                 proceedStart();
   });
@@ -1370,7 +1371,10 @@ let currentQuizData = null;
                 playSound(correctSound);
                 score++;
                 selectedOption.classList.add('correct');
-                showFeedback(true, "إجابة رائعة!");
+                // استخدم نسخة التقدم (مع شريط الوقت)
+                if (window.showFeedbackWithProgress) {
+                    window.showFeedbackWithProgress({ correct: true, emoji: '✅', message: 'إجابة رائعة!' });
+                }
                 if (typeof window.incrementMainScore === 'function') {
                     window.incrementMainScore(1);
                 }
@@ -1386,12 +1390,15 @@ let currentQuizData = null;
                 const correctOptionEl = document.querySelector(`.quiz-option[data-key="${question.correctAnswer}"]`);
                 if (correctOptionEl) correctOptionEl.classList.add('correct');
                 selectedOption.classList.add('incorrect');
-                showFeedback(false, "إجابة خاطئة!");
+                if (window.showFeedbackWithProgress) {
+                    window.showFeedbackWithProgress({ correct: false, emoji: '❌', message: 'إجابة خاطئة!', hint: question.hint || '' });
+                }
             }
+            const delay = (selectedKey === question.correctAnswer) ? FEEDBACK_DURATION : FEEDBACK_INCORRECT_DURATION;
             setTimeout(() => {
                 currentQuestionIndex++;
                 displayQuestion();
-            }, FEEDBACK_DURATION);
+            }, delay);
         }
 
         function handleTimeOut() {
@@ -1400,42 +1407,20 @@ let currentQuizData = null;
                 opt.style.pointerEvents = 'none';
                 opt.classList.add('no-hover');
             });
-            const correctOptionEl = document.querySelector(`.quiz-option[data-key="${allQuestions[currentQuestionIndex].correctAnswer}"]`);
+            const currentQ = allQuestions[currentQuestionIndex];
+            const correctOptionEl = document.querySelector(`.quiz-option[data-key="${currentQ.correctAnswer}"]`);
             if (correctOptionEl) correctOptionEl.classList.add('correct');
-            showFeedback(false, "انتهى الوقت!");
+            if (window.showFeedbackWithProgress) {
+                window.showFeedbackWithProgress({ correct: false, emoji: '⏰', message: 'انتهى الوقت!', hint: currentQ.hint || '' });
+            }
             setTimeout(() => {
                 currentQuestionIndex++;
                 displayQuestion();
-            }, FEEDBACK_DURATION);
+            }, FEEDBACK_INCORRECT_DURATION);
         }
 
-        function showFeedback(isCorrect, message) {
-            if (!feedbackPopup || !feedbackContent) {
-                console.error("Feedback popup elements not found!");
-                return;
-            }
-            feedbackContent.classList.remove('correct', 'incorrect');
-            if (feedbackHint) feedbackHint.innerHTML = '';
-            if (feedbackMessage) feedbackMessage.textContent = '';
-            playSound(guideAppearsSound);
-            if (feedbackMessage) {
-                feedbackMessage.textContent = message;
-            }
-            feedbackContent.classList.remove('correct', 'incorrect');
-            if (isCorrect) {
-                if (feedbackEmoji) feedbackEmoji.textContent = '✅';
-                feedbackContent.classList.add('correct');
-                if (feedbackHint) feedbackHint.innerHTML = '';
-            } else {
-                if (feedbackEmoji) feedbackEmoji.textContent = '🤔';
-                feedbackContent.classList.add('incorrect');
-                const currentQuestion = allQuestions[currentQuestionIndex];
-                if (feedbackHint && currentQuestion.hint) {
-                    feedbackHint.innerHTML = `💡 ${currentQuestion.hint}`;
-                }
-            }
-            feedbackPopup.classList.add('visible');
-        }
+    // ملاحظة: تمت إزالة الدالة المحلية showFeedback التي كانت تُخفي الدالة الأصلية ذات شريط التقدم.
+    // استبدلت جميع النداءات لتستخدم window.showFeedbackWithProgress لضمان عرض موحّد.
 
         function displayResults() {
             if (currentQuizTitle === 'تحدي بوابة الجامعة') {
