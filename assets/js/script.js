@@ -750,7 +750,28 @@ document.addEventListener('DOMContentLoaded', () => {
             if(gameSceneContainer) gameSceneContainer.classList.remove('hidden');
 
             if (window.updateStatusBar) window.updateStatusBar();
-            
+
+            if (gameState.selectedGuide && !gameState.answeredQuestions.has('gate_q1')) {
+                // force gate quiz
+                const guideInfo = allGuides.find(g => g.id === gameState.selectedGuide);
+                if (guideInfo) {
+                    playSound(guideAppearsSound);
+                    const verb = guideInfo.gender === 'female' ? 'تقول' : 'يقول';
+                    const modalContent = `
+                        <div style="text-align: center;">
+                            <div class="guide-icon" style="margin: 0 auto 10px; font-size: 48px; width: 80px; height: 80px;">${guideInfo.emoji}</div>
+                            <h3 style="color: var(--primary-dark); margin: 0;">${guideInfo.name} ${verb}:</h3>
+                            <p style="font-size: 16px; color: var(--text-light); margin-top: 10px;">"لنبدأ التحدي الأول لدخول الجامعة!"</p>
+                        </div>
+                    `;
+                    showModal('رسالة من مرشدك', modalContent, () => {
+                        const gateQuizBtn = document.getElementById('start-gate-quiz-btn');
+                        if (gateQuizBtn) gateQuizBtn.click();
+                    });
+                }
+                return true;
+            }
+
             const targetScene = localStorage.getItem('iugGameTargetScene');
             localStorage.removeItem('iugGameTargetScene');
 
