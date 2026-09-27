@@ -1,0 +1,135 @@
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Cairo,sans-serif;background:#061120;color:#eef7ff;overflow-x:hidden}a{text-decoration:none;color:inherit}.container{width:min(1160px,calc(100% - 28px));margin:auto}.noise{position:fixed;inset:0;pointer-events:none;opacity:.08;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:24px 24px;z-index:-1}.glow{position:fixed;width:380px;height:380px;border-radius:50%;filter:blur(90px);opacity:.45;z-index:-2}.glow-a{background:#006bff;top:5%;left:-120px}.glow-b{background:#00e6c3;bottom:10%;right:-120px}.header{position:sticky;top:0;z-index:20;background:rgba(6,17,32,.72);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.1)}.nav{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px}.brand-badge{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,#00e6c3,#00a6ff);color:#061120;font-weight:900;box-shadow:0 18px 44px rgba(0,166,255,.35)}.brand strong,.brand small{display:block;line-height:1.15}.brand small{color:#a9bed7}.links{display:flex;gap:22px;color:#b8cbe2;font-weight:800}.links a:hover{color:#fff}.menu{display:none;background:none;border:0}.menu span{display:block;width:28px;height:3px;background:#fff;margin:6px;border-radius:99px}.hero{min-height:calc(100vh - 76px);display:flex;align-items:center;padding:80px 0;background:radial-gradient(circle at top right,rgba(0,166,255,.28),transparent 36rem)}.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}.chip,.kicker{display:inline-flex;align-items:center;gap:9px;padding:8px 14px;border-radius:99px;background:rgba(0,230,195,.1);border:1px solid rgba(0,230,195,.28);color:#00e6c3;font-weight:900}.chip i{width:10px;height:10px;border-radius:50%;background:#00e6c3;box-shadow:0 0 0 8px rgba(0,230,195,.12)}h1{font-size:clamp(44px,7vw,88px);line-height:1.05;margin:24px 0 16px;letter-spacing:-2px}h1 em{display:block;font-style:normal;background:linear-gradient(90deg,#fff,#65d4ff,#00e6c3);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p,.section-head p,.split p,.big-card p{color:#b8cbe2;font-size:18px;line-height:2}.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin:28px 0}.btn{min-height:52px;border-radius:999px;padding:0 24px;border:1px solid transparent;display:inline-flex;align-items:center;justify-content:center;font-weight:900;cursor:pointer;font-family:inherit}.primary{background:linear-gradient(135deg,#00e6c3,#00a6ff);color:#04111d;box-shadow:0 18px 44px rgba(0,166,255,.25)}.secondary{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16)}.hero-alert{padding:16px 18px;border-radius:22px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#cfe1f4}.hero-visual{position:relative;min-height:470px;border-radius:34px;background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.16);box-shadow:0 30px 90px rgba(0,0,0,.35);display:grid;place-items:center;overflow:hidden}.hero-visual:before{content:"";position:absolute;width:330px;height:330px;border:1px dashed rgba(255,255,255,.22);border-radius:50%;animation:spin 18s linear infinite}.terminal{position:relative;z-index:2;width:min(410px,88%);background:rgba(2,10,20,.9);border:1px solid rgba(255,255,255,.16);border-radius:24px;overflow:hidden;box-shadow:0 25px 70px rgba(0,0,0,.45)}.dots{display:flex;gap:8px;padding:16px;background:rgba(255,255,255,.06)}.dots span{width:12px;height:12px;border-radius:50%;background:#00e6c3}.dots span:nth-child(2){background:#ffd166}.dots span:nth-child(3){background:#ff5d8f}pre{direction:ltr;text-align:left;margin:0;padding:24px;color:#bdf9ff;line-height:1.8;overflow:auto}.floating-card{position:absolute;background:rgba(255,255,255,.1);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.16);border-radius:20px;padding:16px 20px;box-shadow:0 18px 50px rgba(0,0,0,.25)}.floating-card strong{display:block;color:#00e6c3;font-size:30px}.floating-card span{color:#cfe1f4;font-weight:800}.card-one{top:30px;right:32px}.card-two{bottom:40px;left:28px}.card-three{bottom:120px;right:42px}.section{padding:95px 0}.section-head{text-align:center;max-width:850px;margin:0 auto 42px}.section h2{font-size:clamp(30px,4vw,54px);line-height:1.25;margin:16px 0}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.info-card,.journey,.big-card,.form-layout,.faq details{background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.055));border:1px solid rgba(255,255,255,.15);border-radius:28px;box-shadow:0 30px 80px rgba(0,0,0,.28)}.info-card{padding:28px}.info-card span{font-size:34px}.info-card p,.faq p{color:#b8cbe2;line-height:1.9}.dark{background:linear-gradient(180deg,rgba(255,255,255,.04),transparent)}.split{display:grid;grid-template-columns:1fr .9fr;gap:28px;align-items:center}.journey{padding:28px}.step{display:grid;grid-template-columns:54px 1fr;gap:14px;align-items:center;margin:16px 0}.step b{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#00e6c3,#00a6ff);color:#061120}.big-card{padding:clamp(28px,5vw,56px)}.form-layout{display:grid;grid-template-columns:320px 1fr;overflow:hidden}.side-panel{padding:30px;background:rgba(255,255,255,.06);border-left:1px solid rgba(255,255,255,.14)}.side-panel ul{color:#b8cbe2;line-height:2;padding-right:20px}.counter{margin-top:22px;padding:18px;border-radius:18px;background:rgba(0,230,195,.1);border:1px solid rgba(0,230,195,.24)}.counter span,.counter strong{display:block}.reg-form{padding:30px}.form-section{padding:24px;border-radius:24px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.1);margin-bottom:18px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}label{display:grid;gap:8px;font-weight:800;color:#e1efff}input,select,textarea{width:100%;min-height:48px;border-radius:16px;border:1px solid rgba(255,255,255,.16);background:rgba(3,13,25,.75);color:#fff;padding:12px 14px;font-family:inherit;outline:0}textarea{resize:vertical}input:focus,select:focus,textarea:focus{border-color:#00e6c3;box-shadow:0 0 0 4px rgba(0,230,195,.08)}.hint,.status{color:#b8cbe2}.checks,.consents{display:grid;gap:12px;margin:16px 0}.checks label,.consents label{display:flex;align-items:center;gap:10px;color:#b8cbe2}input[type=checkbox]{width:18px;min-height:18px;accent-color:#00e6c3}.submit{width:100%;border:0;font-size:18px}.faq{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.faq details{padding:22px}.faq summary{font-weight:900;cursor:pointer}footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.18)}.footer-inner{display:flex;justify-content:space-between;gap:16px;align-items:center}.footer-inner p{color:#b8cbe2;margin:6px 0 0}.modal{position:fixed;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:99;padding:18px}.modal.show{display:flex}.modal-card{position:relative;max-width:520px;background:#08182a;border:1px solid rgba(255,255,255,.16);border-radius:28px;padding:34px;text-align:center;box-shadow:0 30px 90px rgba(0,0,0,.45)}.close{position:absolute;top:12px;left:12px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:24px;cursor:pointer}.check{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;margin:0 auto 14px;background:linear-gradient(135deg,#00e6c3,#00a6ff);color:#061120;font-size:42px;font-weight:900}.reveal{opacity:0;transform:translateY(22px);transition:.7s ease}.reveal.visible{opacity:1;transform:none}@keyframes spin{to{transform:rotate(360deg)}}@media(max-width:950px){.hero-grid,.split,.cards,.form-layout,.faq{grid-template-columns:1fr}.side-panel{border-left:0;border-bottom:1px solid rgba(255,255,255,.14)}.links{position:absolute;top:76px;inset-inline:14px;display:none;flex-direction:column;background:rgba(6,17,32,.96);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:18px}.links.open{display:flex}.menu{display:block}}@media(max-width:650px){.grid{grid-template-columns:1fr}.reg-form,.side-panel,.form-section{padding:18px}h1{font-size:42px}.hero{padding:48px 0}.floating-card{position:static;margin:10px}.hero-visual{display:block;padding:34px 16px}.terminal{margin:0 auto 20px}}
+
+
+/* شعار الفرع - ضع الصورة باسم lo.JPG بجانب index.html */
+.brand-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  object-fit: cover;
+  background: #ffffff;
+  padding: 4px;
+  box-shadow: 0 18px 44px rgba(0, 166, 255, 0.35);
+  display: block;
+  flex-shrink: 0;
+}
+
+
+/* ===============================
+   Mobile Registration Visibility Fix
+   إصلاح ظهور نموذج التسجيل على الجوال
+   =============================== */
+@media (max-width: 768px) {
+  html, body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* منع اختفاء الأقسام بسبب حركة الظهور على بعض متصفحات الجوال */
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+  }
+
+  /* ضمان ظهور قسم التسجيل كاملًا */
+  #form,
+  .registration,
+  .form-layout,
+  .reg-form,
+  .form-section {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .registration {
+    padding-top: 70px !important;
+  }
+
+  .form-layout {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+
+  .side-panel {
+    width: 100% !important;
+    border-left: 0 !important;
+    border-bottom: 1px solid rgba(255,255,255,.14) !important;
+    padding: 20px !important;
+  }
+
+  .reg-form {
+    width: 100% !important;
+    padding: 18px !important;
+  }
+
+  .form-section {
+    width: 100% !important;
+    padding: 18px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  label,
+  input,
+  select,
+  textarea,
+  button {
+    max-width: 100% !important;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px !important; /* يمنع زوم iPhone عند الضغط */
+  }
+
+  .section-head {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    margin-bottom: 24px !important;
+  }
+
+  .section-head h2 {
+    font-size: 30px !important;
+  }
+
+  .section-head p {
+    font-size: 16px !important;
+  }
+}
+
+/* زر تسجيل سريع يظهر على الجوال */
+.mobile-register-btn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-register-btn {
+    position: fixed;
+    right: 14px;
+    left: 14px;
+    bottom: 14px;
+    z-index: 80;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    border-radius: 999px;
+    background: linear-gradient(135deg,#00e6c3,#00a6ff);
+    color: #04111d;
+    font-weight: 900;
+    box-shadow: 0 18px 44px rgba(0,166,255,.35);
+  }
+
+  footer {
+    padding-bottom: 92px !important;
+  }
+}
